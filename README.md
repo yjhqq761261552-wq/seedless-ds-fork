@@ -6,6 +6,8 @@
 
 [全部版本改进](CHANGELOG.md) · [最新滤镜与验证](SHADERS_1.0.11.md) · [许可](LICENSING.md) · [上游衍生英文说明](README.upstream-derived.md)
 
+[下载最新测试版 APK（GitHub Releases）](https://github.com/yjhqq761261552-wq/seedless-ds-fork/releases/tag/v1.0.11-shaders)。感谢 OpenGL 滤镜的原算法作者与移植者，完整名单及源码依据见 [OpenGL / GLES 滤镜来源致谢](CREDITS.md#opengl--gles-滤镜来源)。
+
 ## 主要改进
 
 - 添加了副屏幕悬浮窗模式，在4/3的机型上可以全屏幕展示，副屏固定在右下角，支持调整副屏大小与透明度，已在rp nova机型上进行测试。
