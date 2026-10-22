@@ -1,0 +1,22 @@
+SeedlessDS 1.0.11: selected Vulkan interpolation / LCD filters
+
+Sharp Bilinear: Themaister, public domain. Per-axis automatic prescale adapts
+the upstream algorithm to independently scaled DS screens.
+Sharp Shimmerless: zadpos / Woohyun Kang, public domain / CC0 1.0.
+Pixel AA Fast: fishku, copyright 2023-2025, CC0 1.0.
+LCD3x: Gigaherz, public domain.
+Quilez: based on the bundled hunterk Quilez.dsd public-domain implementation
+of the improved texture interpolation method by Inigo Quilez.
+NDS Color: existing bundled DraStic-format shaders, GNU GPL v2 or later.
+
+The upstream shader files, CC0 license, repository commits and SHA-256 values
+are provided in third-party-shaders/ in the corresponding source archive.
+See 05-CC0.txt for the complete CC0 1.0 text.
+
+Sharp Shimmerless uses direct footprint bounds, including fractional origins;
+its downscaling fallback is a bounded four-sample approximation. Pixel AA Fast
+combines the upstream square/linear-interpolate/square-root stages into four
+manual gamma-correct texel reads in the existing presentation pass, without
+emulating its intermediate framebuffer quantization or subpixel AA variants.
+LCD3x grids use native 256x192 DS coordinates. Reads stay within each screen.
+No physical driver, image quality or end-to-end latency certification is implied.

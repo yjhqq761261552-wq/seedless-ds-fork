@@ -1,0 +1,11 @@
+SeedlessDS custom integration 1.0.6-upstream (version code 116)
+
+Based on the previously delivered custom 1.0.5-rewindperf build.
+Official app update: 3bd4645d1a5c9dacb2a485eadbb1089de44a0c73.
+Official core update: 1cae6f9d8ad7dc651a48452a5ebe23fd8c347d12.
+The 1.0.1 tag itself points to cb801966f680273224e4f5d313b95f9c53fd5e4b and predates the compatibility/rendering update.
+
+Custom changes retained: dual-display layout/touch/shader/fence fixes; input mailbox and low-latency touch; RP Nova left-stick direction handling; bindable rewind with background packing.
+Integration adjustments: compatible build toolchain, opt-in developer frame controls, stock database hash migration, atomic asset replacement, guarded shutdown/input and matching runtime dependency notices.
+
+Full modified source, pinned native dependency archives and the unchanged cheat catalog XML source accompany this build. Existing upstream attribution and licenses remain applicable. See UPSTREAM_1_0_1.md in the source archive for build and validation details.

@@ -1,0 +1,5 @@
+SeedlessDS 1.0.7-vulkan / version code 117
+
+Based on custom 1.0.6-upstream. Added an optional Vulkan 1.0 CPU-frame display backend for Android 7 and newer. It uses dynamic Vulkan entry points, one GPU submission per display in flight, coherent consumer-owned frame snapshots, nearest/linear sampling, shared screen/touch layout and OpenGL compatibility fallback. The software DS 3D core and existing rewind/input implementations remain in place.
+
+Code changes include Vulkan native presentation and shaders, frame publication/snapshot/pixel packing, frontend selection and settings, source/build integration, lifetime handling and host regression tests. Existing project and third-party notices continue to apply. See WatermelonDS-reference and VULKAN_LOW_LATENCY.md for provenance and limitations.

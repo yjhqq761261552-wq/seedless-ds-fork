@@ -1,0 +1,158 @@
+{
+  "version": "1.0.5-rewindperf",
+  "versionCode": 115,
+  "package": "com.seedlessds.app.debug",
+  "minimumSdk": 21,
+  "targetSdk": 35,
+  "apk": "SeedlessDS-1.0.5-rewindperf-debug.apk",
+  "apkBytes": 32550785,
+  "apkSha256": "19a8b2ce26e5e9fe0a0f6c10716a7bbd4ab89ba7a9fa87ab4a7a0d50f4c9ce57",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "signatureVerified": true,
+  "testTotal": 48,
+  "tests": [
+    {
+      "suite": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.StickInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "nativeHostTestSuites": 5,
+  "nativeHostTests": {
+    "tests": {
+      "rewind_ring_test": "passed",
+      "rewind_codec_test": "passed",
+      "rewind_worker_test": "passed",
+      "rewind_manager_test": "passed",
+      "rewind_manager_async_test": "passed",
+      "outstandingAllocations": 0
+    },
+    "ringRandomOperations": 10000,
+    "workerReuseCycles": 512,
+    "scope": "Production ring, codec, background worker and scheduler; fake machine and clock; real host zlib; not Android gameplay"
+  },
+  "lintErrors": 0,
+  "lintWarnings": 18,
+  "shaderAssets": 192,
+  "shaderAssetsMatchSourceAnd104": true,
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "zipOffset": 21184512,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "zipOffset": 21200896,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "zipOffset": 21217280,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "zipOffset": 22740992,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "zipOffset": 30965760,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "emulationThreadCapturesState": true,
+  "emulationThreadComputesSnapshotCrc": false,
+  "emulationThreadCompressesSnapshots": false,
+  "maximumInFlightCompressionJobs": 1,
+  "rawSnapshotBufferReused": true,
+  "androidWorkerRequestedNice": 5,
+  "reportedGame": "Pokemon HeartGold",
+  "reportedDevice": "RP Nova",
+  "userReportedRewindOnSpeedPercent": "93-100",
+  "userReportedRewindOffSpeedPercent": "99-100",
+  "androidDeviceTested": false,
+  "fullGameStateRoundTripTested": false,
+  "measuredAndroidPerformanceImprovement": null,
+  "changedFilesFrom104": [
+    "app/build.gradle.kts",
+    "core/src/core/CMakeLists.txt",
+    "core/src/core/rewind.c",
+    "core/src/core/rewind_codec.c",
+    "core/src/core/rewind_codec.h",
+    "core/src/core/rewind_memory.h",
+    "core/src/core/rewind_ring.c",
+    "core/src/core/rewind_ring.h",
+    "core/src/core/rewind_worker.c",
+    "core/src/core/rewind_worker.h",
+    "core/src/core/state.c",
+    "core/src/core/state_format.h",
+    "core/tests/rewind_codec_test.c",
+    "core/tests/rewind_manager_test.c",
+    "core/tests/rewind_ring_test.c",
+    "core/tests/rewind_worker_test.c",
+    "README.md",
+    "REWIND.md",
+    "REWIND_PERFORMANCE.md",
+    "tools/host/pthread_win.h",
+    "tools/host/windows_heap.c",
+    "tools/host/zlib_win.h",
+    "tools/run_rewind_host_tests.py"
+  ]
+}

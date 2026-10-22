@@ -1,0 +1,633 @@
+{
+  "version": "1.0.8-optimized",
+  "versionCode": 118,
+  "referenceCommit": "9bd6a0db59f944cda961e1df7f6e692eb6d4e65b",
+  "apk": "SeedlessDS-1.0.8-optimized-debug.apk",
+  "apkBytes": 41454573,
+  "apkSha256": "a14f0990701d802e1d39f368923bd50847db2796e610494598058a9808de949b",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "testTotal": 79,
+  "jvmSuites": [
+    {
+      "suite": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.RecoverableReplaceTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.StickInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.VulkanPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.VulkanSettingsTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.ra.RaHostOverrideTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lintErrors": 0,
+  "lintWarnings": 24,
+  "lintWarningTypes": [
+    "ApplySharedPref",
+    "DefaultLocale",
+    "UnusedAttribute",
+    "UnusedAttribute",
+    "ModifierParameter",
+    "ModifierParameter",
+    "ChromeOsAbiSupport",
+    "ExportedReceiver",
+    "DataExtractionRules",
+    "DrawAllocation",
+    "DrawAllocation",
+    "Recycle",
+    "StaticFieldLeak",
+    "StaticFieldLeak",
+    "UnusedResources",
+    "UnusedResources",
+    "UnusedResources",
+    "UseOfNonLambdaOffsetOverload",
+    "MonochromeLauncherIcon",
+    "MonochromeLauncherIcon",
+    "ViewConstructor",
+    "ClickableViewAccessibility",
+    "ClickableViewAccessibility",
+    "ClickableViewAccessibility"
+  ],
+  "nativeSafetyTests": {
+    "saveFaultCases": 21,
+    "saveWriterAndAdmission": "passed",
+    "loadCompletionAndCancellation": "passed",
+    "mailboxEdgesMovesCancelAndConcurrentAccess": "passed",
+    "resamplerRates": [
+      8000,
+      44100,
+      48000,
+      96000,
+      192000
+    ],
+    "ringOwnershipWrapOverflowAndFlush": "passed",
+    "histogramPercentiles": "passed",
+    "emulatedFrameObserverCount": 120,
+    "scope": "Production code, fault-injection file/serialization/clock adapters; no Android driver or live saves"
+  },
+  "nativeVideoTests": {
+    "scalesTested": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "rgb565Values": 65536,
+    "concurrentPublications": 300,
+    "concurrentReaders": 2,
+    "coherentSnapshots": [
+      178,
+      294
+    ],
+    "tests": {
+      "baseScreenshotAllScalesModesAndFormats": "passed",
+      "rgbaPacking": "passed",
+      "rgb565Conversion": "passed",
+      "capacityGuards": "passed",
+      "completedPageAndMetadata": "passed",
+      "loadingAndNoNewFrame": "passed",
+      "concurrentSnapshots": "passed",
+      "presentModeAndImageCount": "passed",
+      "preRotation": "passed"
+    },
+    "scope": "Production pixel/snapshot code and WSI policy; fixture core state and host mutex; no Android Vulkan driver execution"
+  },
+  "nativeRewindTests": {
+    "tests": {
+      "rewind_ring_test": "passed",
+      "rewind_codec_test": "passed",
+      "rewind_worker_test": "passed",
+      "rewind_manager_test": "passed",
+      "rewind_manager_async_test": "passed",
+      "outstandingAllocations": 0
+    },
+    "ringRandomOperations": 10000,
+    "workerReuseCycles": 512,
+    "scope": "Production ring, codec, background worker and scheduler; fake machine and clock; real host zlib; not Android gameplay"
+  },
+  "androidAdapterTests": {
+    "serial": "bbda80a8",
+    "tests": [
+      {
+        "audioPriming": "passed",
+        "duplicateResume": "passed",
+        "gainAndNativeRateConversion": "passed",
+        "pauseResume": "passed",
+        "disconnectFallback": "passed",
+        "openFailureFallback": "passed",
+        "scope": "Production audio adapter with fake AAudio driver in an isolated Android process; no physical sound measurement"
+      },
+      {
+        "sharedFrameOwnership": "passed",
+        "packOncePerSerial": "passed",
+        "boundedTwoSlotPool": "passed",
+        "concurrentPublicationAttempts": 1000,
+        "scope": "Production packet pool; fixture core snapshots; Android CPU executable, no Vulkan driver"
+      },
+      {
+        "newFrameBroadcast": "passed",
+        "lifecycleCancellation": "passed",
+        "alreadyPublished": "passed",
+        "boundedTimeout": "passed",
+        "waiters": 8
+      }
+    ]
+  },
+  "shaderRecipes": 110,
+  "shaderPassPairs": 147,
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+      "apkOffset": 21266432,
+      "loadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "sha256": "d3e48717c9aa147e0ab21063ba0e8e0211cabf8bf40b222640829519edbf58e1",
+      "apkOffset": 21282816,
+      "loadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "sha256": "b0695db819286819c5b8aa06e837a2a623af3462f487f34cb577f23b101284e3",
+      "apkOffset": 11272192,
+      "loadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "sha256": "0206820a1ae844d17894edbc9ce461bc6d1331f82eade3314aaf004fb7c7dbf1",
+      "apkOffset": 22380544,
+      "loadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "sha256": "6c7449d97cbcfc31827627c381cf99e6dc6228281cbbcec13a6e1173a4878670",
+      "apkOffset": 35536896,
+      "loadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "nova": {
+    "device": "Retroid Pocket Nova / Android 13 / QCS8550 / Adreno 740",
+    "rom": "起源心金4.0正式版（设备已有改版ROM）",
+    "caseDurationSeconds": 24,
+    "results": [
+      {
+        "case": "vk-1x-none",
+        "hudMin": 99.8,
+        "hudMax": 100.2,
+        "sampleCount": 2,
+        "frameP95us": 17408,
+        "frameP99us": 17920,
+        "rewindP95us": 1280,
+        "copyP95us": 384,
+        "audio": [
+          48000,
+          1536,
+          3,
+          0,
+          0,
+          5384
+        ]
+      },
+      {
+        "case": "vk-2x-none",
+        "hudMin": 99.9,
+        "hudMax": 100.1,
+        "sampleCount": 2,
+        "frameP95us": 17280,
+        "frameP99us": 17664,
+        "rewindP95us": 896,
+        "copyP95us": 384,
+        "audio": [
+          48000,
+          1536,
+          4,
+          0,
+          0,
+          5385
+        ]
+      },
+      {
+        "case": "vk-4x-none",
+        "hudMin": 100.0,
+        "hudMax": 100.2,
+        "sampleCount": 2,
+        "frameP95us": 17664,
+        "frameP99us": 18304,
+        "rewindP95us": 1024,
+        "copyP95us": 768,
+        "audio": [
+          48000,
+          1536,
+          6,
+          0,
+          0,
+          5379
+        ]
+      },
+      {
+        "case": "vk-8x-none",
+        "hudMin": 99.7,
+        "hudMax": 100.1,
+        "sampleCount": 2,
+        "frameP95us": 18432,
+        "frameP99us": 19456,
+        "rewindP95us": 640,
+        "copyP95us": 1792,
+        "audio": [
+          48000,
+          1536,
+          9,
+          0,
+          0,
+          5387
+        ]
+      },
+      {
+        "case": "vk-2x-fxaa",
+        "hudMin": 99.9,
+        "hudMax": 100.1,
+        "sampleCount": 2,
+        "frameP95us": 17280,
+        "frameP99us": 17664,
+        "rewindP95us": 2048,
+        "copyP95us": 384,
+        "audio": [
+          48000,
+          1536,
+          5,
+          0,
+          0,
+          5389
+        ]
+      },
+      {
+        "case": "gl-2x-none",
+        "hudMin": 100.0,
+        "hudMax": 100.2,
+        "sampleCount": 2,
+        "frameP95us": 17408,
+        "frameP99us": 18048,
+        "rewindP95us": 896,
+        "copyP95us": 0,
+        "audio": [
+          48000,
+          1536,
+          5,
+          0,
+          0,
+          5384
+        ]
+      },
+      {
+        "case": "legacy-audio-2x",
+        "hudMin": 99.9,
+        "hudMax": 100.1,
+        "sampleCount": 2,
+        "frameP95us": 17408,
+        "frameP99us": 17664,
+        "rewindP95us": 1152,
+        "copyP95us": 384,
+        "audio": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "rawMatrix": [
+      {
+        "case": "vk-1x-none",
+        "process": "30990",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          99.8,
+          100.2
+        ],
+        "latencySnapshots": [
+          "10-20 22:44:06.169 30990 30990 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6272, 6272, 11, 17920, 17920, 1, 2304, 2304, 4, 384, 384]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 1, 0, 0, 50]",
+          "10-20 22:44:16.210 30990 30990 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6272, 6272, 613, 17408, 18688, 11, 2304, 2304, 606, 384, 384]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 3, 0, 0, 2717]",
+          "10-20 22:44:26.249 30990 30990 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6272, 6272, 1216, 17408, 17920, 21, 1280, 2304, 1209, 384, 384]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 3, 0, 0, 5384]"
+        ],
+        "vulkanStats": [
+          "10-20 22:44:11.099 30990 31034 I SeedlessVulkanStats: primary serial=310 cpuP95us=5532 cpuP99us=5964 ageP95us=5683 ageP99us=6129 skipped=0 acquireMiss=0",
+          "10-20 22:44:16.100 30990 31034 I SeedlessVulkanStats: primary serial=610 cpuP95us=6810 cpuP99us=7247 ageP95us=7008 ageP99us=7447 skipped=0 acquireMiss=0",
+          "10-20 22:44:21.102 30990 31034 I SeedlessVulkanStats: primary serial=910 cpuP95us=5915 cpuP99us=6164 ageP95us=6066 ageP99us=6334 skipped=0 acquireMiss=0",
+          "10-20 22:44:26.099 30990 31034 I SeedlessVulkanStats: primary serial=1210 cpuP95us=2975 cpuP99us=3573 ageP95us=3247 ageP99us=3683 skipped=0 acquireMiss=0"
+        ]
+      },
+      {
+        "case": "vk-2x-none",
+        "process": "31212",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          99.9,
+          100.1
+        ],
+        "latencySnapshots": [
+          "10-20 22:44:31.720 31212 31212 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6528, 6528, 11, 19328, 19328, 1, 3072, 3072, 4, 384, 384]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 3, 0, 0, 51]",
+          "10-20 22:44:41.759 31212 31212 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6528, 6528, 613, 17408, 17792, 11, 3072, 3072, 606, 384, 384]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 4, 0, 0, 2718]",
+          "10-20 22:44:51.801 31212 31212 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6528, 6528, 1216, 17280, 17664, 21, 896, 3072, 1209, 384, 384]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 4, 0, 0, 5385]"
+        ],
+        "vulkanStats": [
+          "10-20 22:44:36.650 31212 31256 I SeedlessVulkanStats: primary serial=310 cpuP95us=6824 cpuP99us=7318 ageP95us=7044 ageP99us=7407 skipped=0 acquireMiss=0",
+          "10-20 22:44:41.651 31212 31256 I SeedlessVulkanStats: primary serial=610 cpuP95us=5767 cpuP99us=5960 ageP95us=5902 ageP99us=6117 skipped=0 acquireMiss=0",
+          "10-20 22:44:46.653 31212 31256 I SeedlessVulkanStats: primary serial=910 cpuP95us=7108 cpuP99us=7377 ageP95us=7238 ageP99us=7567 skipped=0 acquireMiss=0",
+          "10-20 22:44:51.647 31212 31256 I SeedlessVulkanStats: primary serial=1210 cpuP95us=5258 cpuP99us=5572 ageP95us=5424 ageP99us=5771 skipped=0 acquireMiss=0"
+        ]
+      },
+      {
+        "case": "vk-4x-none",
+        "process": "31442",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          100.0,
+          100.2
+        ],
+        "latencySnapshots": [
+          "10-20 22:44:57.287 31442 31442 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 1152, 1152, 11, 18688, 18688, 1, 2944, 2944, 4, 1664, 1664]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 5, 0, 0, 49]",
+          "10-20 22:45:07.321 31442 31442 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 1152, 1152, 613, 17664, 18688, 11, 2944, 2944, 606, 640, 768]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 6, 0, 0, 2714]",
+          "10-20 22:45:17.356 31442 31442 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 1152, 1152, 1215, 17664, 18304, 21, 1024, 2944, 1208, 768, 896]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 6, 0, 0, 5379]"
+        ],
+        "vulkanStats": [
+          "10-20 22:45:02.214 31442 31486 I SeedlessVulkanStats: primary serial=310 cpuP95us=5840 cpuP99us=6026 ageP95us=6012 ageP99us=6206 skipped=0 acquireMiss=0",
+          "10-20 22:45:07.218 31442 31486 I SeedlessVulkanStats: primary serial=610 cpuP95us=6283 cpuP99us=6621 ageP95us=6472 ageP99us=6824 skipped=0 acquireMiss=0",
+          "10-20 22:45:12.219 31442 31486 I SeedlessVulkanStats: primary serial=910 cpuP95us=6657 cpuP99us=7310 ageP95us=6835 ageP99us=7440 skipped=0 acquireMiss=0",
+          "10-20 22:45:17.215 31442 31486 I SeedlessVulkanStats: primary serial=1210 cpuP95us=4689 cpuP99us=5074 ageP95us=4882 ageP99us=5254 skipped=0 acquireMiss=0"
+        ]
+      },
+      {
+        "case": "vk-8x-none",
+        "process": "31692",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          99.7,
+          100.1
+        ],
+        "latencySnapshots": [
+          "10-20 22:45:22.865 31692 31692 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 14464, 14464, 11, 18304, 18304, 1, 3712, 3712, 4, 5632, 5632]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 5, 0, 0, 52]",
+          "10-20 22:45:32.902 31692 31692 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 14464, 14464, 613, 18560, 19456, 11, 3712, 3712, 606, 1792, 2048]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 9, 0, 0, 2719]",
+          "10-20 22:45:42.949 31692 31692 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 14464, 14464, 1216, 18432, 19456, 21, 640, 3712, 1209, 1792, 1920]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 9, 0, 0, 5387]"
+        ],
+        "vulkanStats": [
+          "10-20 22:45:27.797 31692 31736 I SeedlessVulkanStats: primary serial=310 cpuP95us=11607 cpuP99us=13007 ageP95us=11741 ageP99us=13116 skipped=0 acquireMiss=0",
+          "10-20 22:45:32.799 31692 31736 I SeedlessVulkanStats: primary serial=610 cpuP95us=6550 cpuP99us=7397 ageP95us=6717 ageP99us=7588 skipped=0 acquireMiss=0",
+          "10-20 22:45:37.800 31692 31736 I SeedlessVulkanStats: primary serial=910 cpuP95us=7891 cpuP99us=12421 ageP95us=8067 ageP99us=12574 skipped=0 acquireMiss=0",
+          "10-20 22:45:42.801 31692 31736 I SeedlessVulkanStats: primary serial=1210 cpuP95us=11911 cpuP99us=12891 ageP95us=12026 ageP99us=13025 skipped=0 acquireMiss=0"
+        ]
+      },
+      {
+        "case": "vk-2x-fxaa",
+        "process": "31955",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          100.1,
+          99.9
+        ],
+        "latencySnapshots": [
+          "10-20 22:45:48.527 31955 31955 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6400, 6400, 11, 18816, 18816, 1, 2688, 2688, 4, 640, 640]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 2, 0, 0, 54]",
+          "10-20 22:45:58.573 31955 31955 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6400, 6400, 614, 17280, 17792, 11, 2688, 2688, 607, 384, 512]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 5, 0, 0, 2722]",
+          "10-20 22:46:08.610 31955 31955 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 6400, 6400, 1216, 17280, 17664, 21, 2048, 2688, 1209, 384, 384]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 5, 0, 0, 5389]"
+        ],
+        "vulkanStats": [
+          "10-20 22:45:53.452 31955 31999 I SeedlessVulkanStats: primary serial=310 cpuP95us=4392 cpuP99us=6476 ageP95us=4539 ageP99us=6599 skipped=0 acquireMiss=0",
+          "10-20 22:45:58.446 31955 31999 I SeedlessVulkanStats: primary serial=610 cpuP95us=4829 cpuP99us=5189 ageP95us=4985 ageP99us=5370 skipped=0 acquireMiss=0",
+          "10-20 22:46:03.447 31955 31999 I SeedlessVulkanStats: primary serial=910 cpuP95us=5561 cpuP99us=5784 ageP95us=5672 ageP99us=5868 skipped=0 acquireMiss=0",
+          "10-20 22:46:08.447 31955 31999 I SeedlessVulkanStats: primary serial=1210 cpuP95us=5669 cpuP99us=6244 ageP95us=5905 ageP99us=6362 skipped=0 acquireMiss=0"
+        ]
+      },
+      {
+        "case": "gl-2x-none",
+        "process": "32219",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          100.2,
+          100.0
+        ],
+        "latencySnapshots": [
+          "10-20 22:46:14.090 32219 32219 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 8192, 8192, 11, 18560, 18560, 1, 3456, 3456, 0, 0, 0]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 2, 0, 0, 50]",
+          "10-20 22:46:24.127 32219 32219 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 8192, 8192, 613, 17408, 18560, 11, 3456, 3456, 0, 0, 0]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 5, 0, 0, 2717]",
+          "10-20 22:46:34.167 32219 32219 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 8192, 8192, 1215, 17408, 18048, 21, 896, 3456, 0, 0, 0]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 5, 0, 0, 5384]"
+        ],
+        "vulkanStats": []
+      },
+      {
+        "case": "legacy-audio-2x",
+        "process": "32468",
+        "durationSeconds": 24,
+        "hudSpeedPercent": [
+          0.0,
+          100.1,
+          99.9
+        ],
+        "latencySnapshots": [
+          "10-20 22:46:39.632 32468 32468 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 5888, 5888, 11, 17408, 17408, 1, 2176, 2176, 4, 512, 512]; rewind=2; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[0, 0, 0, 0, 0, 0]",
+          "10-20 22:46:49.670 32468 32468 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 5888, 5888, 613, 17408, 17792, 11, 2176, 2176, 606, 384, 384]; rewind=22; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[0, 0, 0, 0, 0, 0]",
+          "10-20 22:46:59.711 32468 32468 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 5888, 5888, 1216, 17408, 17664, 21, 1152, 2176, 1209, 384, 384]; rewind=42; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[0, 0, 0, 0, 0, 0]"
+        ],
+        "vulkanStats": [
+          "10-20 22:46:44.563 32468 32512 I SeedlessVulkanStats: primary serial=310 cpuP95us=7215 cpuP99us=7707 ageP95us=7447 ageP99us=7850 skipped=0 acquireMiss=0",
+          "10-20 22:46:49.564 32468 32512 I SeedlessVulkanStats: primary serial=610 cpuP95us=10167 cpuP99us=10605 ageP95us=10347 ageP99us=10770 skipped=0 acquireMiss=0",
+          "10-20 22:46:54.557 32468 32512 I SeedlessVulkanStats: primary serial=910 cpuP95us=6155 cpuP99us=6790 ageP95us=6318 ageP99us=6943 skipped=0 acquireMiss=0",
+          "10-20 22:46:59.557 32468 32512 I SeedlessVulkanStats: primary serial=1210 cpuP95us=5480 cpuP99us=5800 ageP95us=5649 ageP99us=6029 skipped=0 acquireMiss=0"
+        ]
+      }
+    ],
+    "matrixApkSha256": "58b177f617ae391f1f4d7f9ebedc8640b885c0572567d9910d439f5a98075562",
+    "confirmationChecks": {
+      "menuOverwriteConfirmation": true,
+      "menuCancelPreservesBytesAndModificationTime": true,
+      "menuConfirmedOverwriteCommits": true,
+      "menuLoadCancelAndConfirm": true,
+      "quickSaveCancelAndConfirm": true,
+      "quickLoadCancelAndConfirm": true,
+      "temporaryBindings": "F8/F9, restored after test",
+      "scope": "Final APK on Nova; UI slots 3 and 9 originally empty"
+    },
+    "cleanup": {
+      "removedNewTestFiles": [
+        "起源心金4.0正式版_2.dss",
+        "起源心金4.0正式版_8.dss"
+      ],
+      "baselineFilesNotRemoved": true
+    },
+    "simulatedDisplay": {
+      "filter": "FXAA",
+      "vulkanPrimaryAndExternal": true,
+      "sizes": [
+        "800x600",
+        "640x480"
+      ],
+      "removedAndReconnected": true,
+      "rotationRebuildObserved": true,
+      "visualInspection": "4:3 map image on virtual display; main screen and PIP restored after disconnect",
+      "physicalDualPanel": false,
+      "vulkanEvents": [
+        "10-20 22:47:26.266   400   452 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1",
+        "10-20 22:47:26.268   400   452 I SeedlessVulkan: Vulkan display backend active",
+        "10-20 22:47:28.683   400   474 I SeedlessVulkan: presentMode=1 images=5 transform=1 logical=800x600 extent=600x800 maxInFlight=1",
+        "10-20 22:47:28.710   400   474 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=800x600 extent=800x600 maxInFlight=1",
+        "10-20 22:47:49.307   400   474 I SeedlessVulkan: presentMode=1 images=5 transform=1 logical=640x480 extent=480x640 maxInFlight=1",
+        "10-20 22:47:49.338   400   474 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=640x480 extent=640x480 maxInFlight=1",
+        "10-20 22:48:29.205   400   474 I SeedlessVulkan: presentMode=1 images=5 transform=1 logical=800x600 extent=600x800 maxInFlight=1",
+        "10-20 22:48:29.238   400   474 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=800x600 extent=800x600 maxInFlight=1"
+      ],
+      "recentStats": [
+        "10-20 22:48:52.592   400   452 I SeedlessVulkanStats: primary serial=5106 cpuP95us=5694 cpuP99us=7044 ageP95us=6062 ageP99us=7171 skipped=0 acquireMiss=0",
+        "10-20 22:48:54.189   400   474 I SeedlessVulkanStats: external serial=5202 cpuP95us=6062 cpuP99us=6718 ageP95us=6734 ageP99us=7148 skipped=0 acquireMiss=0",
+        "10-20 22:48:57.586   400   452 I SeedlessVulkanStats: primary serial=5406 cpuP95us=5439 cpuP99us=5726 ageP95us=5593 ageP99us=5863 skipped=0 acquireMiss=0",
+        "10-20 22:48:59.190   400   474 I SeedlessVulkanStats: external serial=5502 cpuP95us=6076 cpuP99us=6399 ageP95us=6538 ageP99us=6947 skipped=0 acquireMiss=0",
+        "10-20 22:49:02.586   400   452 I SeedlessVulkanStats: primary serial=5706 cpuP95us=6142 cpuP99us=6626 ageP95us=6326 ageP99us=6778 skipped=0 acquireMiss=0",
+        "10-20 22:49:04.192   400   474 I SeedlessVulkanStats: external serial=5802 cpuP95us=7100 cpuP99us=7572 ageP95us=7626 ageP99us=8057 skipped=0 acquireMiss=0",
+        "10-20 22:49:07.587   400   452 I SeedlessVulkanStats: primary serial=6006 cpuP95us=7082 cpuP99us=7636 ageP95us=7344 ageP99us=7923 skipped=0 acquireMiss=0",
+        "10-20 22:49:09.192   400   474 I SeedlessVulkanStats: external serial=6102 cpuP95us=6552 cpuP99us=7177 ageP95us=7367 ageP99us=7808 skipped=0 acquireMiss=0"
+      ],
+      "latencySnapshots": [
+        "10-20 22:48:28.051   400   400 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 13312, 13312, 3630, 17408, 17792, 61, 1024, 3456, 3626, 256, 384]; rewind=60; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 0, 1, 0, 16057]",
+        "10-20 22:48:38.086   400   400 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 13312, 13312, 4233, 17408, 17792, 71, 1024, 3456, 4230, 256, 384]; rewind=60; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 0, 1, 0, 18722]",
+        "10-20 22:48:48.120   400   400 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 13312, 13312, 4835, 17408, 17792, 81, 896, 3456, 4832, 256, 384]; rewind=60; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 0, 1, 0, 21388]",
+        "10-20 22:48:58.154   400   400 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 13312, 13312, 5437, 17408, 17792, 91, 896, 3456, 5434, 256, 384]; rewind=60; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 0, 1, 0, 24053]",
+        "10-20 22:49:08.191   400   400 I SeedlessLatency: input/frame/rewind/copy [n,p95us,p99us]=[1, 13312, 13312, 6039, 17408, 17792, 101, 896, 1280, 6036, 256, 384]; rewind=60; audio [Hz,buffer,starved,overrun,xrun,callbacks]=[48000, 1536, 0, 1, 0, 26720]"
+      ]
+    },
+    "states": {
+      "newSave": true,
+      "overwrite": true,
+      "loadActualCompletion": true,
+      "testUiSlot": 3
+    },
+    "pauseResumeCycles": 5,
+    "rewindKeyCombinationSent": true,
+    "preservation": {
+      "saves": [
+        {
+          "name": "口袋妖怪梦の黑2 7月16修复版.dsv",
+          "unchanged": true
+        },
+        {
+          "name": "口袋妖怪梦の黑2 7月16修复版_0.dss",
+          "unchanged": true
+        },
+        {
+          "name": "爱相随+.dsv",
+          "unchanged": true
+        },
+        {
+          "name": "爱相随+_0.dss",
+          "unchanged": true
+        },
+        {
+          "name": "节奏天国黄金版.dsv",
+          "unchanged": true
+        },
+        {
+          "name": "起源心金4.0正式版.dsv",
+          "unchanged": true
+        },
+        {
+          "name": "起源心金4.0正式版_0.dss",
+          "unchanged": true
+        },
+        {
+          "name": "起源心金4.0正式版_1.dss",
+          "unchanged": true
+        }
+      ],
+      "preferencesIdentical": true,
+      "overlayRestored": true
+    }
+  },
+  "limits": [
+    "No physical input-to-photon or acoustic latency measurement",
+    "No physical dual-panel, mixed-refresh or Bluetooth test",
+    "No live logged-in RetroAchievements unlock test",
+    "Short stationary-game samples do not prove all games or thermal endurance",
+    "Vulkan presentation of software-rendered DS frames; no hardware DS 3D port"
+  ]
+}

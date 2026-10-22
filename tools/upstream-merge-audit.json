@@ -1,0 +1,866 @@
+[
+  {
+    "path": ".gitmodules",
+    "status": "apply upstream",
+    "finalSha256": "206c51b0623f9314248c5c27fd67986fd95c57e006ef8708f6e194da40e5aeac",
+    "upstreamSha256": "206c51b0623f9314248c5c27fd67986fd95c57e006ef8708f6e194da40e5aeac"
+  },
+  {
+    "path": ".idea/vcs.xml",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": null,
+    "upstreamSha256": "f62f4d36f48dd1a11d48a4670c0c389f631f4f503be0be9c32ad2bdf9b4b0040"
+  },
+  {
+    "path": "LICENSE",
+    "status": "apply upstream",
+    "finalSha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809",
+    "upstreamSha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+  },
+  {
+    "path": "LICENSING.md",
+    "status": "apply upstream",
+    "finalSha256": "d29f743b0d1d491e6a30970fd0f8605900d88f0e8d267823b906621a685665b8",
+    "upstreamSha256": "d29f743b0d1d491e6a30970fd0f8605900d88f0e8d267823b906621a685665b8"
+  },
+  {
+    "path": "README.md",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "87d01d8ea7dce890f738dddcce1c49e4de36af54bdf4466333079b39b4c748dc",
+    "upstreamSha256": "2532d833e7aad6a3b3d2a8e227db4b93e32d24bb318492d2f9e6e6c39448aa45"
+  },
+  {
+    "path": "app/build.gradle.kts",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "f4d7b7fe3c867d4a3b8e5b81e753f1c8df66e33b1f5702fc7a4166332067d083",
+    "upstreamSha256": "cf3b3bac6aabdf94dd89d294d9925beac18e9cc9aee85e158ff81f6ce0f2a380"
+  },
+  {
+    "path": "app/src/main/AndroidManifest.xml",
+    "status": "apply upstream",
+    "finalSha256": "9ddd0572951ba45f60f35f3dd483050ed1e2cb7516b33aa67428af645dbbe3e8",
+    "upstreamSha256": "9ddd0572951ba45f60f35f3dd483050ed1e2cb7516b33aa67428af645dbbe3e8"
+  },
+  {
+    "path": "app/src/main/assets/fonts/orbitron.ttf",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/game_database.xml",
+    "status": "apply upstream",
+    "finalSha256": "eb36227459ce65b47c2eff35378fe882652852160c6ec27f7c86e869f6c85efd",
+    "upstreamSha256": "eb36227459ce65b47c2eff35378fe882652852160c6ec27f7c86e869f6c85efd"
+  },
+  {
+    "path": "app/src/main/assets/keymaps/Shield.dkm",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/licenses/00-SeedlessDS-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "4def52f942bfd843bc8cf4bcb2fd735233b5e746acd9439d396a15b944b0118b",
+    "upstreamSha256": "4def52f942bfd843bc8cf4bcb2fd735233b5e746acd9439d396a15b944b0118b"
+  },
+  {
+    "path": "app/src/main/assets/licenses/AGPL-3.0.txt",
+    "status": "apply upstream",
+    "finalSha256": "13fb48a6c31a72e0e2b69650b1cebe8954f7b73449848492dcfd22b25bd91afa",
+    "upstreamSha256": "13fb48a6c31a72e0e2b69650b1cebe8954f7b73449848492dcfd22b25bd91afa"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Android-NDK-runtime-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "cdd33b0bfb50a32558251fc521a2cf00f355f21cf46b0926973d2288aa5c5318",
+    "upstreamSha256": "cdd33b0bfb50a32558251fc521a2cf00f355f21cf46b0926973d2288aa5c5318"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Android-NDK-toolchain-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "0e578bb21eb819f03db85a2f8c59eb779155eadec37d6606fc06dd7a8ffd9dfb",
+    "upstreamSha256": "0e578bb21eb819f03db85a2f8c59eb779155eadec37d6606fc06dd7a8ffd9dfb"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Android-dependencies.txt",
+    "status": "apply upstream",
+    "finalSha256": "758a2ccd2ba183b5cf2d0293267bd4e79a40a5dac6e364ff73ae43e943559fff",
+    "upstreamSha256": "7ea10e99f221cf2fa70e8b1c213fee18d14a0083b050a70d7139e061c9cda06d"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Apache-2.0.txt",
+    "status": "apply upstream",
+    "finalSha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5",
+    "upstreamSha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+  },
+  {
+    "path": "app/src/main/assets/licenses/BIOS-BSD-2-Clause.txt",
+    "status": "apply upstream",
+    "finalSha256": "439a66570d9eadcb15d19b618b275bb842d8174634da1a8718f41d514a34c94d",
+    "upstreamSha256": "439a66570d9eadcb15d19b618b275bb842d8174634da1a8718f41d514a34c94d"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Boxart-source.txt",
+    "status": "apply upstream",
+    "finalSha256": "904f4d72ab17171ff088db85e30fbbc967e4a14f9a56989226db062c4850db55",
+    "upstreamSha256": "904f4d72ab17171ff088db85e30fbbc967e4a14f9a56989226db062c4850db55"
+  },
+  {
+    "path": "app/src/main/assets/licenses/DeadSkullzJr-cheats.txt",
+    "status": "apply upstream",
+    "finalSha256": "773870ad9213772d708ef26eb405003aae1826f2a1932f34f5fb284e202bd54e",
+    "upstreamSha256": "773870ad9213772d708ef26eb405003aae1826f2a1932f34f5fb284e202bd54e"
+  },
+  {
+    "path": "app/src/main/assets/licenses/FXAA-BSD-3-Clause.txt",
+    "status": "apply upstream",
+    "finalSha256": "1eeca869bebf63e2b8ae449648512234ebe0a8b03c31882ade51a36082b491a0",
+    "upstreamSha256": "1eeca869bebf63e2b8ae449648512234ebe0a8b03c31882ade51a36082b491a0"
+  },
+  {
+    "path": "app/src/main/assets/licenses/GPL-2.0.txt",
+    "status": "apply upstream",
+    "finalSha256": "498d32907f132c2cd7d3ae269f304aed87156293f63e724b83d9f62ed787d55a",
+    "upstreamSha256": "498d32907f132c2cd7d3ae269f304aed87156293f63e724b83d9f62ed787d55a"
+  },
+  {
+    "path": "app/src/main/assets/licenses/GPL-3.0.txt",
+    "status": "apply upstream",
+    "finalSha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809",
+    "upstreamSha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+  },
+  {
+    "path": "app/src/main/assets/licenses/GPL-shader-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "6abb45e6d259a50a80030161d2abfdd2a45653958b21050f128dcd57b4438201",
+    "upstreamSha256": "6abb45e6d259a50a80030161d2abfdd2a45653958b21050f128dcd57b4438201"
+  },
+  {
+    "path": "app/src/main/assets/licenses/HQ2X-GPL.txt",
+    "status": "apply upstream",
+    "finalSha256": "315566dd87946998f3ced32d163653a01102da43c87343acf3a59ac3ade6ed28",
+    "upstreamSha256": "315566dd87946998f3ced32d163653a01102da43c87343acf3a59ac3ade6ed28"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Kenney-CC0.txt",
+    "status": "apply upstream",
+    "finalSha256": "8d1ac34a24218cd475c53731a3d4a726598d75a77702bd7fcf5a44d2c163b118",
+    "upstreamSha256": "8d1ac34a24218cd475c53731a3d4a726598d75a77702bd7fcf5a44d2c163b118"
+  },
+  {
+    "path": "app/src/main/assets/licenses/LGPL-3.0.txt",
+    "status": "apply upstream",
+    "finalSha256": "ea7d049c7705dc13afc202dd18e1827f3484f8212fd3fa7b82fc4a0c363432c9",
+    "upstreamSha256": "ea7d049c7705dc13afc202dd18e1827f3484f8212fd3fa7b82fc4a0c363432c9"
+  },
+  {
+    "path": "app/src/main/assets/licenses/LZMA-public-domain.txt",
+    "status": "apply upstream",
+    "finalSha256": "843e6a44c9ea97c225a60777c13d6a30f19a8558d70c84ab2a2c8c2edaa138ec",
+    "upstreamSha256": "843e6a44c9ea97c225a60777c13d6a30f19a8558d70c84ab2a2c8c2edaa138ec"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Lua-MIT.txt",
+    "status": "apply upstream",
+    "finalSha256": "cf5c45d40a2cfc980f883c950b580f6880ef4c52548adb999bb461339ec86fe0",
+    "upstreamSha256": "cf5c45d40a2cfc980f883c950b580f6880ef4c52548adb999bb461339ec86fe0"
+  },
+  {
+    "path": "app/src/main/assets/licenses/MPL-2.0.txt",
+    "status": "apply upstream",
+    "finalSha256": "cde215e5b42363eb28ca2462c4558ff4807b38f383c537624c31e44657ac58f4",
+    "upstreamSha256": "cde215e5b42363eb28ca2462c4558ff4807b38f383c537624c31e44657ac58f4"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Manrope-OFL.txt",
+    "status": "apply upstream",
+    "finalSha256": "4b8929f05a122b7abb9059501dc7dc4df86f8c97d5a1769d60d82cf2d2795dde",
+    "upstreamSha256": "4b8929f05a122b7abb9059501dc7dc4df86f8c97d5a1769d60d82cf2d2795dde"
+  },
+  {
+    "path": "app/src/main/assets/licenses/OkHttp-public-suffix-NOTICE.txt",
+    "status": "apply upstream",
+    "finalSha256": "ebc35dadeaaec1d0571dad7cb45c9e797ccd8b7d181bffd658334583c6f10f7b",
+    "upstreamSha256": "ebc35dadeaaec1d0571dad7cb45c9e797ccd8b7d181bffd658334583c6f10f7b"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Orbitron-OFL.txt",
+    "status": "apply upstream",
+    "finalSha256": "cfa59a2c602fccaae7509965a6f9e515e4f89c66686eb3294336b88e4f0b007b",
+    "upstreamSha256": "cfa59a2c602fccaae7509965a6f9e515e4f89c66686eb3294336b88e4f0b007b"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Quilez-public-domain.txt",
+    "status": "apply upstream",
+    "finalSha256": "66ad20876f6ec526e104cd8503799083e7dece5b334ff024d3adefc58b0e1e6e",
+    "upstreamSha256": "66ad20876f6ec526e104cd8503799083e7dece5b334ff024d3adefc58b0e1e6e"
+  },
+  {
+    "path": "app/src/main/assets/licenses/SMAA.txt",
+    "status": "apply upstream",
+    "finalSha256": "2b848b67ba50ac40b53e11cf1ccdaee2a190ca83b4652cba695a5f1ce81f52ae",
+    "upstreamSha256": "2b848b67ba50ac40b53e11cf1ccdaee2a190ca83b4652cba695a5f1ce81f52ae"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Scale2X-GPL.txt",
+    "status": "apply upstream",
+    "finalSha256": "230b3551b274c455e8187cb051b6d8f3f61e77cb35e0b520aac97d03d6e0a65c",
+    "upstreamSha256": "230b3551b274c455e8187cb051b6d8f3f61e77cb35e0b520aac97d03d6e0a65c"
+  },
+  {
+    "path": "app/src/main/assets/licenses/Scanline-public-domain.txt",
+    "status": "apply upstream",
+    "finalSha256": "8efd49156a82dd904813356668a61210240b3c3ceb6f1d1fb14f8ffad2d787ca",
+    "upstreamSha256": "8efd49156a82dd904813356668a61210240b3c3ceb6f1d1fb14f8ffad2d787ca"
+  },
+  {
+    "path": "app/src/main/assets/licenses/SpaceGrotesk-OFL.txt",
+    "status": "apply upstream",
+    "finalSha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72",
+    "upstreamSha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72"
+  },
+  {
+    "path": "app/src/main/assets/licenses/libarchive-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "2e944adef00d60fc1deb33a875919a3422faa7beb1141b32eef5470fe8969108",
+    "upstreamSha256": "2e944adef00d60fc1deb33a875919a3422faa7beb1141b32eef5470fe8969108"
+  },
+  {
+    "path": "app/src/main/assets/licenses/melonDS-game-database.txt",
+    "status": "apply upstream",
+    "finalSha256": "832585eb62975a87b9469d622ea1228141af29661a70eb9e50f73b9a0e5e6df9",
+    "upstreamSha256": "832585eb62975a87b9469d622ea1228141af29661a70eb9e50f73b9a0e5e6df9"
+  },
+  {
+    "path": "app/src/main/assets/licenses/rcheevos-MIT.txt",
+    "status": "apply upstream",
+    "finalSha256": "8bad4beaf79d4374be2e5629917e3e16c53774ebb5bf5953d32e077ee007cef6",
+    "upstreamSha256": "8bad4beaf79d4374be2e5629917e3e16c53774ebb5bf5953d32e077ee007cef6"
+  },
+  {
+    "path": "app/src/main/assets/licenses/rcheevos-extra-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "8503132d8a410e9cad7f2ca26ec49366be87706f61b187c72084b9f872292ff2",
+    "upstreamSha256": "8503132d8a410e9cad7f2ca26ec49366be87706f61b187c72084b9f872292ff2"
+  },
+  {
+    "path": "app/src/main/assets/licenses/unarr-authors.txt",
+    "status": "apply upstream",
+    "finalSha256": "812580bdc28bc511e6367f8a2a1d1075220d24ea127662873c10c197da3b6082",
+    "upstreamSha256": "812580bdc28bc511e6367f8a2a1d1075220d24ea127662873c10c197da3b6082"
+  },
+  {
+    "path": "app/src/main/assets/licenses/unarr-notices.txt",
+    "status": "apply upstream",
+    "finalSha256": "52e090b6f9ab14bec93bee6bde4aebbf8fec387545400cccb26630601c58e2eb",
+    "upstreamSha256": "52e090b6f9ab14bec93bee6bde4aebbf8fec387545400cccb26630601c58e2eb"
+  },
+  {
+    "path": "app/src/main/assets/nds_bios.zip",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/shaders/_shader_format_.txt",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/shaders/fxaa.dsd",
+    "status": "apply upstream",
+    "finalSha256": "df495106b106f34ce9fbd9ea044c39de9b5f434300f23d4b34ce68c2f980394c",
+    "upstreamSha256": "df495106b106f34ce9fbd9ea044c39de9b5f434300f23d4b34ce68c2f980394c"
+  },
+  {
+    "path": "app/src/main/assets/shaders/fxaa/Fxaa3_8.h",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/shaders/fxaa/fxaa.dsd",
+    "status": "apply upstream",
+    "finalSha256": "21f12ec3290814548bdb17a54e82d286bb11b6f928e9be920d4015331867cdd4",
+    "upstreamSha256": "21f12ec3290814548bdb17a54e82d286bb11b6f928e9be920d4015331867cdd4"
+  },
+  {
+    "path": "app/src/main/assets/shaders/quilez.dsd",
+    "status": "apply upstream",
+    "finalSha256": "6bb92be5f552df864021ac8b2b2fe132b1a25d8ea4557545b5b223862ea16f02",
+    "upstreamSha256": "6bb92be5f552df864021ac8b2b2fe132b1a25d8ea4557545b5b223862ea16f02"
+  },
+  {
+    "path": "app/src/main/assets/shaders/smaa/AreaTex.raw",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/shaders/smaa/SearchTex.raw",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/usrcheat.dat",
+    "status": "apply upstream",
+    "finalSha256": "28ad3272d3578ba2f493e78990a3d6defe9dfebe37d9f53501679be9498eafae",
+    "upstreamSha256": "28ad3272d3578ba2f493e78990a3d6defe9dfebe37d9f53501679be9498eafae"
+  },
+  {
+    "path": "app/src/main/assets/virtual_controller/Neon.zip",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/virtual_controller/Simple-II.zip",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/assets/virtual_controller/Simple.zip",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "app/src/main/cpp/CMakeLists.txt",
+    "status": "merge",
+    "finalSha256": "c430738fc7969f91f02b7c5c30365b721033f11fdd8438b1d41795fd6a1fd4fa",
+    "upstreamSha256": "16dd143f9f5d60e3c0564795ad2485f4ecd687682eee56bcc3505a90da655367"
+  },
+  {
+    "path": "app/src/main/cpp/ra_client.c",
+    "status": "apply upstream",
+    "finalSha256": "c12efc5fc7e37fff8069adbaaa0d317ca93d8384684ad3f8574541f56a51708b",
+    "upstreamSha256": "c12efc5fc7e37fff8069adbaaa0d317ca93d8384684ad3f8574541f56a51708b"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/LauncherIcon.kt",
+    "status": "apply upstream",
+    "finalSha256": "9ba1aad0c80a9c50abd0cea6e73099eb11890f6bb0f38b7e153d9ce2cb072bf0",
+    "upstreamSha256": "9ba1aad0c80a9c50abd0cea6e73099eb11890f6bb0f38b7e153d9ce2cb072bf0"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/MainActivity.kt",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "bebb5b648edd7a61ee84347607125833179ceddd093d3cd7a829bcd6db228fa2",
+    "upstreamSha256": "0c238960caa9259dc3b372383a48d75e55273057ea990c9a4e79456144758c7b"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/control/RuntimeControl.kt",
+    "status": "apply upstream",
+    "finalSha256": "ee3e625733cefa3d2d43f4b44bf3752cd85cfced7cec24926503c9ee467109ae",
+    "upstreamSha256": "ee3e625733cefa3d2d43f4b44bf3752cd85cfced7cec24926503c9ee467109ae"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/DsGlView.kt",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "aac6094ddf4739f9287f78f2350cabf517c8d6f70284402036f26045e7fd35f1",
+    "upstreamSha256": "c7a1dea2026756856583a8ea816024dac9c1d01cca4673de784db42cb6eab583"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/EmuAssets.kt",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "2ea5625cfbdbe6a71a31878c2bf26c47c7bb6d55d911053ff23d320109f9c1fb",
+    "upstreamSha256": "28000419e69730b9505a10ef5173cfab1b8d238f9067159c9eb051cfe6a812f7"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/EmulatorActivity.kt",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "1e2cf61c1d9dfa4f3cff08d021626fa8643e99194678dea3c36050351dc2c945",
+    "upstreamSha256": "74f5f3381931327ed79903749baacff8bfcfdde05ddb36be33bbe491fbd49ab5"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/EmulatorScreen.kt",
+    "status": "merge",
+    "finalSha256": "8a6ffd81a319f97d044873e8ac58f1b0f9d98e68c2bd25c0ec986c26d8c21db5",
+    "upstreamSha256": "7904ec33217cc2a505f8ca2a4753a3f2c1516ee7cfc8197db38d3cf8b0faa1cd"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/ExternalDisplay.kt",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "481c90efe51dc13191036940c49c1cc1bd2b08307d1a69dd929200ddff8eed88",
+    "upstreamSha256": "208350a0734a94186d8adfceb4162831cd013a6a184c0dce8d247f4cbb8e40ed"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/ExternalInfo.kt",
+    "status": "apply upstream",
+    "finalSha256": "0a8ef3c0e59b6a1b751a950ecf0e7bd9c77b65a5373df8dd7ecf45bb37ba5080",
+    "upstreamSha256": "0a8ef3c0e59b6a1b751a950ecf0e7bd9c77b65a5373df8dd7ecf45bb37ba5080"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/ExternalThread.kt",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "14103c7e7199b06e5668d8445265277a0595c440101d3481c407f7422c568e29",
+    "upstreamSha256": "0079ced14a34c7596099154aa635532136ea2b585eb72df05f8d1bbafc7df42e"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/FrameControls.kt",
+    "status": "apply upstream",
+    "finalSha256": "db077ef825a5ca34fe5af9c04ee14fef9b215845266a1eca854e4413cfc6fe61",
+    "upstreamSha256": "db077ef825a5ca34fe5af9c04ee14fef9b215845266a1eca854e4413cfc6fe61"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/LicensesScreen.kt",
+    "status": "apply upstream",
+    "finalSha256": "5cd05b4193631d8ce52c3bf9f93d1c962a234a9eb416eb79080d253b7778c334",
+    "upstreamSha256": "295d82dbfea7266d5d52b0fe91dee67ad9bced3d40ac063b5dd864c2408d78a7"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/SeedlessBrand.kt",
+    "status": "apply upstream",
+    "finalSha256": "25f3eea67f6d89f6e547b0f31d1ceb2508b73671c50a86d5a88ec8a7ec3bcc2d",
+    "upstreamSha256": "25f3eea67f6d89f6e547b0f31d1ceb2508b73671c50a86d5a88ec8a7ec3bcc2d"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/SeedlessLaunchIntro.kt",
+    "status": "apply upstream",
+    "finalSha256": "91bef1521477b6c348d2189cdcb531f8c76c597d1f1296fda139e80b1a25d9a5",
+    "upstreamSha256": "91bef1521477b6c348d2189cdcb531f8c76c597d1f1296fda139e80b1a25d9a5"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/emu/SettingsScreen.kt",
+    "status": "merge",
+    "finalSha256": "db8348a70abfc0acef33b5ddd3b70a4fc3fe1dec65db63b875fe8d777e7eaff2",
+    "upstreamSha256": "21ede987cfad9b4f0997431beb16acf72387d8b1e57250d29a1908c2b8bc1193"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/ra/RaHostOverride.kt",
+    "status": "apply upstream",
+    "finalSha256": "410f4f9a6cb30aca1c700451b2c5fb97e24748fb20b9f7e927481e365f868211",
+    "upstreamSha256": "410f4f9a6cb30aca1c700451b2c5fb97e24748fb20b9f7e927481e365f868211"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/ra/RaHostOverrideReceiver.kt",
+    "status": "apply upstream",
+    "finalSha256": "7c23904caa7ab52ef82cd11c6c64d83ec1e428895156466955bfefe9f9f4f550",
+    "upstreamSha256": "7c23904caa7ab52ef82cd11c6c64d83ec1e428895156466955bfefe9f9f4f550"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/ra/RaNative.kt",
+    "status": "apply upstream",
+    "finalSha256": "dc26ffa52e2799d05abd58ea40c1db2669d6c47351f61f8fc6c81af1e775ae00",
+    "upstreamSha256": "dc26ffa52e2799d05abd58ea40c1db2669d6c47351f61f8fc6c81af1e775ae00"
+  },
+  {
+    "path": "app/src/main/java/com/seedlessds/app/ra/RetroAchievements.kt",
+    "status": "merge",
+    "finalSha256": "ddfd05582f7c80e3d5e618ff6a72f118527d0ade260dc2686016ab830f8b3ba4",
+    "upstreamSha256": "7b3ae2a72c261f8d060d7ebac2193093e05032b06eee0593d2114b9807e6831b"
+  },
+  {
+    "path": "app/src/main/res/drawable-nodpi/seedless_icon_alt.png",
+    "status": "apply upstream",
+    "finalSha256": "0f6d1915b31a183103fd67a92b8bf9ff0bde0ef393b0ca44359176073225f203",
+    "upstreamSha256": "0f6d1915b31a183103fd67a92b8bf9ff0bde0ef393b0ca44359176073225f203"
+  },
+  {
+    "path": "app/src/main/res/drawable-nodpi/seedless_icon_default.png",
+    "status": "apply upstream",
+    "finalSha256": "abfbe7b20348f0ddb24b284c43a68b90ff08c020c09a54bb4edcc6f65b144004",
+    "upstreamSha256": "abfbe7b20348f0ddb24b284c43a68b90ff08c020c09a54bb4edcc6f65b144004"
+  },
+  {
+    "path": "app/src/main/res/drawable-nodpi/seedless_intro_pieces.png",
+    "status": "apply upstream",
+    "finalSha256": "d996c79042845ddefaae7f990ab8dd172c302fb37edf63ed4429df64fb1710f1",
+    "upstreamSha256": "d996c79042845ddefaae7f990ab8dd172c302fb37edf63ed4429df64fb1710f1"
+  },
+  {
+    "path": "app/src/main/res/drawable-nodpi/seedless_library.png",
+    "status": "apply upstream",
+    "finalSha256": "97d4d80bf5829441f81960e1d26fa0f9c7f37e3a15c253f591d02450a9e8741c",
+    "upstreamSha256": "97d4d80bf5829441f81960e1d26fa0f9c7f37e3a15c253f591d02450a9e8741c"
+  },
+  {
+    "path": "app/src/main/res/drawable/seedless_icon_alt_inset.xml",
+    "status": "apply upstream",
+    "finalSha256": "2cb794c951e1266443a8c59b4b6e89cce4b556661f992e20911c039003352951",
+    "upstreamSha256": "2cb794c951e1266443a8c59b4b6e89cce4b556661f992e20911c039003352951"
+  },
+  {
+    "path": "app/src/main/res/drawable/seedless_icon_default_inset.xml",
+    "status": "apply upstream",
+    "finalSha256": "7c0079c1735811fc165690d000773fadfb4de86492fd35dce680ef9e495cfe81",
+    "upstreamSha256": "7c0079c1735811fc165690d000773fadfb4de86492fd35dce680ef9e495cfe81"
+  },
+  {
+    "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+    "status": "apply upstream",
+    "finalSha256": "7069fc11fa2be7be81568409356916496a6d168bbd28178da01b56a76549e84c",
+    "upstreamSha256": "7069fc11fa2be7be81568409356916496a6d168bbd28178da01b56a76549e84c"
+  },
+  {
+    "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_alt.xml",
+    "status": "apply upstream",
+    "finalSha256": "0b00cccfee5389067b00006d5a86f4cf6dbe7a30751e4f2e19abcfdbbc0aac43",
+    "upstreamSha256": "0b00cccfee5389067b00006d5a86f4cf6dbe7a30751e4f2e19abcfdbbc0aac43"
+  },
+  {
+    "path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+    "status": "apply upstream",
+    "finalSha256": "7069fc11fa2be7be81568409356916496a6d168bbd28178da01b56a76549e84c",
+    "upstreamSha256": "7069fc11fa2be7be81568409356916496a6d168bbd28178da01b56a76549e84c"
+  },
+  {
+    "path": "app/src/main/res/mipmap/ic_launcher.xml",
+    "status": "apply upstream",
+    "finalSha256": "b208722e316f7147fd561ca4004b1428241a5e6b547bbf1c637f0c69d498df94",
+    "upstreamSha256": "b208722e316f7147fd561ca4004b1428241a5e6b547bbf1c637f0c69d498df94"
+  },
+  {
+    "path": "app/src/main/res/mipmap/ic_launcher_alt.xml",
+    "status": "apply upstream",
+    "finalSha256": "88caa4d2be416cd750b86ab8b660e817daee8d40b6593bfd28fc0bfa61e55b24",
+    "upstreamSha256": "88caa4d2be416cd750b86ab8b660e817daee8d40b6593bfd28fc0bfa61e55b24"
+  },
+  {
+    "path": "app/src/main/res/mipmap/ic_launcher_round.xml",
+    "status": "apply upstream",
+    "finalSha256": "b208722e316f7147fd561ca4004b1428241a5e6b547bbf1c637f0c69d498df94",
+    "upstreamSha256": "b208722e316f7147fd561ca4004b1428241a5e6b547bbf1c637f0c69d498df94"
+  },
+  {
+    "path": "app/src/main/res/values-night/brand_colors.xml",
+    "status": "apply upstream",
+    "finalSha256": "3f7b6833ddb6d702a941b3d67e79d23013012c9c9b6d0b5c9da9e451fbdb3479",
+    "upstreamSha256": "3f7b6833ddb6d702a941b3d67e79d23013012c9c9b6d0b5c9da9e451fbdb3479"
+  },
+  {
+    "path": "app/src/main/res/values-v31/brand_theme.xml",
+    "status": "apply upstream",
+    "finalSha256": "0c26d1956a1bcc24141eb4035b35657393f78e73bef385a647c59925222d21e5",
+    "upstreamSha256": "0c26d1956a1bcc24141eb4035b35657393f78e73bef385a647c59925222d21e5"
+  },
+  {
+    "path": "app/src/main/res/values-zh/strings.xml",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "40f60288b348eb0d8e80c5314a4d544aa10122935ac41087f872f1b8d045f1e6",
+    "upstreamSha256": "3fd092934d81e951fbc665963d29e5432d73a7162757204a2349b58f6a294d94"
+  },
+  {
+    "path": "app/src/main/res/values/brand_colors.xml",
+    "status": "apply upstream",
+    "finalSha256": "5aa0eda77316d247876b9be0daa4119795880ffba5c33544d1a7e5992d975560",
+    "upstreamSha256": "5aa0eda77316d247876b9be0daa4119795880ffba5c33544d1a7e5992d975560"
+  },
+  {
+    "path": "app/src/main/res/values/brand_theme.xml",
+    "status": "apply upstream",
+    "finalSha256": "922d184c45252ce4175b2ade2673d7ffbca870deccd0a80b543e462af5abb156",
+    "upstreamSha256": "922d184c45252ce4175b2ade2673d7ffbca870deccd0a80b543e462af5abb156"
+  },
+  {
+    "path": "app/src/main/res/values/strings.xml",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "b7bac9ddd5f5e5ea6514399628f9d2720061393602d73963d55e27544459919f",
+    "upstreamSha256": "54c43572e9591c461babe6bd9ee5ffb084a12caa2a8a3de1032a4fa364827875"
+  },
+  {
+    "path": "app/src/main/res/xml/network_security_config.xml",
+    "status": "apply upstream",
+    "finalSha256": "fa65fcd20dc5777c7ab44993ff2ddf5e0b09094186541674aa5331ecca8dba26",
+    "upstreamSha256": "fa65fcd20dc5777c7ab44993ff2ddf5e0b09094186541674aa5331ecca8dba26"
+  },
+  {
+    "path": "build.gradle.kts",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": "267dec470e498f872ee0d5f9ae1c125b208d760b2f819b257dd5d51483319aa2",
+    "upstreamSha256": "541599650f6554c5324910a89567520b00b805f30e3c78ce88b268ba41c6f623"
+  },
+  {
+    "path": "gradle/gradle-daemon-jvm.properties",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": null,
+    "upstreamSha256": "37eb28dd9e35941c49b5f06274482d9f2c62faef7d144d94a44231d5a49ecf28"
+  },
+  {
+    "path": "gradle/wrapper/gradle-wrapper.jar",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046",
+    "upstreamSha256": "7a9ce74cff467ca1bf60a4fcd9f05185acceda4d0f382434d393e17864262c5d"
+  },
+  {
+    "path": "gradle/wrapper/gradle-wrapper.properties",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": "d7010368a34c1c06df2bae1a85d8b24c39b2499c74ac892fc7e66d005dbd7b8a",
+    "upstreamSha256": "90854e4c5a475137c647965c8a3f6d056823e7a073b2c58e06385d5d9c04f0ab"
+  },
+  {
+    "path": "gradlew",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3",
+    "upstreamSha256": "0367e8c7d789376a26af723e17b3f05cb09f07361da0ac0aef75d4693c42b001"
+  },
+  {
+    "path": "gradlew.bat",
+    "status": "retain compatible toolchain / ignore IDE metadata",
+    "finalSha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
+    "upstreamSha256": "d539676c48b596afda64c963ec8f7ee56c7b3fe7e3b81d1dbe2d1a1e3dd9e9f8"
+  },
+  {
+    "path": "core/LICENSE",
+    "status": "apply upstream",
+    "finalSha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809",
+    "upstreamSha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+  },
+  {
+    "path": "core/LICENSING.md",
+    "status": "apply upstream",
+    "finalSha256": "d2030e937b822a6da29e277aec81d178ee91a58cfd9ac273f98f81ba8fb6fd24",
+    "upstreamSha256": "d2030e937b822a6da29e277aec81d178ee91a58cfd9ac273f98f81ba8fb6fd24"
+  },
+  {
+    "path": "core/README.md",
+    "status": "apply upstream",
+    "finalSha256": "46dead1e3a928860bf478b0d437c24df3318b62568495dc1590f237a6af86591",
+    "upstreamSha256": "46dead1e3a928860bf478b0d437c24df3318b62568495dc1590f237a6af86591"
+  },
+  {
+    "path": "core/port/x86/CMakeLists.txt",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "core/port/x86/api_stub.c",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "core/port/x86/build.sh",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "core/port/x86/main.c",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "core/port/x86/platform_posix.c",
+    "status": "delete upstream removed",
+    "finalSha256": null,
+    "upstreamSha256": null
+  },
+  {
+    "path": "core/src/core/nds_api.c",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "b675a8509f76379263da017fd868fe677751117076185efc559ab1a8a61e5b46",
+    "upstreamSha256": "07de4c473f5524032e91970ffd63440d751c36cd4be0202ce9af366432c4239b"
+  },
+  {
+    "path": "core/src/core/nds_api_rom.c",
+    "status": "manually integrated; custom behavior retained",
+    "finalSha256": "9251ca8f4cdee1307cafecbb2530b5c06737910da5d77b91ea70d152755f8094",
+    "upstreamSha256": "ef848fc325f8b0ea779e6de98974af258e585ca6fec3ebf30b90b55221b00b9c"
+  },
+  {
+    "path": "core/src/core/sched.c",
+    "status": "apply upstream",
+    "finalSha256": "89ec36fd3ff5a6cf2d2621ab527270f840ffeab3e5fc4b90e903645d1ea073a3",
+    "upstreamSha256": "89ec36fd3ff5a6cf2d2621ab527270f840ffeab3e5fc4b90e903645d1ea073a3"
+  },
+  {
+    "path": "core/src/core/state.c",
+    "status": "merge",
+    "finalSha256": "011b89ce973ef692312abb267f3e8ae2f00406f360593b81178e3da5bd5f2f5d",
+    "upstreamSha256": "4af8037140cbcb4f06ebc656aad6787903ae82ad42dadb6070ce72c6d1af268e"
+  },
+  {
+    "path": "core/src/core_internals.h",
+    "status": "apply upstream",
+    "finalSha256": "3c2839d82da24b4955914da5fafa3914331f3d815ba197de1374029b41f5c39e",
+    "upstreamSha256": "3c2839d82da24b4955914da5fafa3914331f3d815ba197de1374029b41f5c39e"
+  },
+  {
+    "path": "core/src/cpu/jit-arm64/emit_alu_reg.c",
+    "status": "apply upstream",
+    "finalSha256": "a8b6a056d537050747778c36d23b578ce08563af0c553dd9806b4aeb847e4b9c",
+    "upstreamSha256": "a8b6a056d537050747778c36d23b578ce08563af0c553dd9806b4aeb847e4b9c"
+  },
+  {
+    "path": "core/src/cpu/jit-arm64/memhooks.S",
+    "status": "apply upstream",
+    "finalSha256": "39f65f8db829a1064c2bdde0eb93f9ac72f08ca9a7ad090768510c350bda3033",
+    "upstreamSha256": "39f65f8db829a1064c2bdde0eb93f9ac72f08ca9a7ad090768510c350bda3033"
+  },
+  {
+    "path": "core/src/debug/control.c",
+    "status": "merge",
+    "finalSha256": "fe7c37d580af1470f3a8aeab562c6796c16048d1862a90368401a196991c38eb",
+    "upstreamSha256": "56702ad86ab4d61476a195f37850f3dcef670b22fa624a1e9e43d5ba0561c47e"
+  },
+  {
+    "path": "core/src/dma.c",
+    "status": "apply upstream",
+    "finalSha256": "b018f395905b76664b1b5487f7ecd445d45132f63326118c78a91d590c4785e1",
+    "upstreamSha256": "b018f395905b76664b1b5487f7ecd445d45132f63326118c78a91d590c4785e1"
+  },
+  {
+    "path": "core/src/frontend/archive/archive.c",
+    "status": "apply upstream",
+    "finalSha256": "9a730ee0b7014051e4584fc5860ba401537f80c4827387a6993d12e1a1c51848",
+    "upstreamSha256": "9a730ee0b7014051e4584fc5860ba401537f80c4827387a6993d12e1a1c51848"
+  },
+  {
+    "path": "core/src/frontend/cheats/db.c",
+    "status": "apply upstream",
+    "finalSha256": "c52da6d89357b84683a9a421707a915990d6abcb12db2a25ba581ec99ddbd0ec",
+    "upstreamSha256": "c52da6d89357b84683a9a421707a915990d6abcb12db2a25ba581ec99ddbd0ec"
+  },
+  {
+    "path": "core/src/frontend/input.c",
+    "status": "merge",
+    "finalSha256": "bcbd8c6fb19610c68ad05540a88672a17c4e8682ebc66a4a8341dc704579569f",
+    "upstreamSha256": "defd8ab338bb6696805145707bd8884cb492b2bf74efe4b5ceca1fd2e984aada"
+  },
+  {
+    "path": "core/src/gpu/gpu2d/compose.c",
+    "status": "apply upstream",
+    "finalSha256": "5079da29c8d012f0164baa78df9bc2c9eb4d178d98b14ede96a7bc20dcded4cb",
+    "upstreamSha256": "5079da29c8d012f0164baa78df9bc2c9eb4d178d98b14ede96a7bc20dcded4cb"
+  },
+  {
+    "path": "core/src/gpu/gpu2d/line.c",
+    "status": "apply upstream",
+    "finalSha256": "061a131d03544b29f8f41790ca572592ee80b80968568e18eb3e57cede38382a",
+    "upstreamSha256": "061a131d03544b29f8f41790ca572592ee80b80968568e18eb3e57cede38382a"
+  },
+  {
+    "path": "core/src/gpu/gpu2d/obj.c",
+    "status": "apply upstream",
+    "finalSha256": "2f9813bc7c864d347ef2f69bb4acc65bc5886117a63677819b7075d98574f1fe",
+    "upstreamSha256": "2f9813bc7c864d347ef2f69bb4acc65bc5886117a63677819b7075d98574f1fe"
+  },
+  {
+    "path": "core/src/gpu/gpu2d/planes.c",
+    "status": "apply upstream",
+    "finalSha256": "9fa9a215d770ecf3840f68eaa0c973ca0f5d8aa762eb4b878d57a254434b4033",
+    "upstreamSha256": "9fa9a215d770ecf3840f68eaa0c973ca0f5d8aa762eb4b878d57a254434b4033"
+  },
+  {
+    "path": "core/src/gpu/gpu2d/worker.c",
+    "status": "apply upstream",
+    "finalSha256": "9af60984d5e2b02b2e974a8e1cf8df91be8784384b91ba019f0d7e362e01a622",
+    "upstreamSha256": "9af60984d5e2b02b2e974a8e1cf8df91be8784384b91ba019f0d7e362e01a622"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/geometry.c",
+    "status": "apply upstream",
+    "finalSha256": "39b69c87ca051c05950a6f131721d0d147a3b7b9d4cc374c4ac0755ed0442eed",
+    "upstreamSha256": "39b69c87ca051c05950a6f131721d0d147a3b7b9d4cc374c4ac0755ed0442eed"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/gpu3d.c",
+    "status": "apply upstream",
+    "finalSha256": "f8839404eff3ea5374e80cd23eb1751316d2601a647121dc71c71c90dedf8d37",
+    "upstreamSha256": "f8839404eff3ea5374e80cd23eb1751316d2601a647121dc71c71c90dedf8d37"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/gxfifo.c",
+    "status": "apply upstream",
+    "finalSha256": "d3b469731b9e3177773f8463ead0c0b1c65b6525e6e9a83e4998b8e445b9d9e3",
+    "upstreamSha256": "d3b469731b9e3177773f8463ead0c0b1c65b6525e6e9a83e4998b8e445b9d9e3"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/bands.c",
+    "status": "apply upstream",
+    "finalSha256": "5899944d18d090c0a435d7f5f48ba1a60ef9d5fb0969e8b2414ea2641b3b2dea",
+    "upstreamSha256": "5899944d18d090c0a435d7f5f48ba1a60ef9d5fb0969e8b2414ea2641b3b2dea"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/compose_band.c",
+    "status": "apply upstream",
+    "finalSha256": "e8972635e27905d98cca1a26376c473bbf42f11a3dcfdef587eeb6164b749148",
+    "upstreamSha256": "e8972635e27905d98cca1a26376c473bbf42f11a3dcfdef587eeb6164b749148"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/depth_effects.c",
+    "status": "apply upstream",
+    "finalSha256": "d18c7a579a546c6df49bb6386a5d2777c6f09c1f4080f9b13f2c0b3dc0a1bbb6",
+    "upstreamSha256": "d18c7a579a546c6df49bb6386a5d2777c6f09c1f4080f9b13f2c0b3dc0a1bbb6"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/interp.c",
+    "status": "apply upstream",
+    "finalSha256": "92e22e09069ea1edd0374e49c10d1df762b40f8048d0229dfdbc783be2c0964b",
+    "upstreamSha256": "92e22e09069ea1edd0374e49c10d1df762b40f8048d0229dfdbc783be2c0964b"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/neon_helpers.c",
+    "status": "apply upstream",
+    "finalSha256": "33fde8a31c2e5d00139d3de0a503c16a2d9196a8ef49565f4752a3acd2c0ac92",
+    "upstreamSha256": "33fde8a31c2e5d00139d3de0a503c16a2d9196a8ef49565f4752a3acd2c0ac92"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/span.c",
+    "status": "apply upstream",
+    "finalSha256": "032a64a8b6b4f75ee2e310fc5166acdbb9df3e2add4a9fda47fc4c323c1689c6",
+    "upstreamSha256": "032a64a8b6b4f75ee2e310fc5166acdbb9df3e2add4a9fda47fc4c323c1689c6"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/texture.c",
+    "status": "apply upstream",
+    "finalSha256": "dc7486e1b5cb03c10ab7fecf1776c38454f7244e68f2bc0804e56c93ee031369",
+    "upstreamSha256": "dc7486e1b5cb03c10ab7fecf1776c38454f7244e68f2bc0804e56c93ee031369"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/raster/workers.c",
+    "status": "apply upstream",
+    "finalSha256": "9a4df655cb6276808395c730d66ef064b618aef9b80c8bf349d60279ac4beed9",
+    "upstreamSha256": "9a4df655cb6276808395c730d66ef064b618aef9b80c8bf349d60279ac4beed9"
+  },
+  {
+    "path": "core/src/gpu/gpu3d/scale.c",
+    "status": "apply upstream",
+    "finalSha256": "f4356fb9167832f68696e981ba7feb5e9f54779c9b818c3d3e747dfdc329e053",
+    "upstreamSha256": "f4356fb9167832f68696e981ba7feb5e9f54779c9b818c3d3e747dfdc329e053"
+  },
+  {
+    "path": "core/src/hires_runtime.h",
+    "status": "apply upstream",
+    "finalSha256": "06706a86a3be05ee82c3fd907925cb3ea6c1210c8cf914489d9343ddd8d08644",
+    "upstreamSha256": "06706a86a3be05ee82c3fd907925cb3ea6c1210c8cf914489d9343ddd8d08644"
+  },
+  {
+    "path": "core/src/memory/io9.c",
+    "status": "apply upstream",
+    "finalSha256": "f57babedc32f6ff46b2658b3ec25d002a35ca79aee6e8277ec7b710f9a49b7db",
+    "upstreamSha256": "f57babedc32f6ff46b2658b3ec25d002a35ca79aee6e8277ec7b710f9a49b7db"
+  },
+  {
+    "path": "core/src/memory/mirror.c",
+    "status": "apply upstream",
+    "finalSha256": "2dd7e489bfc104ff7fba443a16246d1de60aa1c2486fe2b935057d30ab5e6ee3",
+    "upstreamSha256": "2dd7e489bfc104ff7fba443a16246d1de60aa1c2486fe2b935057d30ab5e6ee3"
+  },
+  {
+    "path": "core/src/spu/mixer.c",
+    "status": "apply upstream",
+    "finalSha256": "0432040c504c175d77e8253a2245dfcd63ab28ce7c14b3ecc2db417be30ad6ed",
+    "upstreamSha256": "0432040c504c175d77e8253a2245dfcd63ab28ce7c14b3ecc2db417be30ad6ed"
+  },
+  {
+    "path": "core/third_party/CMakeLists.txt",
+    "status": "apply upstream",
+    "finalSha256": "a8b9dc2c26fc8b6c495a7d52909016b44d7162fca40315686355e1ce618e2c53",
+    "upstreamSha256": "a8b9dc2c26fc8b6c495a7d52909016b44d7162fca40315686355e1ce618e2c53"
+  },
+  {
+    "path": "core/third_party/LICENSES.md",
+    "status": "apply upstream",
+    "finalSha256": "d95cfa28f6fa7f9aa2195ab87e786e27bd761aa708f7cca9815d21d190f91911",
+    "upstreamSha256": "d95cfa28f6fa7f9aa2195ab87e786e27bd761aa708f7cca9815d21d190f91911"
+  }
+]

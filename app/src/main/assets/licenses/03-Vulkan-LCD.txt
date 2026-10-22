@@ -1,0 +1,19 @@
+Vulkan LCD filter adaptations (SeedlessDS 1.0.10)
+
+LCD1x / LCD1x + NDS Color:
+Original LCD code by Gigaherz, released into the public domain.
+DraStic-format port by jdgleaver, GNU GPL v2 or any later version.
+Sources preserved in assets/shaders/lcd1x.dsd and lcd1x+nds_color.dsd.
+
+zFast LCD / zFast LCD + NDS Color:
+Copyright (C) 2017 Greg Hogan (SoltanGris42).
+DraStic-format port by jdgleaver, GNU GPL v2 or any later version.
+Sources preserved in assets/shaders/zfast_lcd.dsd and zfast_lcd+nds_color.dsd.
+
+Vulkan adaptation retains the original brightness/border defaults and NDS color
+matrix/gamma. Grid coordinates are per-screen native DS coordinates; texture
+reads are clamped to that screen. Negative color matrix outputs are clamped
+before fractional power for defined behavior. The software DS core is unchanged.
+This adaptation is distributed under GNU GPL v2 or any later version.
+The complete corresponding source is provided with the application source.
+See the project's GNU GPL license texts and original shader source notices.

@@ -1,0 +1,122 @@
+{
+  "version": "1.0.4-stickfix",
+  "versionCode": 114,
+  "package": "com.seedlessds.app.debug",
+  "minimumSdk": 21,
+  "targetSdk": 35,
+  "apk": "SeedlessDS-1.0.4-stickfix-debug.apk",
+  "apkBytes": 32075597,
+  "apkSha256": "c528faeb2b3e892eaed2ac73193bbc0df9a3f6f9457465f36a53a94c33a2f699",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "signatureVerified": true,
+  "tests": [
+    {
+      "suite": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.StickInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "testTotal": 48,
+  "newStickTests": 14,
+  "angularSweepSamples": 3600,
+  "lintErrors": 0,
+  "lintWarnings": 18,
+  "shaderAssets": 192,
+  "shaderAssetsMatchSourceAnd103": true,
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "zipOffset": 21184512,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "zipOffset": 21200896,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "zipOffset": 21217280,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "zipOffset": 21266432,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "zipOffset": 22740992,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "unchangedNativeSourceFiles": 413,
+  "reportedDevice": "RP Nova",
+  "reportedControl": "left analog stick",
+  "rpNovaDeviceTested": false,
+  "androidDeviceTested": false,
+  "changedFilesFrom103": [
+    "app/build.gradle.kts",
+    "app/src/main/java/com/seedlessds/app/emu/EmulatorActivity.kt",
+    "app/src/main/java/com/seedlessds/app/emu/EmulatorScreen.kt",
+    "app/src/main/java/com/seedlessds/app/emu/LiveInput.kt",
+    "app/src/test/java/com/seedlessds/app/emu/StickInputTest.kt",
+    "README.md",
+    "STICK_FIXES.md"
+  ]
+}

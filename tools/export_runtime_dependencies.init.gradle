@@ -1,0 +1,18 @@
+import groovy.json.JsonOutput
+allprojects { p ->
+    if (p.path == ':app') {
+        p.afterEvaluate {
+            p.tasks.register('exportRuntimeDependencyInventory') {
+                doLast {
+                    def records = p.configurations.debugRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.collect { a ->
+                        [coordinate: a.moduleVersion.id.toString(), artifact: a.file.name,
+                         sha256: java.security.MessageDigest.getInstance('SHA-256').digest(a.file.bytes).encodeHex().toString()]
+                    }.sort { it.coordinate }
+                    def dest = new File(p.buildDir, 'debug-runtime-dependencies.json')
+                    dest.text = JsonOutput.prettyPrint(JsonOutput.toJson(records))
+                    println "Dependency inventory: ${dest}"
+                }
+            }
+        }
+    }
+}

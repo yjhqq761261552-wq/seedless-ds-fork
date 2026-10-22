@@ -1,0 +1,105 @@
+{
+  "version": "1.0.2-lowlatency",
+  "versionCode": 112,
+  "package": "com.seedlessds.app.debug",
+  "minimumSdk": 21,
+  "targetSdk": 35,
+  "apk": "SeedlessDS-1.0.2-lowlatency-debug.apk",
+  "apkBytes": 32062594,
+  "apkSha256": "3265a2d16e908f1bfb75cd58b560d7f6dc439a64000b2d448651775a8b91b2f6",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "signatureVerified": true,
+  "tests": [
+    {
+      "suite": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "testTotal": 29,
+  "lintErrors": 0,
+  "lintWarnings": 18,
+  "shaderAssets": 192,
+  "shaderAssetsMatchDeliveredSourceAndPreviousValidatedBuild": true,
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "zipOffset": 21184512,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "zipOffset": 21200896,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "zipOffset": 21217280,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "zipOffset": 21266432,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "zipOffset": 22740992,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "nativeHostConcurrencyTest": {
+    "source": "production input_mailbox.c",
+    "hostLockAdapter": "Windows SRW lock; Android build uses pthread mutex",
+    "writers": 3,
+    "readers": 3,
+    "writes": 90000,
+    "reads": 90000,
+    "inconsistentSnapshots": 0,
+    "resetAndFullWidthMasksPassed": true
+  },
+  "androidDeviceTested": false,
+  "dualScreenDeviceTested": false,
+  "measuredLatencyMilliseconds": null
+}

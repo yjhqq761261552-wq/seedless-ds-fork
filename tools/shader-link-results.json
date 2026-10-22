@@ -1,0 +1,1031 @@
+[
+  {
+    "recipe": "2XBR_v3.7C.dfx",
+    "shader": "2XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpxgq7l4ta\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpxgq7l4ta\\shader.frag\n"
+  },
+  {
+    "recipe": "2XBR_v3.7C_1x.dfx",
+    "shader": "2XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp057teyub\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp057teyub\\shader.frag\n"
+  },
+  {
+    "recipe": "2XBR_v3.7C_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp9ehxhio3\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp9ehxhio3\\shader.frag\n"
+  },
+  {
+    "recipe": "2XBR_v3.7C_2x.dfx",
+    "shader": "2XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8f4sp446\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8f4sp446\\shader.frag\n"
+  },
+  {
+    "recipe": "2XBR_v3.7C_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpk1fdy6yt\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpk1fdy6yt\\shader.frag\n"
+  },
+  {
+    "recipe": "4XBR_v1.1_Low configuration.dfx",
+    "shader": "4XBR_v1.1_Low configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpb4tjstqc\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpb4tjstqc\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v1.1_Low configuration.dfx",
+    "shader": "5XBR_v1.1_Low configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp7lv4bdee\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp7lv4bdee\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v2.1_High configuration.dfx",
+    "shader": "5XBR_v2.1_High configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdiw74ebq\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdiw74ebq\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.5a_Low Configuration.dfx",
+    "shader": "5XBR_v3.5a_Low Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpqnj3kcpi\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpqnj3kcpi\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.5a_Very High Configuration.dfx",
+    "shader": "5XBR_v3.5a_Very High Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcwsbnh6_\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcwsbnh6_\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.5b_Very High Configuration.dfx",
+    "shader": "5XBR_v3.5b_Very High Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpa4uixws1\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpa4uixws1\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7_CRT + Low Configuration.dfx",
+    "shader": "5XBR_v3.7_CRT + Low Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpwa_e_e9y\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpwa_e_e9y\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7_LCD3X + Low Configuration.dfx",
+    "shader": "5XBR_v3.7_Low configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpx4tscoj1\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpx4tscoj1\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7_LCD3X + Low Configuration.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1ddqmova\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1ddqmova\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7_Low configuration.dfx",
+    "shader": "5XBR_v3.7_Low configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8u1x6iqj\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8u1x6iqj\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A + LCD3x_1x.dfx",
+    "shader": "5XBR_v3.7A.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0yyn2uf4\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0yyn2uf4\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A + LCD3x_1x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_sqcaxbl\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_sqcaxbl\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A + LCD3x_2x.dfx",
+    "shader": "5XBR_v3.7A.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp4d_gdz1x\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp4d_gdz1x\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A + LCD3x_2x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpl1ct_4uz\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpl1ct_4uz\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A + LCD3x_3x(Full).dfx",
+    "shader": "5XBR_v3.7A.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp61qzwrv0\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp61qzwrv0\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A + LCD3x_3x(Full).dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp71k7amik\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp71k7amik\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A.dfx",
+    "shader": "5XBR_v3.7A.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprzt4h8jg\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprzt4h8jg\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A_1x.dfx",
+    "shader": "5XBR_v3.7A.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0trbfoyo\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0trbfoyo\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpq62j8hyd\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpq62j8hyd\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A_2x.dfx",
+    "shader": "5XBR_v3.7A.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpu6vio_11\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpu6vio_11\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7A_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdlyac9ds\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdlyac9ds\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7a_CRT + High Configuration.dfx",
+    "shader": "5XBR_v3.7a_CRT + High Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpx6p8kl6w\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpx6p8kl6w\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7a_CRT + Low Configuration.dfx",
+    "shader": "5XBR_v3.7a_CRT + Low Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpae_jqo9s\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpae_jqo9s\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7a_High Configuration.dfx",
+    "shader": "5XBR_v3.7a_High Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp5_lbylkm\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp5_lbylkm\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7a_Low Configuration.dfx",
+    "shader": "5XBR_v3.7a_Low Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmppwlvczsr\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmppwlvczsr\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7B.dfx",
+    "shader": "5XBR_v3.7B.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjuqj661g\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjuqj661g\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7B_1x.dfx",
+    "shader": "5XBR_v3.7B.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmperyff6ci\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmperyff6ci\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7B_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpkiwio261\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpkiwio261\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7B_2x.dfx",
+    "shader": "5XBR_v3.7B.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpyqdv2nls\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpyqdv2nls\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7B_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcue76_h6\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcue76_h6\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + CRT.dfx",
+    "shader": "5XBR_v3.7C + CRT.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp441q26cq\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp441q26cq\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + LCD3x_1x.dfx",
+    "shader": "5XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpyovuld09\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpyovuld09\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + LCD3x_1x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpsun70797\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpsun70797\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + LCD3x_2x.dfx",
+    "shader": "5XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmppz2muet3\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmppz2muet3\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + LCD3x_2x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1hjfqlmd\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1hjfqlmd\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + LCD3x_3x(Full).dfx",
+    "shader": "5XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpduj54r8e\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpduj54r8e\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C + LCD3x_3x(Full).dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpg15xgs34\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpg15xgs34\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C.dfx",
+    "shader": "5XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp72bdyv6v\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp72bdyv6v\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C_1x.dfx",
+    "shader": "5XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnbxn0byb\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnbxn0byb\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpn_gduntk\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpn_gduntk\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C_2x.dfx",
+    "shader": "5XBR_v3.7C.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjr25yplm\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjr25yplm\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v3.7C_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdak_gx6s\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdak_gx6s\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0 + CRT.dfx",
+    "shader": "5XBR_v4.0 + CRT.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpji68wmqj\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpji68wmqj\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0+ LCD3x.dfx",
+    "shader": "5XBR_v4.0.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp47dzpigp\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp47dzpigp\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0+ LCD3x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpej5cx24s\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpej5cx24s\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0.dfx",
+    "shader": "5XBR_v4.0.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_1_wr0fh\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_1_wr0fh\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0_CRT + Low Configuration.dfx",
+    "shader": "5XBR_v4.0_CRT + Low Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpkv6koc_s\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpkv6koc_s\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0_High Configuration.dfx",
+    "shader": "5XBR_v4.0_High Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpg75fvx43\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpg75fvx43\\shader.frag\n"
+  },
+  {
+    "recipe": "5XBR_v4.0_Low Configuration.dfx",
+    "shader": "5XBR_v4.0_Low Configuration.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_5qnqrl9\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_5qnqrl9\\shader.frag\n"
+  },
+  {
+    "recipe": "AA.dfx",
+    "shader": "AA.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjjf44z00\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjjf44z00\\shader.frag\n"
+  },
+  {
+    "recipe": "Cartoon1x.dfx",
+    "shader": "Cartoon1x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1kq7pc2r\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1kq7pc2r\\shader.frag\n"
+  },
+  {
+    "recipe": "Cartoon2x.dfx",
+    "shader": "Cartoon2x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnzvfpvlk\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnzvfpvlk\\shader.frag\n"
+  },
+  {
+    "recipe": "Cartoon3x.dfx",
+    "shader": "Cartoon3x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpq_bgdyks\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpq_bgdyks\\shader.frag\n"
+  },
+  {
+    "recipe": "CRT-Geom-no-Curvature.dfx",
+    "shader": "crt-geom.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpz292r9pu\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpz292r9pu\\shader.frag\n"
+  },
+  {
+    "recipe": "CRT-Geom.dfx",
+    "shader": "crt-geom.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1rprhsmm\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1rprhsmm\\shader.frag\n"
+  },
+  {
+    "recipe": "CrtC.dfx",
+    "shader": "CrtC.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpwuap9a_t\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpwuap9a_t\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot HD.dfx",
+    "shader": "dot.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpgsk460d1\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpgsk460d1\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot HD_MiZai+nds_color+natural_vision.dfx",
+    "shader": "Dot_MiZai+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpolvdndix\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpolvdndix\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot HD_MiZai.dfx",
+    "shader": "Dot_MiZai.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpftk0r0vk\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpftk0r0vk\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot.dfx",
+    "shader": "dot.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp5vtr76kb\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp5vtr76kb\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot_d4.dfx",
+    "shader": "dot_d4.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpf8p_ek1f\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpf8p_ek1f\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot_d4_HD.dfx",
+    "shader": "dot_d4.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpiursv1wl\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpiursv1wl\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot_hv4.dfx",
+    "shader": "dot_hv4.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpkn3ykfl_\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpkn3ykfl_\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot_hv4_HD.dfx",
+    "shader": "dot_hv4.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8mog1k2k\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8mog1k2k\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot_MiZai+nds_color+natural_vision.dfx",
+    "shader": "Dot_MiZai+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmplh1h1v4o\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmplh1h1v4o\\shader.frag\n"
+  },
+  {
+    "recipe": "Dot_MiZai.dfx",
+    "shader": "Dot_MiZai.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpam344987\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpam344987\\shader.frag\n"
+  },
+  {
+    "recipe": "FXAA HQ.dfx",
+    "shader": "fxaa/fxaa_luma.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpr95oz04n\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpr95oz04n\\shader.frag\n"
+  },
+  {
+    "recipe": "FXAA HQ.dfx",
+    "shader": "fxaa/fxaa.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp7_qpa894\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp7_qpa894\\shader.frag\n"
+  },
+  {
+    "recipe": "FXAA HQ.dfx",
+    "shader": "quilez.dsd",
+    "passIndex": 2,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpx5cjlfr9\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpx5cjlfr9\\shader.frag\n"
+  },
+  {
+    "recipe": "FXAA.dfx",
+    "shader": "fxaa.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpvrhmc2dk\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpvrhmc2dk\\shader.frag\n"
+  },
+  {
+    "recipe": "FXAA.dfx",
+    "shader": "quilez.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcs5_i_p0\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcs5_i_p0\\shader.frag\n"
+  },
+  {
+    "recipe": "HQ2X.dfx",
+    "shader": "hq2x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0xo3kcpj\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0xo3kcpj\\shader.frag\n"
+  },
+  {
+    "recipe": "HQ2X.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmps7_4q20d\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmps7_4q20d\\shader.frag\n"
+  },
+  {
+    "recipe": "lcd1x+natural_vision.dfx",
+    "shader": "lcd1x+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpxcf7kmvp\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpxcf7kmvp\\shader.frag\n"
+  },
+  {
+    "recipe": "lcd1x+nds_color+natural_vision.dfx",
+    "shader": "lcd1x+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpfn3v7dfr\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpfn3v7dfr\\shader.frag\n"
+  },
+  {
+    "recipe": "lcd1x+nds_color.dfx",
+    "shader": "lcd1x+nds_color.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp2wy7lpw4\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp2wy7lpw4\\shader.frag\n"
+  },
+  {
+    "recipe": "lcd1x.dfx",
+    "shader": "lcd1x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp6nqxigu8\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp6nqxigu8\\shader.frag\n"
+  },
+  {
+    "recipe": "LCD3x HD.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpw319c375\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpw319c375\\shader.frag\n"
+  },
+  {
+    "recipe": "LCD3x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpqysr7d31\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpqysr7d31\\shader.frag\n"
+  },
+  {
+    "recipe": "Linear.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprxaynkhx\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprxaynkhx\\shader.frag\n"
+  },
+  {
+    "recipe": "Linear2X.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjh6t7p6k\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjh6t7p6k\\shader.frag\n"
+  },
+  {
+    "recipe": "Linear2X.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpymxudd_4\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpymxudd_4\\shader.frag\n"
+  },
+  {
+    "recipe": "natural_vision.dfx",
+    "shader": "natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp009r_0pv\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp009r_0pv\\shader.frag\n"
+  },
+  {
+    "recipe": "nds_color.dfx",
+    "shader": "nds_color.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpfkzjhhld\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpfkzjhhld\\shader.frag\n"
+  },
+  {
+    "recipe": "None.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnw3sj63u\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnw3sj63u\\shader.frag\n"
+  },
+  {
+    "recipe": "Quilez.dfx",
+    "shader": "quilez.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpgkz2vcwu\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpgkz2vcwu\\shader.frag\n"
+  },
+  {
+    "recipe": "retro-tiles HD+nds_color+natural_vision.dfx",
+    "shader": "retro-tiles+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp68z7mqq5\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp68z7mqq5\\shader.frag\n"
+  },
+  {
+    "recipe": "retro-tiles HD.dfx",
+    "shader": "retro-tiles.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjf5b_b64\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjf5b_b64\\shader.frag\n"
+  },
+  {
+    "recipe": "retro-tiles+nds_color+natural_vision.dfx",
+    "shader": "retro-tiles+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_larkrwl\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_larkrwl\\shader.frag\n"
+  },
+  {
+    "recipe": "retro-tiles.dfx",
+    "shader": "retro-tiles.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpivl01w8x\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpivl01w8x\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0.dfx",
+    "shader": "SABR_v3.0.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0d9z1ed2\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp0d9z1ed2\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_1x.dfx",
+    "shader": "SABR_v3.0.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp170333km\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp170333km\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcs7afkvi\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcs7afkvi\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_2x.dfx",
+    "shader": "SABR_v3.0.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp2zks3k07\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp2zks3k07\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjua14tyg\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjua14tyg\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized + LCD3x_1x.dfx",
+    "shader": "SABR_v3.0_Optimized.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprg6cobgw\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprg6cobgw\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized + LCD3x_1x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpy6tawv3y\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpy6tawv3y\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized + LCD3x_2x.dfx",
+    "shader": "SABR_v3.0_Optimized.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp6wg112rg\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp6wg112rg\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized + LCD3x_2x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpts5u82tg\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpts5u82tg\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized + LCD3x_3x(Full).dfx",
+    "shader": "SABR_v3.0_Optimized.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnhcc1pj9\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnhcc1pj9\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized + LCD3x_3x(Full).dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpc42gw79q\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpc42gw79q\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized.dfx",
+    "shader": "SABR_v3.0_Optimized.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpk6orgxo7\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpk6orgxo7\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_1x.dfx",
+    "shader": "SABR_v3.0_Optimized.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1xons484\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp1xons484\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpvx7enfud\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpvx7enfud\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_2x.dfx",
+    "shader": "SABR_v3.0_Optimized.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmppw75v_j0\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmppw75v_j0\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpzgeyzgc3\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpzgeyzgc3\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq + LCD3x_1x.dfx",
+    "shader": "SABR_v3.0_Optimized_lq.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnped3jf5\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnped3jf5\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq + LCD3x_1x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpsr666fuo\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpsr666fuo\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq + LCD3x_2x.dfx",
+    "shader": "SABR_v3.0_Optimized_lq.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpli__83ky\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpli__83ky\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq + LCD3x_2x.dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpv3iqqu20\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpv3iqqu20\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq + LCD3x_3x(Full).dfx",
+    "shader": "SABR_v3.0_Optimized_lq.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnyabfwno\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpnyabfwno\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq + LCD3x_3x(Full).dfx",
+    "shader": "LCD3x.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp54biowon\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp54biowon\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq.dfx",
+    "shader": "SABR_v3.0_Optimized_lq.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpro7izhsc\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpro7izhsc\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq_1x.dfx",
+    "shader": "SABR_v3.0_Optimized_lq.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp3jbjfchs\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp3jbjfchs\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq_1x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp9hrmvuxp\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp9hrmvuxp\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq_2x.dfx",
+    "shader": "SABR_v3.0_Optimized_lq.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpqc4buy2k\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpqc4buy2k\\shader.frag\n"
+  },
+  {
+    "recipe": "SABR_v3.0_Optimized_lq_2x.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8w8fqeru\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8w8fqeru\\shader.frag\n"
+  },
+  {
+    "recipe": "Scale2X.dfx",
+    "shader": "scale2x.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpis_kbeys\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpis_kbeys\\shader.frag\n"
+  },
+  {
+    "recipe": "Scale2X.dfx",
+    "shader": "linear.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpioi46xki\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpioi46xki\\shader.frag\n"
+  },
+  {
+    "recipe": "Scale_color_correction.dfx",
+    "shader": "scale_color_correction.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjvqjjcek\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpjvqjjcek\\shader.frag\n"
+  },
+  {
+    "recipe": "Scanline.dfx",
+    "shader": "scanline.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpaa88ln0x\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpaa88ln0x\\shader.frag\n"
+  },
+  {
+    "recipe": "Scanlinesd.dfx",
+    "shader": "Scanlinesd.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpmjl3u3db\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpmjl3u3db\\shader.frag\n"
+  },
+  {
+    "recipe": "ScanlinesdColor.dfx",
+    "shader": "ScanlinesdColor.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_mx3sl8h\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_mx3sl8h\\shader.frag\n"
+  },
+  {
+    "recipe": "ScanlinesdColorX.dfx",
+    "shader": "ScanlinesdColorX.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_lp_b22t\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_lp_b22t\\shader.frag\n"
+  },
+  {
+    "recipe": "ScanlinesdX.dfx",
+    "shader": "ScanlinesdX.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpulpybxun\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpulpybxun\\shader.frag\n"
+  },
+  {
+    "recipe": "sharp_bilinear+natural_vision.dfx",
+    "shader": "sharp_bilinear+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp91qr7gi0\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp91qr7gi0\\shader.frag\n"
+  },
+  {
+    "recipe": "sharp_bilinear+nds_color+natural_vision.dfx",
+    "shader": "sharp_bilinear+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp6dwzecqs\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp6dwzecqs\\shader.frag\n"
+  },
+  {
+    "recipe": "sharp_bilinear+nds_color.dfx",
+    "shader": "sharp_bilinear+nds_color.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmps61mzz9k\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmps61mzz9k\\shader.frag\n"
+  },
+  {
+    "recipe": "sharp_bilinear.dfx",
+    "shader": "sharp_bilinear.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcjtdk8dg\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpcjtdk8dg\\shader.frag\n"
+  },
+  {
+    "recipe": "SMAA.dfx",
+    "shader": "smaa/smaa_edge.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8kjjo3um\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp8kjjo3um\\shader.frag\n"
+  },
+  {
+    "recipe": "SMAA.dfx",
+    "shader": "smaa/smaa_weight.dsd",
+    "passIndex": 1,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdzzqts5o\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpdzzqts5o\\shader.frag\n"
+  },
+  {
+    "recipe": "SMAA.dfx",
+    "shader": "smaa/smaa_blend.dsd",
+    "passIndex": 2,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpyuq_h6k6\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpyuq_h6k6\\shader.frag\n"
+  },
+  {
+    "recipe": "SMAA.dfx",
+    "shader": "quilez.dsd",
+    "passIndex": 3,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpfnl82ncm\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpfnl82ncm\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast.dfx",
+    "shader": "zfast.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmph3pxvzfu\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmph3pxvzfu\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd+dsi_color.dfx",
+    "shader": "zfast_lcd+dsi_color.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpf9m9avb7\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpf9m9avb7\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd+dslite_color+natural_vision.dfx",
+    "shader": "zfast_lcd+dslite_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprtsa0v5p\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmprtsa0v5p\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd+dslite_color.dfx",
+    "shader": "zfast_lcd+dslite_color.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp3viio89l\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp3viio89l\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd+natural_vision.dfx",
+    "shader": "zfast_lcd+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_e88iibp\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp_e88iibp\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd+nds_color+natural_vision.dfx",
+    "shader": "zfast_lcd+nds_color+natural_vision.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpzhpm68np\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpzhpm68np\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd+nds_color.dfx",
+    "shader": "zfast_lcd+nds_color.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpu5yv6xf7\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmpu5yv6xf7\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd.dfx",
+    "shader": "zfast_lcd.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp20gkxzxb\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmp20gkxzxb\\shader.frag\n"
+  },
+  {
+    "recipe": "zfast_lcd_brightness.dfx",
+    "shader": "zfast_lcd_brightness.dsd",
+    "passIndex": 0,
+    "success": true,
+    "log": "C:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmphrfty1h3\\shader.vert\nC:\\Users\\23969\\Documents\\Codex\\2026-10-14\\zhe\\work\\optimization\\SeedlessDS-1.0.8-optimized\\tools\\shader-check\\tmphrfty1h3\\shader.frag\n"
+  }
+]

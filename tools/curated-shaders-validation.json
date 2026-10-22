@@ -1,0 +1,284 @@
+{
+  "version": "1.0.11-shaders",
+  "versionCode": 121,
+  "base": "1.0.10-lcd",
+  "apk": "SeedlessDS-1.0.11-vulkan-shaders-debug.apk",
+  "apkBytes": 38950213,
+  "apkSha256": "8fd4d892cc4c7974d044253146569cbfb35ee7112b929de6446522d4eb108d5e",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "addedVulkanFilters": [
+    "sharp_bilinear",
+    "sharp_bilinear+nds_color",
+    "sharp_shimmerless",
+    "sharp_shimmerless+nds_color",
+    "pixel_aa_fast",
+    "LCD3x",
+    "LCD3x+nds_color",
+    "Quilez",
+    "Quilez+nds_color"
+  ],
+  "totalVulkanFilters": 16,
+  "filterMathTests": {
+    "source": "production filter_math.glsl compiled verbatim with C scalar adapters",
+    "exactBoxCoverageComparisons": 416,
+    "maximumAbsoluteCoverageError": 6.103515630684342e-06,
+    "integerScaleSamples": 480,
+    "coordinateRangeAndMonotonicityChecks": 3030,
+    "tests": {
+      "fractionalOriginBoxCoverage": "passed",
+      "integerPixelPreservation": "passed",
+      "sharpBilinearLinearLimit": "passed",
+      "pixelAaTransitionBounds": "passed",
+      "quilezMonotonicity": "passed"
+    },
+    "scope": "Host coordinate math; no GPU derivatives, sampler/color output or physical display verification"
+  },
+  "upstreamSources": {
+    "libretro/glsl-shaders": {
+      "commit": "ad947689af01544f2857591a0e3e171ac30e9dff",
+      "files": [
+        {
+          "path": "pixel-art-scaling/shaders/pixel_aa/pixel_aa_fast.glsl",
+          "sha256": "5d46c4cdea627dc2441b523e62651c0dcdb67529d8274faa448f8ef07bc6408d"
+        },
+        {
+          "path": "handheld/shaders/lcd3x.glsl",
+          "sha256": "1ca0fb49b35fe3415b0eeb78518e5042a87f8b26f0ae76bf7b99fd56a5c7762e"
+        },
+        {
+          "path": "interpolation/shaders/sharp-bilinear.glsl",
+          "sha256": "9b9afa91fe12bcbd49398179bf2072ce5a38b531c39a4fd381e92602c6dc114b"
+        },
+        {
+          "path": "pixel-art-scaling/shaders/pixel_aa/pixel_aa.glsl",
+          "sha256": "3cf4173ce2ca322954fee60c59e5cbb367a628ff8a490d59203a15c7ecf42800"
+        },
+        {
+          "path": "pixel-art-scaling/pixel_aa_fast.glslp",
+          "sha256": "67141dc0d09bcb76c099a8b6022e357cf979c46ad587bbcf936440a66649ba34"
+        },
+        {
+          "path": "pixel-art-scaling/shaders/pixel_aa/to_lin_fast.glsl",
+          "sha256": "4cbc6c7a05e79f00354406e795a641b534c9b2cc8bcbc1569725bbbe54b2d090"
+        }
+      ]
+    },
+    "Woohyun-Kang/Sharp-Shimmerless-Shader": {
+      "commit": "2a74e7af599335c2ce5e493f823a757925c80db3",
+      "files": [
+        {
+          "path": "LICENSE.txt",
+          "sha256": "6d489af6292662d9e36d34ce49423784984a5f6e41d7b58f49b01264df59fa03"
+        },
+        {
+          "path": "README.md",
+          "sha256": "61e8c3e66f4f4941bacb3bb31840a6bd0194b5cff9f32040a9ce59da20a6d32e"
+        },
+        {
+          "path": "shaders_glsl/shaders/sharp-shimmerless.glsl",
+          "sha256": "d6d9f34713d971a656309ebb6bf17536081b9188acc4d68a09808aee393b9e82"
+        }
+      ]
+    },
+    "quilezImplementation": "Bundled public-domain hunterk port: app/src/main/assets/shaders/Quilez.dsd"
+  },
+  "jvmTests": 94,
+  "testSuites": [
+    {
+      "name": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.RecoverableReplaceTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.RendererPolicyTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.StickInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.VulkanPolicyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.VulkanSettingsTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.ra.RaHostOverrideTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lintErrors": 0,
+  "lintWarnings": [
+    "Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background",
+    "Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead",
+    "Attribute `networkSecurityConfig` is only used in API level 24 and higher (current min is 21)",
+    "Attribute `localeConfig` is only used in API level 33 and higher (current min is 21)",
+    "Modifier parameter should be the first optional parameter",
+    "Modifier parameter should be the first optional parameter",
+    "Missing x86_64 ABI support for ChromeOS",
+    "Exported receiver does not require permission",
+    "The attribute `android:allowBackup` is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute `android:dataExtractionRules` specifying an `@xml` resource which configures cloud backups and device transfers on Android 12 and higher.",
+    "Avoid object allocations during draw/layout operations (preallocate and reuse instead)",
+    "Avoid object allocations during draw/layout operations (preallocate and reuse instead)",
+    "This `AssetFileDescriptor` should be freed up after use with `#close()`",
+    "Do not place Android context classes in static fields; this is a memory leak",
+    "Do not place Android context classes in static fields; this is a memory leak",
+    "The resource `R.drawable.ic_launcher_foreground` appears to be unused",
+    "The resource `R.drawable.ic_seedless_mark` appears to be unused",
+    "The resource `R.drawable.ic_seedless_monochrome` appears to be unused",
+    "The resource `R.string.vulkan_locked` appears to be unused",
+    "The resource `R.string.vulkan_fallback_shader` appears to be unused",
+    "The resource `R.string.vulkan_fallback_delay` appears to be unused",
+    "State backed values should use the lambda overload of Modifier.offset",
+    "The application adaptive icon is missing a monochrome tag",
+    "The application adaptive roundIcon is missing a monochrome tag",
+    "Custom view `ExtEditOverlay` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`",
+    "Custom view `DsGlView` overrides `onTouchEvent` but not `performClick`",
+    "Custom view `ExtSurfaceView` overrides `onTouchEvent` but not `performClick`",
+    "Custom view `ExtEditOverlay` overrides `onTouchEvent` but not `performClick`"
+  ],
+  "nativeVideoTests": {
+    "scalesTested": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "rgb565Values": 65536,
+    "concurrentPublications": 300,
+    "concurrentReaders": 2,
+    "coherentSnapshots": [
+      291,
+      295
+    ],
+    "tests": {
+      "baseScreenshotAllScalesModesAndFormats": "passed",
+      "rgbaPacking": "passed",
+      "rgb565Conversion": "passed",
+      "capacityGuards": "passed",
+      "completedPageAndMetadata": "passed",
+      "loadingAndNoNewFrame": "passed",
+      "concurrentSnapshots": "passed",
+      "presentModeAndImageCount": "passed",
+      "normalVulkanUsesFifo": "passed",
+      "lcdUsesNearestSampler": "passed",
+      "interpolationSamplerPolicy": "passed",
+      "preRotation": "passed"
+    },
+    "scope": "Production pixel/snapshot code and WSI policy; fixture core state and host mutex; no Android Vulkan driver execution"
+  },
+  "spirvReproducible": true,
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+      "apkOffset": 21282816,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "sha256": "d3e48717c9aa147e0ab21063ba0e8e0211cabf8bf40b222640829519edbf58e1",
+      "apkOffset": 21299200,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "sha256": "ae12c550a24e1924b8cd91d8a567b2013544df9521b67086aa0d0aa3cb92e5d8",
+      "apkOffset": 21315584,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "sha256": "81d9a5422931684b8879f258367c0170ad3610ce2ba4e09c278f344e43e072b6",
+      "apkOffset": 21839872,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "sha256": "cf8c215647df75785b2a03b5e728e053c8df5e698ca0d1e700f4aca5d6eda24a",
+      "apkOffset": 23298048,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "coreAndOpenGlShaderSourcesUnchangedFrom110": true,
+  "deviceTestingPerformed": false,
+  "installedOnNova": false,
+  "limits": [
+    "No device operations were performed, per user request",
+    "GPU image appearance, performance, physical dual-screen and LCD phase require user testing",
+    "Built-in defaults; edited OpenGL shader parameters are not imported",
+    "No end-to-end latency measurements"
+  ]
+}

@@ -1,0 +1,10 @@
+WatermelonDS Vulkan low-latency reference
+
+Project: https://github.com/SapphireRhodonite/WatermelonDS
+Release: 0.8.0.rc3
+Exact app revision: 9bd6a0db59f944cda961e1df7f6e692eb6d4e65b
+License: GNU GPL version 3; see GPL-3.0.txt. Original project and contributor attribution is retained.
+
+Reference code: renderer/FrameQueue.cpp, renderer/VulkanSurfacePresenter.cpp, renderer/VulkanOutput.cpp, MelonInstance.cpp and Android input/render coordination. These implement a melonDS-specific Vulkan rendering and presentation pipeline. This custom SeedlessDS build instead adds a CPU-frame Vulkan display backend, with bounded GPU submissions, late frame capture and compatibility fallback. It does not port melonDS hardware 3D emulation or claim equivalent latency measurements.
+
+Vulkan synchronization and pre-rotation also follow primary Khronos and Android documentation. Full design, modifications, validation scope and source URLs are in VULKAN_LOW_LATENCY.md in the accompanying modified source archive. Vulkan shaders and their generated SPIR-V header are included.

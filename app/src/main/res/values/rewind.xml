@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rewind_title">Rewind</string>
+    <string name="rewind_enable">Enable rewind</string>
+    <string name="rewind_enable_description">Keep recent game states in memory. Captures about once a second; may reduce performance.</string>
+    <string name="rewind_duration">History length</string>
+    <string name="rewind_duration_description">Up to the selected duration, limited by a 64 MiB history budget. Cleared on exit, reset or loading a state.</string>
+    <plurals name="rewind_seconds">
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+    <string name="rewind_bind">Bind rewind button</string>
+    <string name="rewind_bind_description">Select Rewind (hold) under emulator functions. Tap to go back once; hold to continue.</string>
+    <string name="rewind_hold">Rewind (hold)</string>
+    <string name="rewind_short">RW</string>
+    <string name="rewind_disabled">Enable rewind in Settings → Buttons first.</string>
+    <string name="rewind_empty">No rewind history yet. Play for a moment first.</string>
+    <string name="rewind_failed">Rewind could not save or restore a state. Toggle rewind off and on to retry.</string>
+</resources>

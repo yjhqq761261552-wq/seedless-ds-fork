@@ -1,0 +1,152 @@
+{
+  "version": "1.0.3-rewind",
+  "versionCode": 113,
+  "package": "com.seedlessds.app.debug",
+  "minimumSdk": 21,
+  "targetSdk": 35,
+  "apk": "SeedlessDS-1.0.3-rewind-debug.apk",
+  "apkBytes": 34221409,
+  "apkSha256": "0704e96aa7ad270c94bd523db7dda1276f81047450a7c0939ea3c13129e6e472",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "signatureVerified": true,
+  "tests": [
+    {
+      "suite": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "testTotal": 34,
+  "lintErrors": 0,
+  "lintWarnings": 18,
+  "shaderAssets": 192,
+  "shaderAssetsMatchDeliveredSourceAndPreviousBuild": true,
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "zipOffset": 21184512,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "zipOffset": 21200896,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "zipOffset": 21217280,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "zipOffset": 22740992,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "zipOffset": 30867456,
+      "zipAligned16k": true,
+      "loadSegmentAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "rewindNativeHostTests": {
+    "tests": {
+      "rewind_ring_test": "passed",
+      "rewind_manager_test": "passed",
+      "outstandingAllocations": 0
+    },
+    "ringRandomOperations": 10000,
+    "scope": "Production ring and scheduler; fake machine, codec and clock; not Android gameplay"
+  },
+  "fullEmulatorStateRoundTripTested": false,
+  "androidDeviceTested": false,
+  "dualScreenDeviceTested": false,
+  "rewindDefaults": {
+    "enabled": false,
+    "seconds": 30,
+    "captureEveryEmulatedFrames": 60,
+    "historyPayloadBudgetBytes": 67108864,
+    "holdStepIntervalMicroseconds": 250000
+  },
+  "referenceCommit": "rafaelvcaetano/melonDS-android@c42995caff0144f37ad9791dc9bc96d82e8a6f65",
+  "changedFilesFrom102": [
+    "app/build.gradle.kts",
+    "app/src/main/cpp/jni/core_state.c",
+    "app/src/main/java/com/seedlessds/app/emu/DsGlView.kt",
+    "app/src/main/java/com/seedlessds/app/emu/DsSettings.kt",
+    "app/src/main/java/com/seedlessds/app/emu/EmulatorActivity.kt",
+    "app/src/main/java/com/seedlessds/app/emu/EmulatorScreen.kt",
+    "app/src/main/java/com/seedlessds/app/emu/KeyBindings.kt",
+    "app/src/main/java/com/seedlessds/app/emu/KeyMap.kt",
+    "app/src/main/java/com/seedlessds/app/emu/SettingsScreen.kt",
+    "app/src/main/java/com/seedlessds/app/ra/RetroAchievements.kt",
+    "app/src/main/java/com/seedlessds/core/SeedlessCore.kt",
+    "app/src/main/res/values/rewind.xml",
+    "app/src/main/res/values-zh-rCN/rewind.xml",
+    "app/src/test/java/com/seedlessds/app/emu/KeyBindingsTest.kt",
+    "core/include/seedlessds/rewind.h",
+    "core/src/core/CMakeLists.txt",
+    "core/src/core/nds_api.c",
+    "core/src/core/nds_api_rom.c",
+    "core/src/core/rewind.c",
+    "core/src/core/rewind_memory.h",
+    "core/src/core/rewind_ring.c",
+    "core/src/core/rewind_ring.h",
+    "core/src/core/state.c",
+    "core/src/debug/control.c",
+    "core/src/frontend/input.c",
+    "core/src/platform/android/audio.c",
+    "core/tests/rewind_manager_test.c",
+    "core/tests/rewind_ring_test.c",
+    "README.md",
+    "REWIND.md",
+    "tools/run_rewind_host_tests.py"
+  ]
+}

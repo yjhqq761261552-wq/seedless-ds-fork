@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rewind_title">回溯</string>
+    <string name="rewind_enable">启用回溯</string>
+    <string name="rewind_enable_description">在内存中保留近期游戏状态，约每秒记录一次，可能影响模拟性能。</string>
+    <string name="rewind_duration">历史保留时长</string>
+    <string name="rewind_duration_description">最长保留所选时长，历史记录受 64 MiB 内存上限限制。退出、重置或读档后清空。</string>
+    <plurals name="rewind_seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <string name="rewind_bind">绑定回溯按键</string>
+    <string name="rewind_bind_description">在模拟器功能中选择“回溯（按住）”。短按回退一次，按住连续回退。</string>
+    <string name="rewind_hold">回溯（按住）</string>
+    <string name="rewind_short">回溯</string>
+    <string name="rewind_disabled">请先在“设置 → 按键”中启用回溯。</string>
+    <string name="rewind_empty">暂无回溯记录，请先游玩片刻。</string>
+    <string name="rewind_failed">回溯状态保存或恢复失败，请关闭再开启回溯后重试。</string>
+</resources>

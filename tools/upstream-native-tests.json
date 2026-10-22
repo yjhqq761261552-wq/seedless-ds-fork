@@ -1,0 +1,13 @@
+{
+  "tests": {
+    "rewind_ring_test": "passed",
+    "rewind_codec_test": "passed",
+    "rewind_worker_test": "passed",
+    "rewind_manager_test": "passed",
+    "rewind_manager_async_test": "passed",
+    "outstandingAllocations": 0
+  },
+  "ringRandomOperations": 10000,
+  "workerReuseCycles": 512,
+  "scope": "Production ring, codec, background worker and scheduler; fake machine and clock; real host zlib; not Android gameplay"
+}

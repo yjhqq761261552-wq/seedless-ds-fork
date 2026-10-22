@@ -1,0 +1,377 @@
+{
+  "version": "1.0.9-renderer",
+  "versionCode": 119,
+  "apk": "SeedlessDS-1.0.9-renderer-debug.apk",
+  "apkBytes": 37838801,
+  "apkSha256": "9a341e9a84ab2b087300de969432b03fcc6e7f6493f78cd629883008d71b2eeb",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "jvmTests": 86,
+  "testSuites": [
+    {
+      "name": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.RecoverableReplaceTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.RendererPolicyTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.StickInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.VulkanPolicyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.emu.VulkanSettingsTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.seedlessds.app.ra.RaHostOverrideTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lintErrors": 0,
+  "lintWarnings": [
+    "Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background",
+    "Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead",
+    "Attribute `networkSecurityConfig` is only used in API level 24 and higher (current min is 21)",
+    "Attribute `localeConfig` is only used in API level 33 and higher (current min is 21)",
+    "Modifier parameter should be the first optional parameter",
+    "Modifier parameter should be the first optional parameter",
+    "Missing x86_64 ABI support for ChromeOS",
+    "Exported receiver does not require permission",
+    "The attribute `android:allowBackup` is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute `android:dataExtractionRules` specifying an `@xml` resource which configures cloud backups and device transfers on Android 12 and higher.",
+    "Avoid object allocations during draw/layout operations (preallocate and reuse instead)",
+    "Avoid object allocations during draw/layout operations (preallocate and reuse instead)",
+    "This `AssetFileDescriptor` should be freed up after use with `#close()`",
+    "Do not place Android context classes in static fields; this is a memory leak",
+    "Do not place Android context classes in static fields; this is a memory leak",
+    "The resource `R.drawable.ic_launcher_foreground` appears to be unused",
+    "The resource `R.drawable.ic_seedless_mark` appears to be unused",
+    "The resource `R.drawable.ic_seedless_monochrome` appears to be unused",
+    "The resource `R.string.vulkan_locked` appears to be unused",
+    "The resource `R.string.vulkan_fallback_shader` appears to be unused",
+    "The resource `R.string.vulkan_fallback_delay` appears to be unused",
+    "State backed values should use the lambda overload of Modifier.offset",
+    "The application adaptive icon is missing a monochrome tag",
+    "The application adaptive roundIcon is missing a monochrome tag",
+    "Custom view `ExtEditOverlay` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`",
+    "Custom view `DsGlView` overrides `onTouchEvent` but not `performClick`",
+    "Custom view `ExtSurfaceView` overrides `onTouchEvent` but not `performClick`",
+    "Custom view `ExtEditOverlay` overrides `onTouchEvent` but not `performClick`"
+  ],
+  "nativeVideoTests": {
+    "scalesTested": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "rgb565Values": 65536,
+    "concurrentPublications": 300,
+    "concurrentReaders": 2,
+    "coherentSnapshots": [
+      165,
+      260
+    ],
+    "tests": {
+      "baseScreenshotAllScalesModesAndFormats": "passed",
+      "rgbaPacking": "passed",
+      "rgb565Conversion": "passed",
+      "capacityGuards": "passed",
+      "completedPageAndMetadata": "passed",
+      "loadingAndNoNewFrame": "passed",
+      "concurrentSnapshots": "passed",
+      "presentModeAndImageCount": "passed",
+      "normalVulkanUsesFifo": "passed",
+      "preRotation": "passed"
+    },
+    "scope": "Production pixel/snapshot code and WSI policy; fixture core state and host mutex; no Android Vulkan driver execution"
+  },
+  "nova": {
+    "device": "Retroid Pocket Nova / Android 13 / Adreno 740",
+    "game": "设备已有《起源心金4.0正式版》",
+    "uiChecks": {
+      "rendererBeforeFilter": true,
+      "defaultOpenGL": true,
+      "openGlCompleteFilterList": true,
+      "vulkanOnlyNoneLinearFxaa": true,
+      "incompatibleFilterResetOnSwitch": true,
+      "lowLatencyVisibleOnlyForVulkan": true,
+      "rendererSavedThroughMenu": true,
+      "liveLatencySwitchStaysVulkan": true
+    },
+    "backendMatrix": [
+      {
+        "case": "legacy-default-gl",
+        "requestedRenderer": "default",
+        "requestedFilter": "None",
+        "lowLatency": true,
+        "durationSeconds": 8,
+        "process": "18558",
+        "vulkanEvents": [],
+        "actualBackend": "OpenGL",
+        "noCrash": true
+      },
+      {
+        "case": "vk-none-lowlatency-0",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "None",
+        "lowLatency": false,
+        "durationSeconds": 8,
+        "process": "18709",
+        "vulkanEvents": [
+          "10-20 23:48:08.904 18709 18754 I SeedlessVulkan: presentMode=2 images=4 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=0",
+          "10-20 23:48:08.909 18709 18754 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "vk-none-lowlatency-1",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "None",
+        "lowLatency": true,
+        "durationSeconds": 8,
+        "process": "18849",
+        "vulkanEvents": [
+          "10-20 23:48:18.305 18849 18894 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=1",
+          "10-20 23:48:18.310 18849 18894 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "vk-linear-lowlatency-0",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "Linear",
+        "lowLatency": false,
+        "durationSeconds": 8,
+        "process": "18997",
+        "vulkanEvents": [
+          "10-20 23:48:27.698 18997 19042 I SeedlessVulkan: presentMode=2 images=4 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=0",
+          "10-20 23:48:27.704 18997 19042 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "vk-linear-lowlatency-1",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "Linear",
+        "lowLatency": true,
+        "durationSeconds": 8,
+        "process": "19143",
+        "vulkanEvents": [
+          "10-20 23:48:37.128 19143 19181 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=1",
+          "10-20 23:48:37.130 19143 19181 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "vk-fxaa-lowlatency-0",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "FXAA",
+        "lowLatency": false,
+        "durationSeconds": 8,
+        "process": "19279",
+        "vulkanEvents": [
+          "10-20 23:48:46.549 19279 19319 I SeedlessVulkan: presentMode=2 images=4 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=0",
+          "10-20 23:48:46.555 19279 19319 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "vk-fxaa-lowlatency-1",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "FXAA",
+        "lowLatency": true,
+        "durationSeconds": 8,
+        "process": "19419",
+        "vulkanEvents": [
+          "10-20 23:48:55.967 19419 19462 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=1",
+          "10-20 23:48:55.973 19419 19462 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "vk-invalid-filter-normalized",
+        "requestedRenderer": "Vulkan",
+        "requestedFilter": "SMAA",
+        "lowLatency": true,
+        "durationSeconds": 8,
+        "process": "19556",
+        "vulkanEvents": [
+          "10-20 23:49:05.401 19556 19599 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=1",
+          "10-20 23:49:05.407 19556 19599 I SeedlessVulkan: Vulkan display backend active"
+        ],
+        "actualBackend": "Vulkan",
+        "noCrash": true
+      },
+      {
+        "case": "gl-smaa-lowlatency-ignored",
+        "requestedRenderer": "OpenGL",
+        "requestedFilter": "SMAA",
+        "lowLatency": true,
+        "durationSeconds": 8,
+        "process": "19704",
+        "vulkanEvents": [],
+        "actualBackend": "OpenGL",
+        "noCrash": true
+      }
+    ],
+    "dual": {
+      "tests": [
+        {
+          "virtualDisplay": "800x600",
+          "filter": "FXAA",
+          "lowLatency": false,
+          "legacyDelayPreference": 2,
+          "vulkanEvents": [
+            "10-20 23:49:58.630 20047 20091 I SeedlessVulkan: presentMode=2 images=4 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=0",
+            "10-20 23:49:58.636 20047 20091 I SeedlessVulkan: Vulkan display backend active",
+            "10-20 23:50:01.030 20047 20112 I SeedlessVulkan: presentMode=2 images=4 transform=1 logical=800x600 extent=600x800 maxInFlight=1 lowLatency=0",
+            "10-20 23:50:01.057 20047 20112 I SeedlessVulkan: presentMode=2 images=4 transform=0 logical=800x600 extent=800x600 maxInFlight=1 lowLatency=0"
+          ],
+          "primaryAndExternalActive": true
+        },
+        {
+          "virtualDisplay": "800x600",
+          "filter": "FXAA",
+          "lowLatency": true,
+          "legacyDelayPreference": 2,
+          "vulkanEvents": [
+            "10-20 23:50:12.065 20214 20260 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=1280x960 extent=1280x960 maxInFlight=1 lowLatency=1",
+            "10-20 23:50:12.071 20214 20260 I SeedlessVulkan: Vulkan display backend active",
+            "10-20 23:50:14.488 20214 20279 I SeedlessVulkan: presentMode=1 images=5 transform=1 logical=800x600 extent=600x800 maxInFlight=1 lowLatency=1",
+            "10-20 23:50:14.510 20214 20279 I SeedlessVulkan: presentMode=1 images=5 transform=0 logical=800x600 extent=800x600 maxInFlight=1 lowLatency=1"
+          ],
+          "primaryAndExternalActive": true
+        }
+      ],
+      "physicalDualPanel": false
+    },
+    "preservation": {
+      "preferencesRestored": true,
+      "originalSavesUnchanged": true,
+      "originalSaveCount": 8,
+      "overlayRestored": true,
+      "installedApkSha256": "9a341e9a84ab2b087300de969432b03fcc6e7f6493f78cd629883008d71b2eeb",
+      "newBackupsCreated": false
+    }
+  },
+  "nativeLibraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+      "apkOffset": 21282816,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "sha256": "d3e48717c9aa147e0ab21063ba0e8e0211cabf8bf40b222640829519edbf58e1",
+      "apkOffset": 21299200,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "sha256": "d122a822a4247d5b63c14d684e494e91b3584b4a0c386e2cc80d52febda874cb",
+      "apkOffset": 21315584,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "sha256": "6c9bb05c8315e834e277b753c2c5db82d85939d3c25fb9c863ce001a9c1fb5bc",
+      "apkOffset": 21823488,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "sha256": "5a46f7a1a07f12dcf6e1f4dabb8e628efe523e792bd1701d3921bf4b894c55d5",
+      "apkOffset": 23281664,
+      "elfLoadAlignment": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "coreAndOpenGlShaderSourcesUnchangedFrom108": true,
+  "limits": [
+    "Renderer changes require closing the game; filters and low latency can be changed during play",
+    "Explicit Android/driver/diagnostic compatibility fallback remains; shader-based fallback removed",
+    "Virtual secondary display only, not physical dual-panel testing",
+    "Compatibility smoke tests, no input-to-photon latency measurement"
+  ]
+}

@@ -1,0 +1,72 @@
+# SeedlessDS 1.0.11：精选 Vulkan 着色器
+
+基于 1.0.10-lcd（继承 1.0.9 的渲染器设置），版本码 121，包名和签名不变，可覆盖安装。依照用户此前要求，本轮未连接、安装或操作 Nova，交由用户实测。
+
+## 筛选与新增选项
+
+着色器没有统一、可信的评价分数。本轮参考作者说明、Libretro 维护版本与社区实际使用反馈，再结合 NDS 的 UI、2D/3D 混合画面和当前 Vulkan 单遍管线筛选，没有把仓库 star 数当作画质评分。
+
+| 家族 | 主要用途 | 新增选项 |
+|---|---|---|
+| Sharp Bilinear | 整数预放大配合双线性，减轻普通线性的模糊 | 原版、NDS 色彩版 |
+| Sharp Shimmerless | 用矩形覆盖思路处理非整数放大，适合比较滚动画面的闪烁 | 原版、NDS 色彩版 |
+| Pixel AA Fast | 像素边缘的平滑过渡与伽马混合 | 原版 |
+| LCD3x | 模拟 RGB 子像素与网格；区别于此前 LCD1x | 原版、NDS 色彩版 |
+| Quilez | 五次多项式插值，作为轻量的清晰/平滑折中 | 原版、NDS 色彩版 |
+
+共 **新增 9 项，Vulkan 列表合计 16 项**。入口：**设置 → 屏幕 → 渲染器：Vulkan → 图像滤镜**。原有滤镜与 Vulkan 低延迟开/关继续保留，默认渲染器仍为 OpenGL。
+
+优先对比 Sharp Shimmerless 与 Sharp Bilinear；若偏好像素颗粒，可比较 LCD3x 和此前的 LCD1x/zFast LCD。是否喜欢颜色或边缘处理属于主观选择，新增效果尚未在设备上验证，不能保证人人认为更好。
+
+筛选参考：[Sharp Bilinear 等的社区使用讨论](https://forums.libretro.com/t/what-is-your-favorite-shader-and-why-2019-edition-opinion/24393)、[Sharp Shimmerless 作者说明](https://github.com/Woohyun-Kang/Sharp-Shimmerless-Shader)、[Pixel AA 源码及功能说明](https://github.com/libretro/glsl-shaders/blob/ad947689af01544f2857591a0e3e171ac30e9dff/pixel-art-scaling/shaders/pixel_aa/pixel_aa.glsl)、[LCD3x 原始实现](https://github.com/libretro/glsl-shaders/blob/ad947689af01544f2857591a0e3e171ac30e9dff/handheld/shaders/lcd3x.glsl)。这些链接用于追溯选择与算法，并非效果排名。
+
+## 移植与兼容处理
+
+- 五个家族都接入当前 Vulkan 呈现 pass，保留每屏最多一个 GPU 提交，没有增加离屏画面队列；不代表没有额外 GPU 运算成本。
+- 缩放类效果依据每屏上传纹理的实际尺寸和 UV 导数计算比例，涵盖旋转和 PIP 的比例；取样限制在该屏的图集区域，避免读取另一屏。
+- Sharp Bilinear 采用按轴自动预缩放，并对小于 1 的预缩放值做保护；它在小倍率放大时可能接近普通线性。
+- Sharp Shimmerless 使用输出像素中心左右的覆盖边界，处理非整数位置的矩形。缩小显示时采用有界四次取样近似，不能宣称所有缩小比例都严格无闪烁。
+- Pixel AA Fast 原本需要先平方线性化、再插值和开方。本版在一个 pass 中用四次 texelFetch 完成同一类伽马混合，保留平滑过渡，不复制中间帧缓冲量化误差；缩小显示采用四点近似。没有加入子像素 AA 或完整 Pixel AA 的所有可调版本。
+- LCD3x 网格使用各屏独立的 256×192 原生 DS 坐标，RGB 条纹沿模拟画面方向排列，不代表实际面板的 RGB/BGR 子像素结构。
+- Quilez 采用项目已有 hunterk 公有领域实现的插值公式。NDS 色彩组合复用 1.0.10 的安全钳位和颜色矩阵。
+- 切回 OpenGL 时按已部署的 GLSL 文件校验效果；没有对应文件的 Vulkan 专用效果会重置为无滤镜。全局设置、每游戏继承和保存也做相同校验；同名自定义 GLSL 文件实际存在时可以继续使用。
+
+本轮未移植多遍 CRT、Super-xBR、ScaleFX、完整 SMAA 或任意 Slang 预设加载。这些需要独立的中间纹理、缩放或资源管理，不以简单改名冒充完整移植。
+
+## 来源与许可
+
+固定来源提交：
+
+- libretro/glsl-shaders：ad947689af01544f2857591a0e3e171ac30e9dff
+- Woohyun-Kang/Sharp-Shimmerless-Shader：2a74e7af599335c2ce5e493f823a757925c80db3
+
+源码包 third-party-shaders/ 保留实际使用的原始文件、CC0 许可与 SHA-256 清单；APK 许可证页增加作者和许可声明。Sharp Bilinear、Sharp Shimmerless、LCD3x 为公有领域/CC0，Pixel AA 为 fishku 的 CC0 实现；Quilez 使用本项目已有公有领域代码。原有 NDS 色彩和项目许可继续保留。
+
+## 自动验证与限制
+
+- Android 构建成功，**94 项 JVM 测试通过**；Lint **0 错误 / 27 警告**。
+- 滤镜编号、采样器类型、Vulkan 选择、低延迟状态、全局/每游戏保存和清除覆盖、切换回 GL 的兼容处理均有回归检查。
+- 12 组生产像素/快照/WSI/采样策略主机检查通过；现有核心源码与 OpenGL 着色器未改动。
+- 生产 filter_math.glsl 编译为主机 C 后，通过 **416 次独立面积覆盖对照、480 个整数倍率采样、3030 项范围/单调性检查**。覆盖对照最大绝对误差约 0.00000610。这些检查只验证坐标数学，不验证 GPU 导数、取样颜色、驱动图像或缩小近似。
+- 两个 Vulkan 1.0 着色器编译通过，生成的 SPIR-V 与 GLSL 再编译结果一致；push constants 仍为原有 64 字节。
+- APK assets 对照源码、签名、5 个 ARM64 库的 ELF LOAD / APK 文件偏移 16KiB 对齐通过。
+- **没有真机画面、帧率、功耗、物理双屏或端到端延迟测量，未安装 Nova。** 之前版本的设备记录是历史结果，不代表本轮新效果已通过真机验证。
+
+建议用同一游戏存档对比静止细字、地图滚动、1/2 倍 3D、PIP、交换屏幕及副屏；非整数缩放和 LCD 彩条的效果请以设备为准。
+
+## 构建与复现
+
+JDK17、SDK35、Build Tools34.0.0、NDK25.2.9519653、CMake3.22.1，配置 local.properties 的 sdk.dir 后：
+
+```text
+gradlew.bat --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+python tools/run_filter_math_tests.py --ndk <NDK目录>
+python tools/run_vulkan_host_tests.py --ndk <NDK目录>
+python tools/compile_vulkan_shaders.py --glslang <glslang路径> --check
+```
+
+普通 APK 构建使用随源 SPIR-V，不需要安装 glslang。源码携带固定版本原生依赖和着色器来源，不含用户 ROM、存档、账号或本地构建缓存。
+
+APK SHA-256：`8fd4d892cc4c7974d044253146569cbfb35ee7112b929de6446522d4eb108d5e`
+
+签名证书 SHA-256：`99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165`

@@ -1,0 +1,776 @@
+{
+  "versionName": "1.0.7-vulkan",
+  "versionCode": 117,
+  "package": "com.seedlessds.app.debug",
+  "base": "1.0.6-upstream",
+  "baseArchiveSha256": "dd6999ab5803f9eed0c17b1ea674d55ab2729dddfad5898e9f380f63de03f63e",
+  "referenceRelease": "https://github.com/SapphireRhodonite/WatermelonDS/releases/tag/0.8.0.rc3",
+  "referenceCommit": "9bd6a0db59f944cda961e1df7f6e692eb6d4e65b",
+  "scope": "Experimental Vulkan CPU-frame presentation backend; unchanged software DS 3D core.",
+  "apk": "SeedlessDS-1.0.7-vulkan-debug.apk",
+  "apkBytes": 39021914,
+  "apkSha256": "fae306f3b203657acedd9fbb56eb3a4bc3550d5f1d7322a2bc958cd0dd9d88dc",
+  "certificateSha256": "99e2395bd7c458a577e6bc4f4c7237a7474cb20a178fad07313c2778a7943165",
+  "signatureV1": true,
+  "signatureV2": true,
+  "testTotal": 69,
+  "jvmTests": [
+    {
+      "suite": "com.seedlessds.app.emu.DsPenPointerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.KeyBindingsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.LiveInputTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.ScreenGeometryTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.StickInputTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.VulkanPolicyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.emu.VulkanSettingsTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.seedlessds.app.ra.RaHostOverrideTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "vulkanHostTests": {
+    "scalesTested": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "rgb565Values": 65536,
+    "concurrentPublications": 300,
+    "concurrentReaders": 2,
+    "coherentSnapshots": [
+      297,
+      298
+    ],
+    "tests": {
+      "rgbaPacking": "passed",
+      "rgb565Conversion": "passed",
+      "capacityGuards": "passed",
+      "completedPageAndMetadata": "passed",
+      "loadingAndNoNewFrame": "passed",
+      "concurrentSnapshots": "passed",
+      "presentModeAndImageCount": "passed",
+      "preRotation": "passed"
+    },
+    "scope": "Production pixel/snapshot code and WSI policy; fixture core state and host mutex; no Android Vulkan driver execution"
+  },
+  "rewindHostTests": {
+    "tests": {
+      "rewind_ring_test": "passed",
+      "rewind_codec_test": "passed",
+      "rewind_worker_test": "passed",
+      "rewind_manager_test": "passed",
+      "rewind_manager_async_test": "passed",
+      "outstandingAllocations": 0
+    },
+    "ringRandomOperations": 10000,
+    "workerReuseCycles": 512,
+    "scope": "Production ring, codec, background worker and scheduler; fake machine and clock; real host zlib; not Android gameplay"
+  },
+  "lintErrors": 0,
+  "lintWarnings": 24,
+  "lintWarningIds": [
+    "ApplySharedPref",
+    "DefaultLocale",
+    "UnusedAttribute",
+    "UnusedAttribute",
+    "ModifierParameter",
+    "ModifierParameter",
+    "ChromeOsAbiSupport",
+    "ExportedReceiver",
+    "DataExtractionRules",
+    "DrawAllocation",
+    "DrawAllocation",
+    "Recycle",
+    "StaticFieldLeak",
+    "StaticFieldLeak",
+    "UnusedResources",
+    "UnusedResources",
+    "UnusedResources",
+    "UseOfNonLambdaOffsetOverload",
+    "MonochromeLauncherIcon",
+    "MonochromeLauncherIcon",
+    "ViewConstructor",
+    "ClickableViewAccessibility",
+    "ClickableViewAccessibility",
+    "ClickableViewAccessibility"
+  ],
+  "spirvShadersCompiledAndReproduced": 2,
+  "glslRecipes": 110,
+  "glslPassPairs": 147,
+  "glslLinkFailures": 0,
+  "glslAssetsUnchanged": 188,
+  "allApkAssetBytesMatchSource": true,
+  "productionFilesVerifiedUnchanged": [
+    "app/src/main/java/com/seedlessds/app/emu/LiveInput.kt",
+    "app/src/main/java/com/seedlessds/app/emu/ScreenGeometry.kt",
+    "app/src/main/java/com/seedlessds/app/emu/KeyMap.kt",
+    "core/src/frontend/input_mailbox.c",
+    "core/src/frontend/input_mailbox.h",
+    "core/src/core/rewind.c",
+    "core/src/core/rewind_worker.c",
+    "core/src/core/rewind_ring.c",
+    "core/src/core/rewind_codec.c",
+    "core/src/core/state_format.h",
+    "app/src/main/cpp/jni/gpu_fence.c",
+    "tools/run_rewind_host_tests.py",
+    "app/src/main/assets/usrcheat.dat",
+    "app/src/main/assets/game_database.xml",
+    "core/src/gpu/CMakeLists.txt",
+    "core/src/gpu/gpu.c",
+    "core/src/gpu/gpu.h",
+    "core/src/gpu/gpu2d/bg_affine.c",
+    "core/src/gpu/gpu2d/bg_text.c",
+    "core/src/gpu/gpu2d/blend.c",
+    "core/src/gpu/gpu2d/CMakeLists.txt",
+    "core/src/gpu/gpu2d/compose.c",
+    "core/src/gpu/gpu2d/deferred.c",
+    "core/src/gpu/gpu2d/gpu2d.c",
+    "core/src/gpu/gpu2d/gpu2d.h",
+    "core/src/gpu/gpu2d/line.c",
+    "core/src/gpu/gpu2d/obj.c",
+    "core/src/gpu/gpu2d/palette.c",
+    "core/src/gpu/gpu2d/planes.c",
+    "core/src/gpu/gpu2d/worker.c",
+    "core/src/gpu/gpu3d/CMakeLists.txt",
+    "core/src/gpu/gpu3d/dynamic_scale.c",
+    "core/src/gpu/gpu3d/geometry.c",
+    "core/src/gpu/gpu3d/gpu3d.c",
+    "core/src/gpu/gpu3d/gpu3d.h",
+    "core/src/gpu/gpu3d/gxfifo.c",
+    "core/src/gpu/gpu3d/gxfifo_state_primitive_table.c",
+    "core/src/gpu/gpu3d/gxfifo_state_primitive_table.h",
+    "core/src/gpu/gpu3d/io3d.c",
+    "core/src/gpu/gpu3d/matrix.c",
+    "core/src/gpu/gpu3d/poly.c",
+    "core/src/gpu/gpu3d/scale.c",
+    "core/src/gpu/gpu3d/raster/bands.c",
+    "core/src/gpu/gpu3d/raster/CMakeLists.txt",
+    "core/src/gpu/gpu3d/raster/compose_band.c",
+    "core/src/gpu/gpu3d/raster/depth_effects.c",
+    "core/src/gpu/gpu3d/raster/interp.c",
+    "core/src/gpu/gpu3d/raster/neon_helpers.c",
+    "core/src/gpu/gpu3d/raster/raster.h",
+    "core/src/gpu/gpu3d/raster/span.c",
+    "core/src/gpu/gpu3d/raster/texture.c",
+    "core/src/gpu/gpu3d/raster/texture_palette_bank_fallback.c",
+    "core/src/gpu/gpu3d/raster/texture_palette_bank_fallback.h",
+    "core/src/gpu/gpu3d/raster/workers.c",
+    "app/src/main/assets/shaders/2XBR_v3.7C.dfx",
+    "app/src/main/assets/shaders/2XBR_v3.7C.dsd",
+    "app/src/main/assets/shaders/2XBR_v3.7C_1x.dfx",
+    "app/src/main/assets/shaders/2XBR_v3.7C_2x.dfx",
+    "app/src/main/assets/shaders/4XBR_v1.1_Low configuration.dfx",
+    "app/src/main/assets/shaders/4XBR_v1.1_Low configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v1.1_Low configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v1.1_Low configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v2.1_High configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v2.1_High configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.5a_Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.5a_Low Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.5a_Very High Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.5a_Very High Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.5b_Very High Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.5b_Very High Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7A + LCD3x_1x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7A + LCD3x_2x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7A + LCD3x_3x(Full).dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7A.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7A.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7A_1x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7A_2x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7a_CRT + High Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7a_CRT + High Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7a_CRT + Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7a_CRT + Low Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7a_High Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7a_High Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7a_Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7a_Low Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7B.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7B.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7B_1x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7B_2x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C + CRT.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C + CRT.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7C + LCD3x_1x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C + LCD3x_2x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C + LCD3x_3x(Full).dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7C_1x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7C_2x.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7_CRT + Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7_CRT + Low Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v3.7_LCD3X + Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7_Low configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v3.7_Low configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v4.0 + CRT.dfx",
+    "app/src/main/assets/shaders/5XBR_v4.0 + CRT.dsd",
+    "app/src/main/assets/shaders/5XBR_v4.0+ LCD3x.dfx",
+    "app/src/main/assets/shaders/5XBR_v4.0.dfx",
+    "app/src/main/assets/shaders/5XBR_v4.0.dsd",
+    "app/src/main/assets/shaders/5XBR_v4.0_CRT + Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v4.0_CRT + Low Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v4.0_High Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v4.0_High Configuration.dsd",
+    "app/src/main/assets/shaders/5XBR_v4.0_Low Configuration.dfx",
+    "app/src/main/assets/shaders/5XBR_v4.0_Low Configuration.dsd",
+    "app/src/main/assets/shaders/AA.dfx",
+    "app/src/main/assets/shaders/AA.dsd",
+    "app/src/main/assets/shaders/Cartoon1x.dfx",
+    "app/src/main/assets/shaders/Cartoon1x.dsd",
+    "app/src/main/assets/shaders/Cartoon2x.dfx",
+    "app/src/main/assets/shaders/Cartoon2x.dsd",
+    "app/src/main/assets/shaders/Cartoon3x.dfx",
+    "app/src/main/assets/shaders/Cartoon3x.dsd",
+    "app/src/main/assets/shaders/CRT-Geom-no-Curvature.dfx",
+    "app/src/main/assets/shaders/CRT-Geom.dfx",
+    "app/src/main/assets/shaders/crt-geom.dsd",
+    "app/src/main/assets/shaders/CrtC.dfx",
+    "app/src/main/assets/shaders/CrtC.dsd",
+    "app/src/main/assets/shaders/Dot HD.dfx",
+    "app/src/main/assets/shaders/Dot HD_MiZai+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/Dot HD_MiZai.dfx",
+    "app/src/main/assets/shaders/Dot.dfx",
+    "app/src/main/assets/shaders/dot.dsd",
+    "app/src/main/assets/shaders/Dot_d4.dfx",
+    "app/src/main/assets/shaders/dot_d4.dsd",
+    "app/src/main/assets/shaders/Dot_d4_HD.dfx",
+    "app/src/main/assets/shaders/Dot_hv4.dfx",
+    "app/src/main/assets/shaders/dot_hv4.dsd",
+    "app/src/main/assets/shaders/Dot_hv4_HD.dfx",
+    "app/src/main/assets/shaders/Dot_MiZai+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/Dot_MiZai+nds_color+natural_vision.dsd",
+    "app/src/main/assets/shaders/Dot_MiZai.dfx",
+    "app/src/main/assets/shaders/Dot_MiZai.dsd",
+    "app/src/main/assets/shaders/FXAA HQ.dfx",
+    "app/src/main/assets/shaders/FXAA.dfx",
+    "app/src/main/assets/shaders/fxaa.dsd",
+    "app/src/main/assets/shaders/HQ2X.dfx",
+    "app/src/main/assets/shaders/hq2x.dsd",
+    "app/src/main/assets/shaders/lcd1x+natural_vision.dfx",
+    "app/src/main/assets/shaders/lcd1x+natural_vision.dsd",
+    "app/src/main/assets/shaders/lcd1x+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/lcd1x+nds_color+natural_vision.dsd",
+    "app/src/main/assets/shaders/lcd1x+nds_color.dfx",
+    "app/src/main/assets/shaders/lcd1x+nds_color.dsd",
+    "app/src/main/assets/shaders/lcd1x.dfx",
+    "app/src/main/assets/shaders/lcd1x.dsd",
+    "app/src/main/assets/shaders/LCD3x HD.dfx",
+    "app/src/main/assets/shaders/LCD3x.dfx",
+    "app/src/main/assets/shaders/LCD3x.dsd",
+    "app/src/main/assets/shaders/Linear.dfx",
+    "app/src/main/assets/shaders/linear.dsd",
+    "app/src/main/assets/shaders/Linear2X.dfx",
+    "app/src/main/assets/shaders/natural_vision.dfx",
+    "app/src/main/assets/shaders/natural_vision.dsd",
+    "app/src/main/assets/shaders/nds_color.dfx",
+    "app/src/main/assets/shaders/nds_color.dsd",
+    "app/src/main/assets/shaders/None.dfx",
+    "app/src/main/assets/shaders/Quilez.dfx",
+    "app/src/main/assets/shaders/quilez.dsd",
+    "app/src/main/assets/shaders/retro-tiles HD+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/retro-tiles HD.dfx",
+    "app/src/main/assets/shaders/retro-tiles+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/retro-tiles+nds_color+natural_vision.dsd",
+    "app/src/main/assets/shaders/retro-tiles.dfx",
+    "app/src/main/assets/shaders/retro-tiles.dsd",
+    "app/src/main/assets/shaders/SABR_v3.0.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0.dsd",
+    "app/src/main/assets/shaders/SABR_v3.0_1x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_2x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized + LCD3x_1x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized + LCD3x_2x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized + LCD3x_3x(Full).dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized.dsd",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_1x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_2x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq + LCD3x_1x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq + LCD3x_2x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq + LCD3x_3x(Full).dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq.dsd",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq_1x.dfx",
+    "app/src/main/assets/shaders/SABR_v3.0_Optimized_lq_2x.dfx",
+    "app/src/main/assets/shaders/Scale2X.dfx",
+    "app/src/main/assets/shaders/scale2x.dsd",
+    "app/src/main/assets/shaders/Scale_color_correction.dfx",
+    "app/src/main/assets/shaders/scale_color_correction.dsd",
+    "app/src/main/assets/shaders/Scanline.dfx",
+    "app/src/main/assets/shaders/scanline.dsd",
+    "app/src/main/assets/shaders/Scanlinesd.dfx",
+    "app/src/main/assets/shaders/Scanlinesd.dsd",
+    "app/src/main/assets/shaders/ScanlinesdColor.dfx",
+    "app/src/main/assets/shaders/ScanlinesdColor.dsd",
+    "app/src/main/assets/shaders/ScanlinesdColorX.dfx",
+    "app/src/main/assets/shaders/ScanlinesdColorX.dsd",
+    "app/src/main/assets/shaders/ScanlinesdX.dfx",
+    "app/src/main/assets/shaders/ScanlinesdX.dsd",
+    "app/src/main/assets/shaders/sharp_bilinear+natural_vision.dfx",
+    "app/src/main/assets/shaders/sharp_bilinear+natural_vision.dsd",
+    "app/src/main/assets/shaders/sharp_bilinear+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/sharp_bilinear+nds_color+natural_vision.dsd",
+    "app/src/main/assets/shaders/sharp_bilinear+nds_color.dfx",
+    "app/src/main/assets/shaders/sharp_bilinear+nds_color.dsd",
+    "app/src/main/assets/shaders/sharp_bilinear.dfx",
+    "app/src/main/assets/shaders/sharp_bilinear.dsd",
+    "app/src/main/assets/shaders/SMAA.dfx",
+    "app/src/main/assets/shaders/zfast.dfx",
+    "app/src/main/assets/shaders/zfast.dsd",
+    "app/src/main/assets/shaders/zfast_lcd+dsi_color.dfx",
+    "app/src/main/assets/shaders/zfast_lcd+dsi_color.dsd",
+    "app/src/main/assets/shaders/zfast_lcd+dslite_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/zfast_lcd+dslite_color+natural_vision.dsd",
+    "app/src/main/assets/shaders/zfast_lcd+dslite_color.dfx",
+    "app/src/main/assets/shaders/zfast_lcd+dslite_color.dsd",
+    "app/src/main/assets/shaders/zfast_lcd+natural_vision.dfx",
+    "app/src/main/assets/shaders/zfast_lcd+natural_vision.dsd",
+    "app/src/main/assets/shaders/zfast_lcd+nds_color+natural_vision.dfx",
+    "app/src/main/assets/shaders/zfast_lcd+nds_color+natural_vision.dsd",
+    "app/src/main/assets/shaders/zfast_lcd+nds_color.dfx",
+    "app/src/main/assets/shaders/zfast_lcd+nds_color.dsd",
+    "app/src/main/assets/shaders/zfast_lcd.dfx",
+    "app/src/main/assets/shaders/zfast_lcd.dsd",
+    "app/src/main/assets/shaders/zfast_lcd_brightness.dfx",
+    "app/src/main/assets/shaders/zfast_lcd_brightness.dsd",
+    "app/src/main/assets/shaders/fxaa/fxaa.dsd",
+    "app/src/main/assets/shaders/fxaa/fxaa3_luma.dsd",
+    "app/src/main/assets/shaders/fxaa/fxaa_luma.dsd",
+    "app/src/main/assets/shaders/smaa/AreaTexRGB.raw",
+    "app/src/main/assets/shaders/smaa/SearchTexRGB.raw",
+    "app/src/main/assets/shaders/smaa/SMAA.hlsl",
+    "app/src/main/assets/shaders/smaa/smaa_blend.dsd",
+    "app/src/main/assets/shaders/smaa/smaa_edge.dsd",
+    "app/src/main/assets/shaders/smaa/smaa_weight.dsd"
+  ],
+  "nativeDependencies": [
+    "liblog.so",
+    "libdl.so",
+    "librecon_fn.so",
+    "libEGL.so",
+    "libGLESv2.so",
+    "libandroid.so",
+    "libz.so",
+    "libm.so",
+    "libOpenSLES.so",
+    "libc.so"
+  ],
+  "libraries": [
+    {
+      "path": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+      "zipOffset": 21250048,
+      "elfLoadAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "sha256": "d3e48717c9aa147e0ab21063ba0e8e0211cabf8bf40b222640829519edbf58e1",
+      "zipOffset": 21266432,
+      "elfLoadAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/libseedless_bridge.so",
+      "sha256": "3080db09c0196d20781026ef3d1253ad88a6d69c01e4bcc5fe31a42d94506e50",
+      "zipOffset": 23035904,
+      "elfLoadAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon_fn.so",
+      "sha256": "8ec85d6a01fb803b8f392b0a9f83bef9d043fa0bb6a1aec5854c30fc947376e7",
+      "zipOffset": 37470208,
+      "elfLoadAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    },
+    {
+      "path": "lib/arm64-v8a/librecon.so",
+      "sha256": "09220f5f1b55c7d1f5e2d896d5a2f5bc2938ff343f4295a27b53d8e8bb723c07",
+      "zipOffset": 10944512,
+      "elfLoadAlignments": [
+        16384,
+        16384,
+        16384
+      ]
+    }
+  ],
+  "nativeDependencyPins": {
+    "libarchive-3.8.9.tar.xz": "888c934f9d95648ecb9163dc8e23ab80a476ecb81a8f1154704a227b5b676dde",
+    "unarr-1.1.1.tar.xz": "328efa04ea996dd38916b1247a8cf176ac29b85caf92174e34d31998de4174d2",
+    "lzma920.tar.bz2": "8ac221acdca8b6f6dd110120763af42b3707363752fc04e63c7bbff76774a445"
+  },
+  "hardwareGameplayTested": true,
+  "physicalDualDisplayHardwareTested": false,
+  "deviceTest": {
+    "model": "Retroid Pocket Nova",
+    "android": "13",
+    "api": 33,
+    "soc": "QCS8550",
+    "gpu": "Adreno 740",
+    "gpuDriver": "0676.53 (2023-12-27)",
+    "physicalDisplays": 1,
+    "physicalMode": "960x1280, 120 Hz; landscape 1280x960",
+    "date": "2026-10-19",
+    "initialInstalledVersion": "1.0.5-rewindperf / 115",
+    "testedVersion": "1.0.7-vulkan / 117",
+    "coverage": "User-provided 起源心金4.0正式版.nds (modified HeartGold); intro and existing state loaded into map; no original commercial HeartGold ROM comparison.",
+    "cases": [
+      {
+        "case": "2x-none-rewind-off",
+        "scale": 2,
+        "filter": "None",
+        "rewindRecording": false,
+        "backend": "Vulkan",
+        "normalHudSamples": [
+          {
+            "time": "19:46:10",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:46:20",
+            "speedPercent": 100.3,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:46:30",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:46:40",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:46:50",
+            "speedPercent": 100.2,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:47:00",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:47:10",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:47:20",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:47:23",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:47:33",
+            "speedPercent": 100.4,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:48:19",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:48:29",
+            "speedPercent": 100.3,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:48:39",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:48:50",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:49:00",
+            "speedPercent": 100.2,
+            "composedPercent": 100.0
+          }
+        ],
+        "speedMin": 99.8,
+        "speedMax": 100.4,
+        "note": "HUD logs every about 10 s; startup samples excluded; includes only pre-fallback Vulkan phase for 1x. Not input-to-photon measurement."
+      },
+      {
+        "case": "2x-linear-rewind-on",
+        "scale": 2,
+        "filter": "Linear",
+        "rewindRecording": true,
+        "backend": "Vulkan",
+        "normalHudSamples": [
+          {
+            "time": "19:49:47",
+            "speedPercent": 99.9,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:49:57",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:50:07",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:50:17",
+            "speedPercent": 99.7,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:50:27",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:50:37",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:50:47",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:50:57",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:51:07",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:51:17",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:51:27",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:51:37",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:51:47",
+            "speedPercent": 99.9,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:51:57",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:52:07",
+            "speedPercent": 99.9,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:52:17",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:52:27",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:52:37",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          }
+        ],
+        "speedMin": 99.7,
+        "speedMax": 100.1,
+        "note": "HUD logs every about 10 s; startup samples excluded; includes only pre-fallback Vulkan phase for 1x. Not input-to-photon measurement."
+      },
+      {
+        "case": "2x-fxaa-fallback",
+        "scale": 2,
+        "filter": "FXAA",
+        "rewindRecording": false,
+        "backend": "OpenGL",
+        "normalHudSamples": [
+          {
+            "time": "19:53:23",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:53:33",
+            "speedPercent": 99.9,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:53:43",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:53:53",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          }
+        ],
+        "speedMin": 99.9,
+        "speedMax": 100.1,
+        "note": "HUD logs every about 10 s; startup samples excluded; includes only pre-fallback Vulkan phase for 1x. Not input-to-photon measurement."
+      },
+      {
+        "case": "1x-none-rewind-on",
+        "scale": 1,
+        "filter": "None",
+        "rewindRecording": true,
+        "backend": "Vulkan",
+        "normalHudSamples": [
+          {
+            "time": "19:55:27",
+            "speedPercent": 99.8,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:55:38",
+            "speedPercent": 100.1,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:55:48",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:55:58",
+            "speedPercent": 99.9,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:56:08",
+            "speedPercent": 99.9,
+            "composedPercent": 100.0
+          },
+          {
+            "time": "19:56:18",
+            "speedPercent": 100.0,
+            "composedPercent": 100.0
+          }
+        ],
+        "speedMin": 99.8,
+        "speedMax": 100.1,
+        "note": "HUD logs every about 10 s; startup samples excluded; includes only pre-fallback Vulkan phase for 1x. Not input-to-photon measurement."
+      }
+    ],
+    "observedPresentMode": "MAILBOX",
+    "observedSwapchainImages": 5,
+    "maxGpuSubmissionsInFlight": 1,
+    "passed": [
+      "same-package in-place install preserving data",
+      "Vulkan None and Linear produce game frames",
+      "old state loads into map",
+      "PIP picture, alpha blending and touch opens bag",
+      "emulated direction keys move character",
+      "bound rewind key responds and changes history",
+      "menu pause and resume",
+      "Home and resume",
+      "normal close and warm reopen",
+      "FXAA startup falls back to OpenGL and renders",
+      "changing None to FXAA during play falls back and renders",
+      "changing back to None retains OpenGL until reopen",
+      "800x600 and 640x480 simulated secondary displays render through Vulkan",
+      "simulated secondary-display touch opens bag",
+      "remove and reattach simulated display",
+      "secondary transform 90-to-0 swapchain rebuild"
+    ],
+    "settingsRestored": true,
+    "keyBindingsUnchanged": true,
+    "fourSaveStateFilesUnchanged": true,
+    "overlaySettingRestored": true,
+    "measuredInputToPhotonLatency": false,
+    "physicalDualDisplaysTested": false,
+    "physicalAnalogStickTested": false,
+    "vulkanValidationLayersUsed": false,
+    "limits": "Sparse HUD samples do not prove all frames smooth or measure latency. Rewinding intentionally changes time; its transient HUD is excluded from normal forward performance claims. Simulated displays do not reproduce two physical panels, USB-C/HDMI or different refresh-clock behavior."
+  }
+}
