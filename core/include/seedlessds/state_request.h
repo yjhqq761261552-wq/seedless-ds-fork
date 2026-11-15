@@ -5,7 +5,8 @@ extern "C" {
 #endif
 #include <stdint.h>
 /* One operation owns its slot until the actual load or file commit completes.
- * Status: 0 pending, 1 committed, -1 failed/stale. Ticket 0 means rejected. */
+ * Status: 0 pending, 2 snapshot captured/writer pending, 1 committed,
+ * -1 failed/stale. Ticket 0 means rejected. */
 uint64_t nds_state_request(unsigned slot, int load);
 int nds_state_request_status(uint64_t ticket);
 void nds_state_request_poll(void *machine);

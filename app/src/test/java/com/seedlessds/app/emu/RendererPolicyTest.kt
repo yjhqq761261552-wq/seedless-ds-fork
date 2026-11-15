@@ -5,7 +5,7 @@ import org.junit.Test
 
 class RendererPolicyTest {
     @Test fun vulkanHasOnlyImplementedBuiltInFilters() {
-        assertEquals(listOf("None", "Linear", "FXAA", "lcd1x", "lcd1x+nds_color", "zfast_lcd", "zfast_lcd+nds_color", "sharp_bilinear", "sharp_bilinear+nds_color", "sharp_shimmerless", "sharp_shimmerless+nds_color", "pixel_aa_fast", "LCD3x", "LCD3x+nds_color", "Quilez", "Quilez+nds_color"), RendererPolicy.availableFilters(RendererPolicy.VULKAN, listOf("SMAA", "Custom")))
+        assertEquals(listOf("None", "Linear", "FXAA", "lcd1x", "lcd1x+nds_color", "zfast_lcd", "zfast_lcd+nds_color", "sharp_bilinear", "sharp_bilinear+nds_color", "sharp_shimmerless", "sharp_shimmerless+nds_color", "pixel_aa_fast", "LCD3x", "LCD3x+nds_color", "Quilez", "Quilez+nds_color", "rpduo_sharp", "rpduo_grain", "rpduo_grain_plus"), RendererPolicy.availableFilters(RendererPolicy.VULKAN, listOf("SMAA", "Custom")))
         assertEquals(RendererPolicy.vulkanFilters, RendererPolicy.availableFilters(RendererPolicy.VULKAN, emptyList()))
     }
     @Test fun openGlRetainsAllInstalledAndCustomShaders() {
@@ -32,7 +32,7 @@ class RendererPolicyTest {
         assertEquals("Custom", value.filter)
     }
     @Test fun nativeFilterIdsStayStableAcrossDisplays() {
-        val filters = listOf("None", "Linear", "FXAA", "lcd1x", "lcd1x+nds_color", "zfast_lcd", "zfast_lcd+nds_color", "sharp_bilinear", "sharp_bilinear+nds_color", "sharp_shimmerless", "sharp_shimmerless+nds_color", "pixel_aa_fast", "LCD3x", "LCD3x+nds_color", "Quilez", "Quilez+nds_color")
+        val filters = listOf("None", "Linear", "FXAA", "lcd1x", "lcd1x+nds_color", "zfast_lcd", "zfast_lcd+nds_color", "sharp_bilinear", "sharp_bilinear+nds_color", "sharp_shimmerless", "sharp_shimmerless+nds_color", "pixel_aa_fast", "LCD3x", "LCD3x+nds_color", "Quilez", "Quilez+nds_color", "rpduo_sharp", "rpduo_grain", "rpduo_grain_plus")
         filters.forEachIndexed { index, filter -> assertEquals(index, RendererPolicy.vulkanFilterMode(filter)) }
         assertEquals(0, RendererPolicy.vulkanFilterMode("Custom"))
     }

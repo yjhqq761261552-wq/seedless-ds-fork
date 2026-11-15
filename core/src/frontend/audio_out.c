@@ -43,7 +43,7 @@ void audio_out_queue_callback(void *caller, void *context) {
 #undef BUFFER_OFF
 
 void audio_out_set_mode_word(uint32_t a0) {
-    audio_out_mode = (int32_t)a0;
+    __atomic_store_n(&audio_out_mode, (int32_t)a0, __ATOMIC_RELEASE);
 }
 
 void audio_out_set_runtime_flag(uint32_t a0) {

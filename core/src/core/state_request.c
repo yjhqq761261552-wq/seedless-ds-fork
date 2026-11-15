@@ -27,14 +27,23 @@ uint64_t nds_state_request(unsigned requested_slot, int requested_load) {
 
 int nds_state_request_status(uint64_t ticket) {
     pthread_mutex_lock(&lock);
-    int status = ticket && ticket == current ? (phase ? 0 : result) : -1;
+    int status;
+    if (!ticket || ticket != current)
+        status = -1;
+    else if (phase == 3 && !load)
+        /* Snapshot captured; the writer thread still owns compression and
+         * disk I/O. The caller may resume emulation and keep polling for
+         * the final result (phase 0). */
+        status = 2;
+    else
+        status = phase ? 0 : result;
     pthread_mutex_unlock(&lock);
     return status;
 }
 
 void nds_state_write_completed(int status) {
     pthread_mutex_lock(&lock);
-    if (phase == 2 && !load) {
+    if ((phase == 2 || phase == 3) && !load) {
         result = status == 0 ? 1 : -1;
         phase = 0;
     }
@@ -64,6 +73,13 @@ void nds_state_request_poll(void *machine) {
         pthread_mutex_lock(&lock);
         result = status == 0 ? 1 : -1;
         phase = 0;
+        pthread_mutex_unlock(&lock);
+    } else {
+        /* Save snapshot is in its own buffer and the writer thread owns it
+         * now (state_write_finish). Mark phase 3 so the status call can
+         * tell the UI to resume while the write finishes. */
+        pthread_mutex_lock(&lock);
+        phase = 3;
         pthread_mutex_unlock(&lock);
     }
 }

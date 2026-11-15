@@ -35,9 +35,25 @@ internal class StateOperations(private val info: SaveStateInfo) {
                 val ticket = SeedlessCore.stateRequest(slot, load)
                 if (ticket == 0L) { com.seedlessds.app.AppLog.w("state", "State request busy"); return@withContext false }
                 var status: Int
-                do { delay(4); status = SeedlessCore.stateRequestStatus(ticket) } while (status == 0)
+                var resumed = false
+                fun resume() {
+                    if (!resumed) { SeedlessCore.stateHold(false); resumed = true }
+                }
+                do {
+                    delay(4)
+                    status = SeedlessCore.stateRequestStatus(ticket)
+                    // Save only: status 2 means the snapshot is captured and
+                    // the native writer thread owns compression + disk I/O.
+                    // Resume play right away and keep waiting here for the
+                    // final result; the slot file is final (and the sidecar
+                    // below valid) only once the writer completes.
+                    if (!load && status == 2) resume()
+                } while (status == 0 || status == 2)
                 com.seedlessds.app.AppLog.i("state", "${if (load) "load" else "save"} slot=${slot + 1} completed=$status")
                 if (status != 1) return@withContext false
+                // Sidecar work re-reads the whole state file to hash it; it
+                // used to run inside the pause window. Resume first.
+                resume()
                 if (load) ra.deserializeProgress(info.readSidecar(slot))
                 else if (progress == null || !info.writeSidecar(slot, progress)) info.deleteSidecar(slot)
                 true

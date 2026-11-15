@@ -13,9 +13,11 @@ with tempfile.TemporaryDirectory(prefix='seedless-filter-math-') as folder:
  # GLSL/C adapters implement floor/max/clamp over the tested image coordinate range.
  source.write_text('''static float host_floor(float x) {int i=(int)x;return (float)(i-(x<(float)i));}
 static float host_max(float a,float b) {return a>b?a:b;}
+static float host_min(float a,float b) {return a<b?a:b;}
 static float host_clamp(float x,float a,float b) {return x<a?a:(x>b?b:x);}
 #define floor host_floor
 #define max host_max
+#define min host_min
 #define clamp host_clamp
 #include "filter_math.glsl"
 int _fltused=0;
@@ -23,7 +25,7 @@ int _fltused=0;
  def run(args):
   x=subprocess.run([str(v) for v in args],capture_output=True,text=True,timeout=60)
   if x.returncode:raise RuntimeError(x.stdout+x.stderr)
- names=['filter_sharp_bilinear','filter_shimmerless','filter_pixel_aa','filter_quilez']
+ names=['filter_sharp_bilinear','filter_shimmerless','filter_pixel_aa','filter_quilez','filter_box_coverage']
  if os.name=='nt':
   assert a.ndk,'--ndk required on Windows'
   b=Path(a.ndk)/'toolchains/llvm/prebuilt/windows-x86_64/bin'
@@ -34,8 +36,9 @@ int _fltused=0;
   library=t/'filter_math.so'
   run([a.cc,'-shared','-fPIC','-O2','-I',r/'app/src/main/cpp/vulkan',source,'-o',library])
  dll=C.CDLL(str(library))
- for n in names:
+ for n in names[:4]:
   fn=getattr(dll,n);fn.argtypes=[C.c_float] if n=='filter_quilez' else [C.c_float,C.c_float];fn.restype=C.c_float
+ fn=getattr(dll,'filter_box_coverage');fn.argtypes=[C.c_float,C.c_float,C.c_float];fn.restype=C.c_float
  def sample(values,coord):
   pos=coord-.5;i=math.floor(pos);f=pos-i
   at=lambda k:values[min(max(k,0),len(values)-1)]
@@ -76,6 +79,20 @@ int _fltused=0;
     q=dll.filter_quilez(p0-.5)
     assert period-.5002<=q<=period+.5002 and q>=last_quilez-.0002
     last_sharp,last_aa,last_quilez=sb,pa,q;checks+=1
- print(json.dumps({'source':'production filter_math.glsl compiled verbatim with C scalar adapters','exactBoxCoverageComparisons':count,'maximumAbsoluteCoverageError':max_error,'integerScaleSamples':integer_samples,'coordinateRangeAndMonotonicityChecks':checks,'tests':{'fractionalOriginBoxCoverage':'passed','integerPixelPreservation':'passed','sharpBilinearLinearLimit':'passed','pixelAaTransitionBounds':'passed','quilezMonotonicity':'passed'},'scope':'Host coordinate math; no GPU derivatives, sampler/color output or physical display verification'},indent=2))
+ # RP Duo Sharp: per-texel box-coverage weights must reproduce the exact
+ # area average (the harness reference above) at fractional scales.
+ box_checks=0;box_max_error=0.
+ for footprint in [1.,.99,.8,2/3,.5,.4,1/4.5,.25,1/4.5*0.999,.125]:
+  for center in [-.2,.01,.5,.999,1.125,15.0,15.125,15.333,31.5,31.875,32.1,63.9,64.1]:
+   half=footprint/2
+   weights=[dll.filter_box_coverage(center,half,float(t)) for t in range(-1,66)]
+   error=abs(sum(weights)-footprint);box_max_error=max(box_max_error,error)
+   assert error<.0001,('weight sum',center,footprint,error)
+   for values in patterns:
+    weighted=sum(weights[t+1]*values[min(max(t,0),len(values)-1)] for t in range(-1,66))
+    error=abs(weighted/footprint-area(values,center,footprint));box_max_error=max(box_max_error,error)
+    assert error<.0001,('box average',center,footprint,error)
+    box_checks+=1
+ print(json.dumps({'source':'production filter_math.glsl compiled verbatim with C scalar adapters','exactBoxCoverageComparisons':count,'maximumAbsoluteCoverageError':max_error,'integerScaleSamples':integer_samples,'rpDuoBoxCoverageComparisons':box_checks,'rpDuoBoxCoverageMaxError':box_max_error,'coordinateRangeAndMonotonicityChecks':checks,'tests':{'fractionalOriginBoxCoverage':'passed','integerPixelPreservation':'passed','sharpBilinearLinearLimit':'passed','pixelAaTransitionBounds':'passed','quilezMonotonicity':'passed','rpDuoBoxCoverage':'passed'},'scope':'Host coordinate math; no GPU derivatives, sampler/color output or physical display verification'},indent=2))
  if os.name=='nt':
   kernel=C.WinDLL('kernel32');kernel.FreeLibrary.argtypes=[C.c_void_p];assert kernel.FreeLibrary(dll._handle)

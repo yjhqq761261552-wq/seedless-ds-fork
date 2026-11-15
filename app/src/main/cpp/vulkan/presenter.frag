@@ -9,8 +9,10 @@ layout(push_constant) uniform Draw {
     float alpha;
     int rotation;
     int filterMode;
+    vec4 outputRect;
 } draw;
 layout(location=0) in vec2 uv;
+layout(location=1) in vec2 outputPixel;
 layout(location=0) out vec4 color;
 //----------------------------------------------------------------------------------
 // Fxaa3_11.h - version used in CMAA2 sample (https://github.com/GameTechDev/CMAA2)
@@ -330,6 +332,128 @@ vec3 interpolationScreen() {
     if (mode == 8 || mode == 10 || mode == 15) rgb = ndsColor(rgb);
     return rgb;
 }
+vec3 rpDuoSharpScreen() {
+    // RP Duo point-to-point: weight the (at most) 2x2 source texels under
+    // each output pixel by their exact box-coverage area, so fractional
+    // scales stay as crisp as integer scaling instead of smearing through
+    // the bilinear tent filter (top screen 4.5x, bottom screen 4.0x when
+    // the layout sizes them so on the RP Duo). The scale is measured per
+    // draw from derivatives, so each screen — and each presenter on a
+    // dual-screen device — uses its own real ratio at any layout size.
+    // Mixing is done in squared (linear-light) space like Pixel AA Fast.
+    vec2 size = sourceSize();
+    vec2 pixel = (uv - draw.uvRect.xy) / draw.uvRect.zw * size;
+    vec2 footprint = max(fwidth(pixel), vec2(0.000001));
+    vec3 rgb;
+    if (any(greaterThan(footprint, vec2(1.0001)))) {
+        rgb = approximateDownscale(pixel, footprint, size, true);
+    } else {
+        vec2 halfFoot = 0.5 * footprint;
+        ivec2 base = ivec2(floor(pixel - halfFoot));
+        float wx0 = filter_box_coverage(pixel.x, halfFoot.x, float(base.x));
+        float wx1 = filter_box_coverage(pixel.x, halfFoot.x, float(base.x + 1));
+        float wy0 = filter_box_coverage(pixel.y, halfFoot.y, float(base.y));
+        float wy1 = filter_box_coverage(pixel.y, halfFoot.y, float(base.y + 1));
+        // Adaptive taps, same result as the full 2x2 weighted sum: at
+        // 4x-4.5x most output pixels lie fully inside one source texel
+        // (both second weights zero) and take it verbatim — which also
+        // makes the squared mixing the identity there. Only texel-edge
+        // pixels pay for 2 or 4 fetches. The previous version fetched and
+        // mixed all four taps for every pixel on both 120Hz panels and
+        // dropped frames on the RP Duo's GPU.
+        if (wx1 == 0.0 && wy1 == 0.0) {
+            rgb = fetchLocal(base, size);
+        } else if (wy1 == 0.0) {
+            vec3 a = fetchLocal(base, size);
+            vec3 b = fetchLocal(base + ivec2(1, 0), size);
+            rgb = sqrt(max((a * a * wx0 + b * b * wx1) / max(wx0 + wx1, 0.000001), vec3(0.0)));
+        } else if (wx1 == 0.0) {
+            vec3 a = fetchLocal(base, size);
+            vec3 c = fetchLocal(base + ivec2(0, 1), size);
+            rgb = sqrt(max((a * a * wy0 + c * c * wy1) / max(wy0 + wy1, 0.000001), vec3(0.0)));
+        } else {
+            vec3 a = fetchLocal(base, size);
+            vec3 b = fetchLocal(base + ivec2(1, 0), size);
+            vec3 c = fetchLocal(base + ivec2(0, 1), size);
+            vec3 d = fetchLocal(base + ivec2(1, 1), size);
+            vec3 sum = a * a * (wx0 * wy0) + b * b * (wx1 * wy0) +
+                       c * c * (wx0 * wy1) + d * d * (wx1 * wy1);
+            float wsum = (wx0 + wx1) * (wy0 + wy1);
+            rgb = sqrt(max(sum / max(wsum, 0.000001), vec3(0.0)));
+        }
+    }
+    // LCD grid over the point-to-point color: RGB subpixel stripes plus a
+    // per-row weight, in native 256x192 DS pixel space — the same weights
+    // as LCD3x (Gigaherz), but LCD3x point-samples its color while this
+    // filter feeds the grid the exact box-coverage average above, so
+    // fractional scales keep both the grid and the crisp edges.
+    vec2 native = (uv - draw.uvRect.xy) / draw.uvRect.zw * vec2(256.0, 192.0);
+    vec2 angle = 6.283185307179586 * native;
+    const vec3 offsets = 3.141592653589793 * vec3(0.5, 0.5 - 2.0 / 3.0, 0.5 - 4.0 / 3.0);
+    float yfactor = (16.0 + sin(angle.y)) / 17.0;
+    vec3 xfactor = (4.0 + sin(angle.x + offsets)) / 5.0;
+    return rgb * yfactor * xfactor;
+}
+// SuperDrastic ds-grid, Copyright (c) 2026 JorreFog and contributors, MIT.
+// Ported from commit 930c4c5bb3e904557cd8cc42a01a4e27834f5ba1.
+// See assets/licenses/06-SuperDrastic-ds-grid.txt for the complete license.
+vec3 dsGridAreaTap(vec2 center, vec2 footprint, vec2 size) {
+    // One hardware-linear read integrates an output footprint <= one texel.
+    // This is ds-grid's area reconstruction, also valid for fractional origins.
+    vec2 coord = vec2(filter_shimmerless(center.x, footprint.x),
+                      filter_shimmerless(center.y, footprint.y));
+    return sampleLocal(coord, size);
+}
+vec3 dsGridAreaColor(vec2 center, vec2 footprint, vec2 size) {
+    if (all(lessThanEqual(footprint, vec2(1.0))))
+        return dsGridAreaTap(center, footprint, size);
+    // Full-screen RP Duo at all supported internal scales (1x..8x) needs
+    // at most two sub-footprints per axis. Equal-area subdivision extends
+    // the exact reconstruction to these downscales, using 2 or 4 reads.
+    if (any(greaterThan(footprint, vec2(2.0))))
+        return approximateDownscale(center, footprint, size, false);
+    vec2 parts = ceil(footprint);
+    vec2 subFoot = footprint / parts;
+    vec2 offset = (footprint - subFoot) * 0.5;
+    if (parts.x == 1.0)
+        return 0.5 * (dsGridAreaTap(center - offset, subFoot, size) +
+                      dsGridAreaTap(center + offset, subFoot, size));
+    if (parts.y == 1.0)
+        return 0.5 * (dsGridAreaTap(center - offset, subFoot, size) +
+                      dsGridAreaTap(center + offset, subFoot, size));
+    return 0.25 * (dsGridAreaTap(center + vec2(-offset.x, -offset.y), subFoot, size) +
+                   dsGridAreaTap(center + vec2( offset.x, -offset.y), subFoot, size) +
+                   dsGridAreaTap(center + vec2(-offset.x,  offset.y), subFoot, size) +
+                   dsGridAreaTap(center + vec2( offset.x,  offset.y), subFoot, size));
+}
+vec3 rpDuoDsGridScreen(vec2 grainDepth) {
+    const vec2 DS_SIZE = vec2(256.0, 192.0);
+    const float GRAIN_COMPENSATE = 0.5;
+    const float PI = 3.141592653589793;
+    // Exact-area color follows this draw's actual output rectangle. The
+    // aperture stays on the native DS lattice at every internal resolution.
+    vec2 outputSize = max(draw.outputRect.zw, vec2(0.000001));
+    vec2 p = floor(outputPixel) - draw.outputRect.xy;
+    vec2 size = sourceSize();
+    vec2 footprint = size / outputSize;
+    vec3 rgb = dsGridAreaColor((p + 0.5) * footprint, footprint, size);
+    vec2 scale = outputSize / DS_SIZE;
+    // Integrate a shallow raised-cosine aperture across each output pixel.
+    // The sinc term is the exact box integral of that cosine. It gives both
+    // 5x and 5.625x panels the same continuous grain, with smooth edges and
+    // stable phase through fractional origins, rotation and scrolling.
+    vec2 phase = (p + 0.5) / scale;
+    vec2 halfSpan = PI / scale;
+    vec2 ridge = 0.5 + 0.5 * cos(2.0 * PI * phase) * sin(halfSpan) / halfSpan;
+    vec2 aperture = 1.0 - grainDepth * ridge;
+    vec2 meanAperture = 1.0 - 0.5 * grainDepth;
+    float bright = mix(1.0, 1.0 / (meanAperture.x * meanAperture.y), GRAIN_COMPENSATE);
+    float grainGain = aperture.x * aperture.y * bright;
+    // Tiny PIP views smoothly lose the grain as DS cells approach Nyquist.
+    float amount = smoothstep(2.0, 2.5, min(scale.x, scale.y));
+    float gain = mix(1.0, grainGain, amount);
+    return sqrt(min(rgb * rgb * gain, vec3(1.0)));
+}
 vec3 lcd3Screen(vec2 pos) {
     // Gigaherz LCD3x, public domain. Native DS coordinates avoid a different
     // RGB stripe density on the 3D screen, 2D screen or external display.
@@ -353,6 +477,9 @@ void main() {
     } else if (draw.filterMode >= 3 && draw.filterMode <= 6) rgb=lcdScreen(pos);
     else if (draw.filterMode == 12 || draw.filterMode == 13) rgb=lcd3Screen(pos);
     else if ((draw.filterMode >= 7 && draw.filterMode <= 11) || draw.filterMode == 14 || draw.filterMode == 15) rgb=interpolationScreen();
+    else if (draw.filterMode == 16) rgb=rpDuoSharpScreen();
+    else if (draw.filterMode == 17) rgb=rpDuoDsGridScreen(vec2(0.22, 0.18));
+    else if (draw.filterMode == 18) rgb=rpDuoDsGridScreen(vec2(0.30, 0.24));
     else rgb=sampleScreen(screens,pos).rgb;
     color=vec4(rgb,draw.alpha);
 }

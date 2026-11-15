@@ -23,6 +23,7 @@ class DsGlView(context: Context) : SurfaceView(context) {
     private val highColorSurface = RendererPolicy.usesVulkan(SettingsRepo.current)
     private val renderer = DsRenderer()
     private val thread = RenderThread()
+    private val maskBg = MaskBackgrounds(context.applicationContext)
 
     val bottomScreenRect: FloatArray get() = renderer.bottomScreenRect
     val topScreenRect: FloatArray get() = renderer.topScreenRect
@@ -123,6 +124,8 @@ class DsGlView(context: Context) : SurfaceView(context) {
         private var vulkanLowLatency = false
         private var vulkanWidth = 0
         private var vulkanHeight = 0
+        private var lastMaskBg: ScreenMasks.Background? = null
+        private var lastMaskHandle = 0L
         private var fallbackReported: VulkanPolicy.Fallback? = null
 
         fun usingVulkan() = vulkan != 0L
@@ -228,6 +231,15 @@ class DsGlView(context: Context) : SurfaceView(context) {
                             } else {
                                 val frame = SeedlessCore.frameWord()
                                 val geometry = renderer.vulkanGeometry(w, h)
+                                val maskNow = maskBg.current(config,
+                                    ScreenMasks.slotFor(renderer.topScreenRect[2] > 0f, renderer.bottomScreenRect[2] > 0f), w, h)
+                                if (maskNow !== lastMaskBg || vulkan != lastMaskHandle) {
+                                    lastMaskBg = maskNow
+                                    lastMaskHandle = vulkan
+                                    if (maskNow == null) VulkanNative.setBackground(vulkan, null, 0, 0, FloatArray(4))
+                                    else VulkanNative.setBackground(vulkan, maskNow.pixels,
+                                        maskNow.bitmap.width, maskNow.bitmap.height, maskNow.rect)
+                                }
                                 val pip = !DualScreenPresets.singleScreen(config) && config.screenLayout == 5
                                 val result = if (frame and 0xFFFF == 0)
                                     VulkanNative.draw(vulkan, geometry, pip && config.swapScreens) else 0
@@ -307,7 +319,7 @@ class DsGlView(context: Context) : SurfaceView(context) {
                     return false
                 }
                 vulkanWidth = w; vulkanHeight = h; vulkanFilter = config.filter; vulkanLowLatency = config.vulkanLowLatency
-                vulkanExternal = VulkanExternalThread { paused || exiting }.also { it.start() }
+                vulkanExternal = VulkanExternalThread(context.applicationContext) { paused || exiting }.also { it.start() }
                 DisplayBackendStatus.vulkan.value = true
                 DisplayBackendStatus.fallback.value = null
                 com.seedlessds.app.AppLog.i("SeedlessVulkan", "Vulkan display backend active")
@@ -551,12 +563,8 @@ class DsGlView(context: Context) : SurfaceView(context) {
         private fun fitAspect(maxW: Float, maxH: Float): Pair<Float, Float> =
             ScreenGeometry.fitted(maxW, maxH, true, SettingsRepo.current.integerScale)
 
-        private fun xform(r: FloatArray, w: Int, h: Int, sc: Float, offX: Float, offY: Float): FloatArray {
-            val cx = w / 2f; val cy = h / 2f
-            val nx = cx + (r[0] - cx) * sc + offX * w
-            val ny = cy + (r[1] - cy) * sc + offY * h
-            return floatArrayOf(nx, ny, r[2] * sc, r[3] * sc)
-        }
+        private fun xform(r: FloatArray, w: Int, h: Int, sc: Float, offX: Float, offY: Float): FloatArray =
+            ScreenGeometry.transform(r, w.toFloat(), h.toFloat(), sc, offX, offY)
 
         private fun rawRects(w: Int, h: Int, cfg: DsSettings): Pair<FloatArray, FloatArray?> {
             if (DualScreenPresets.singleScreen(cfg)) {
@@ -629,7 +637,15 @@ class DsGlView(context: Context) : SurfaceView(context) {
             val zero = floatArrayOf(0f, 0f, 0f, 0f)
             if (rawBot == null) {
                 val showingBottom = DualScreenPresets.singleBottom(cfg) != cfg.swapScreens
-                val r = if (DualScreenPresets.live(cfg) && cfg.dsSameSize) rawTop
+                // Dual-screen mode (an external display is actually presenting)
+                // automatically switches this panel to its own independent
+                // transform, applied on top of the preset/same-size result.
+                // With the default identity transform the picture is exactly
+                // the preset result, as before. The single-surface top/bot
+                // transforms are untouched and return when the display goes away.
+                val externalActive = cfg.extDisplayType != 0 && ExternalSurface.attached && ExternalSurface.active
+                val r = if (externalActive)
+                    xform(rawTop, w, h, ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY)
                 else if (showingBottom)
                     xform(rawTop, w, h, ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY)
                 else
@@ -640,11 +656,16 @@ class DsGlView(context: Context) : SurfaceView(context) {
                 if (showingBottom) { bottomScreenRect = r; topScreenRect = zero }
                 else { topScreenRect = r; bottomScreenRect = zero }
             } else {
-                var slot0 = rawTop
-                var slot1 = rawBot
-                if (cfg.swapScreens) { val t = slot0; slot0 = slot1; slot1 = t }
-                val topRect = xform(slot0, w, h, ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY)
-                val botRect = xform(slot1, w, h, ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY)
+                var topRect = xform(rawTop, w, h, ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY)
+                var botRect = xform(rawBot, w, h, ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY)
+                // Swap exchanges which screen content goes to which display
+                // rect; the rects themselves (each slot's raw rect with its
+                // own transform) stay put. Exchanging the RAW rects instead
+                // applies each slot's transform to the other slot's base
+                // position, which flings both screens sideways whenever the
+                // two transforms differ (e.g. a side-by-side base layout the
+                // user stacked vertically via the layout editor).
+                if (cfg.swapScreens) { val t = topRect; topRect = botRect; botRect = t }
                 System.arraycopy(quadNdc(w, h, topRect), 0, geo, 0, 12)
                 System.arraycopy(quadNdc(w, h, botRect), 0, geo, 12, 12)
                 topPxW = topRect[2].toInt(); topPxH = topRect[3].toInt()
@@ -732,6 +753,7 @@ class DsGlView(context: Context) : SurfaceView(context) {
             cfg.dsIntFillH, cfg.dsIntAlign, cfg.dsSameSize, cfg.extDisplayType, cfg.extDisplayScreen,
             ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY,
             ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY,
+            ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY,
             DualScreenPresets.version, ExternalSurface.attached, ExternalSurface.active,
         ).joinToString("|")
 
@@ -779,11 +801,13 @@ class DsGlView(context: Context) : SurfaceView(context) {
         private var pipW = 0
         private var pipH = 0
         private val pipBlit = DirectBlit()
+        private val glMask = GlMaskBackground()
 
         private fun ringForget() {
             ringN = 0; ringW = 0; ringH = 0; ringFull = 0
             ringFbo = IntArray(0); ringTex = IntArray(0)
             ringBlitter.forget()
+            glMask.forget()
         }
 
 
@@ -897,7 +921,7 @@ class DsGlView(context: Context) : SurfaceView(context) {
             }
             if (externalThread == null && externalGeneration != snap.generation) {
                 externalGeneration = snap.generation
-                externalThread = ExternalThread(dpy14, android.opengl.EGL14.eglGetCurrentContext()).also { it.start() }
+                externalThread = ExternalThread(dpy14, android.opengl.EGL14.eglGetCurrentContext(), context.applicationContext).also { it.start() }
             }
             return externalThread
         }
@@ -918,6 +942,8 @@ class DsGlView(context: Context) : SurfaceView(context) {
             }
             if (fboRet == 0) GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+            glMask.draw(maskBg.current(SettingsRepo.current,
+                ScreenMasks.slotFor(topScreenRect[2] > 0f, bottomScreenRect[2] > 0f), viewW, viewH), viewH)
             if (i7 != 0) { if (fboRet != 0) { com.seedlessds.app.SeedlessBridge.fboDest(0); GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0) }; return false }
             val tWait = android.os.SystemClock.elapsedRealtimeNanos()
             SeedlessCore.waitScreen()

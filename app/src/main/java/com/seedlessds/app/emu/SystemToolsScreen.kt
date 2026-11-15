@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Memory
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -206,6 +207,12 @@ fun SystemToolsScreen(onBack: () -> Unit) {
             )
         }
     }
+}
+
+private fun fmtBytes(bytes: Long): String = when {
+    bytes < 1024 -> "$bytes B"
+    bytes < 1024 * 1024 -> "${bytes / 1024}KB"
+    else -> String.format("%.1fMB", bytes / 1024.0 / 1024.0)
 }
 
 @Composable private fun ActionCard(icon: ImageVector, title: String, desc: String, onClick: () -> Unit) {

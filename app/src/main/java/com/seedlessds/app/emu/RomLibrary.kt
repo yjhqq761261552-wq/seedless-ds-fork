@@ -274,12 +274,54 @@ object RomLibrary {
         return if (cached == 3) Platform.DSI else Platform.DS
     }
 
+    /* Parsed ROM info used to live only in the in-memory iconCache, so
+     * every process start re-opened every ROM through SAF while scrolling
+     * (hundreds of provider round-trips for a big library). Persist real
+     * parses (header actually read: gameCode present) to a small disk
+     * cache keyed by uri+name; later launches read local files instead. */
+    private fun infoKey(e: RomEntry): String {
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+            .digest((e.uri.toString() + "\n" + e.name).toByteArray(Charsets.UTF_8))
+        return digest.joinToString("") { "%02x".format(it) }
+    }
+
+    private fun diskInfo(ctx: Context, e: RomEntry): NdsInfo? = runCatching {
+        val dir = java.io.File(ctx.filesDir, "rominfo").apply { mkdirs() }
+        val meta = java.io.File(dir, infoKey(e) + ".meta")
+        if (!meta.isFile) return null
+        val parts = meta.readText().split('\t')
+        if (parts.size < 3) return null
+        val png = java.io.File(dir, infoKey(e) + ".png")
+        val icon = if (png.isFile) android.graphics.BitmapFactory.decodeFile(png.absolutePath) else null
+        NdsInfo(parts[0], icon, parts[1].toIntOrNull() ?: 0, parts[2])
+    }.getOrNull()
+
+    private fun storeDiskInfo(ctx: Context, e: RomEntry, info: NdsInfo) {
+        if (info.gameCode.isEmpty()) return
+        runCatching {
+            val dir = java.io.File(ctx.filesDir, "rominfo").apply { mkdirs() }
+            val key = infoKey(e)
+            java.io.File(dir, "$key.meta")
+                .writeText(info.title + "\t" + info.unitCode + "\t" + info.gameCode)
+            val icon = info.icon
+            if (icon != null) {
+                java.io.FileOutputStream(java.io.File(dir, "$key.png")).use {
+                    icon.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+                }
+            }
+        }
+    }
+
     fun info(ctx: Context, e: RomEntry): NdsInfo {
         iconCache[e.uri.toString()]?.let { return it }
         val info = if (e.name.endsWith(".nds", true)) {
-            NdsRom.read(ctx, e.uri).takeUnless { it.title.isBlank() && it.icon == null }
-                ?: runCatching { ctx.contentResolver.openInputStream(e.uri)?.let { NdsRom.read(it) } }.getOrNull()
-                ?: NdsInfo(e.title, null)
+            diskInfo(ctx, e) ?: run {
+                val parsed = NdsRom.read(ctx, e.uri).takeUnless { it.title.isBlank() && it.icon == null }
+                    ?: runCatching { ctx.contentResolver.openInputStream(e.uri)?.let { NdsRom.read(it) } }.getOrNull()
+                    ?: NdsInfo(e.title, null)
+                storeDiskInfo(ctx, e, parsed)
+                parsed
+            }
         } else NdsInfo(e.title, null)
         val resolved = if (info.title.isBlank()) info.copy(title = e.title) else info
         iconCache[e.uri.toString()] = resolved

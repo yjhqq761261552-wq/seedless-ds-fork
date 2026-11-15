@@ -20,8 +20,8 @@ android {
         applicationId = "com.seedlessds.app"
         minSdk = 21
         targetSdk = 35
-        versionCode = 121
-        versionName = "1.0.11-shaders"
+        versionCode = 146
+        versionName = "1.0.36-audiofix"
 
         ndk {
             abiFilters += "arm64-v8a"
@@ -90,6 +90,22 @@ android {
         buildConfig = true
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            all {
+                it.maxHeapSize = "1g"
+                // Let Robolectric fetch its android-all jar through the sandbox proxy.
+                it.systemProperty("http.proxyHost", "hatch-egress-proxy")
+                it.systemProperty("http.proxyPort", "3128")
+                it.systemProperty("https.proxyHost", "hatch-egress-proxy")
+                it.systemProperty("https.proxyPort", "3128")
+                it.systemProperty("http.nonProxyHosts", "localhost|127.0.0.1")
+                it.systemProperty("https.nonProxyHosts", "localhost|127.0.0.1")
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -104,6 +120,10 @@ android {
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation(platform("androidx.compose:compose-bom:2024.12.01"))
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.documentfile:documentfile:1.0.1")

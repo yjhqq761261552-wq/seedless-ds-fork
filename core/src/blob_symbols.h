@@ -6,6 +6,7 @@ extern void sym_libc__setjmp(void) __asm__("_setjmp");
 extern void sym_libc_bsearch(void) __asm__("bsearch");
 extern void sym_libc_close(void) __asm__("close");
 extern void sym_libc_compress(void) __asm__("compress");
+extern void sym_libc_compress2(void) __asm__("compress2");
 extern void sym_libc_compressBound(void) __asm__("compressBound");
 extern void sym_libc_dlclose(void) __asm__("dlclose");
 extern void sym_libc_dlopen(void) __asm__("dlopen");

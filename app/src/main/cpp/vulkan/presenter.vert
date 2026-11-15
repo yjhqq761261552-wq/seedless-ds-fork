@@ -6,8 +6,10 @@ layout(push_constant) uniform Draw {
     float alpha;
     int rotation;
     int filterMode;
+    vec4 outputRect;
 } draw;
 layout(location=0) out vec2 uv;
+layout(location=1) out vec2 outputPixel;
 void main() {
     const vec2 corners[6] = vec2[6](vec2(0,0), vec2(0,1), vec2(1,1),
                                    vec2(0,0), vec2(1,1), vec2(1,0));
@@ -19,4 +21,6 @@ void main() {
     else if (draw.rotation == 3) p = vec2(p.y, -p.x);
     gl_Position = vec4(p, 0, 1);
     uv = draw.uvRect.xy + c * draw.uvRect.zw;
+    // Logical panel coordinates stay aligned with DS axes after pre-rotation.
+    outputPixel = draw.outputRect.xy + c * draw.outputRect.zw;
 }

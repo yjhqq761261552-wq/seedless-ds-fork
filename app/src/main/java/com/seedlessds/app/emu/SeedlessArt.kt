@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.foundation.Image
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -103,8 +102,7 @@ fun GameArt(
 
     Box(
         modifier = modifier
-            .background(gameGradient(title))
-            .let { if (artLoaded) it else it.scanlines() },
+            .background(gameGradient(title)),
         contentAlignment = Alignment.Center,
     ) {
         if (!artLoaded) {
@@ -116,22 +114,10 @@ fun GameArt(
                     filterQuality = FilterQuality.None,
                     modifier = Modifier.fillMaxSize(),
                 )
-                activeUrl != null || loading -> {
-                    if (showInitial) {
-                        Text(
-                            text = title.take(1).uppercase(),
-                            color = Color.White.copy(alpha = 0.18f),
-                            fontFamily = SpaceGrotesk,
-                            fontSize = 46.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(22.dp),
-                        color = Color.White.copy(alpha = 0.85f),
-                        strokeWidth = 2.dp,
-                    )
-                }
+                // No spinner and no scanline pass while art resolves: in a
+                // several-hundred-game grid those are per-card infinite
+                // animations / per-frame line loops that jank every fling.
+                // The static initial is the placeholder.
                 showInitial -> Text(
                     text = title.take(1).uppercase(),
                     color = Color.White.copy(alpha = 0.30f),
@@ -145,6 +131,9 @@ fun GameArt(
             AsyncImage(
                 model = ImageRequest.Builder(context)
                     .data(activeUrl)
+                    // Cards are ~104-160dp wide; never decode covers larger
+                    // than 512px on a side, even for hi-res source scans.
+                    .size(512, 512)
                     .crossfade(true)
                     .listener(
                         onSuccess = { _, _ -> artLoaded = true },

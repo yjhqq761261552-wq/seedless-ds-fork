@@ -36,6 +36,8 @@
 
 ### 新增 Vulkan 移植
 
+感谢 JorreFog 与 SuperDrastic 贡献者的 `ds-grid`。本次 Vulkan 移植依据固定提交 `930c4c5bb3e904557cd8cc42a01a4e27834f5ba1`，原始代码与 MIT 许可随源保存在 `third-party-shaders/SuperDrastic/`，完整许可同时进入 APK 的许可证页。[SuperDrastic 源码](https://github.com/JorreFog/SuperDrastic/blob/930c4c5bb3e904557cd8cc42a01a4e27834f5ba1/shaders/ds-grid.frag)
+
 感谢 Themaister / rsn8887（Sharp Bilinear）、zadpos / Woohyun Kang（Sharp Shimmerless）、fishku（Pixel AA）、Gigaherz（LCD3x）、hunterk 与 Iñigo Quílez（Quilez 插值实现与公式）、jdgleaver（DraStic shader 移植）、Greg Hogan / SoltanGris42（zFast）、NVIDIA（FXAA），以及 Libretro 着色器维护者和其他随源列出的作者。
 
 新增移植的原始文件、固定提交和校验清单保存在 [third-party-shaders](third-party-shaders/)，各文件原有版权与许可继续适用。来源和实现差异见 [1.0.11 说明](SHADERS_1.0.11.md)。

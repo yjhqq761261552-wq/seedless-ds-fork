@@ -2111,7 +2111,7 @@ void state_write_spi_memory_status(const spi_memory_t *m, unsigned char *desc)
 
 typedef size_t (*fn_fwrite)(const void *, size_t, size_t, void *);
 typedef unsigned long (*fn_compress_bound)(unsigned long);
-typedef int (*fn_compress)(void *, unsigned long *, const void *, unsigned long);
+typedef int (*fn_compress2)(void *, unsigned long *, const void *, unsigned long, int);
 typedef void *(*fn_malloc_26)(size_t);
 typedef void (*fn_free_26)(void *);
 typedef int (*fn_fclose)(void *);
@@ -2133,13 +2133,17 @@ void *state_write_finish(void *arg) {
     } else {
         fn_compress_bound bound = (fn_compress_bound)sym_libc_compressBound;
         fn_malloc_26 reserve = (fn_malloc_26)sym_libc_malloc;
-        fn_compress compress = (fn_compress)sym_libc_compress;
+        fn_compress2 compress = (fn_compress2)sym_libc_compress2;
         unsigned long size = bound(0x680000ul);
         const uint8_t *end = rd_ptr_u8(state + 0x828);
         const uint8_t *start = rd_ptr_u8(state + 0x820);
         void *output = reserve((size_t)size);
+        /* Level 1 (Z_BEST_SPEED), the level rewind already uses: zlib's
+         * default level 6 was the single largest cost in the save path on
+         * weak CPUs. The stream format is identical; old and new files
+         * decompress the same way. */
         if (output && compress(output, &size, (uint8_t *)data + 0x40,
-                              (unsigned long)(end - start - 0x40)) == 0) {
+                              (unsigned long)(end - start - 0x40), 1) == 0) {
             uint32_t stored_size = (uint32_t)size;
             if (write_fn(data, 0x40, 1, file) == 1 &&
                 write_fn(&stored_size, sizeof stored_size, 1, file) == 1 &&
@@ -2193,7 +2197,7 @@ int state_load_file(unsigned char *machine, const char *path,
     spu_t *spu = &((nds_t *)machine)->spu;
     if (!buffer) return -1;
     while (state_write_pending() != 0)
-        nds_platform_default()->threads.sleep_us(1);
+        nds_platform_default()->threads.sleep_us(1000);
 
     uint32_t token = 0;
     if (only_look == 0)

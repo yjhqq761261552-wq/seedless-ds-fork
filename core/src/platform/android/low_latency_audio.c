@@ -2,6 +2,7 @@
 #include "low_latency_audio.h"
 #include "pcm_ring.h"
 #include "seedlessds/metrics.h"
+#include "frontend/audio_out.h"
 #include <aaudio/AAudio.h>
 #include <android/log.h>
 #include <dlfcn.h>
@@ -26,12 +27,15 @@ static pthread_mutex_t control = PTHREAD_MUTEX_INITIALIZER;
 static unsigned configured = 1;
 static unsigned sound_enabled = 1;
 static unsigned gain_q15 = 32768;
+static int applied_config = -1;
+static unsigned applied_latency;
 typedef struct {
     AAudioStream *stream;
     pcm_ring_t ring;
     unsigned rate, burst, limit;
     int running, started, failed, xruns, target;
     uint64_t underruns, overruns, callbacks, checked_at;
+    uint64_t observed_callbacks, progress_at;
 } output_t;
 /* Lifetime is stable until stream close has joined all callbacks. Control APIs
  * and the producer share a short lock; the real-time callback never takes it. */
@@ -99,7 +103,10 @@ int low_latency_audio_start(unsigned latency) {
     int ok = 0;
     AAudioStreamBuilder *builder = NULL;
     output_t *o = NULL;
-    if (!__atomic_load_n(&configured, __ATOMIC_ACQUIRE) || !load_api()) goto done;
+    if (latency > 3) latency = 3;
+    applied_config = (int)__atomic_load_n(&configured, __ATOMIC_ACQUIRE);
+    applied_latency = latency;
+    if (!applied_config || !load_api()) goto done;
     o = calloc(1, sizeof *o);
     if (!o || api__createStreamBuilder(&builder) != AAUDIO_OK) goto fail;
     api_StreamBuilder_setDirection(builder, AAUDIO_DIRECTION_OUTPUT);
@@ -119,12 +126,11 @@ int low_latency_audio_start(unsigned latency) {
     o->burst = (unsigned)api_Stream_getFramesPerBurst(o->stream);
     if (!o->burst || o->burst > 4096) goto fail;
     static const unsigned bursts[] = {4, 6, 8, 12};
-    if (latency > 3) latency = 3;
     o->limit = 1470 + 735 * latency;
     o->target = api_Stream_setBufferSizeInFrames(o->stream, (int32_t)(o->burst * bursts[latency]));
     if (o->target <= 0) goto fail;
     __atomic_store_n(&o->running, 1, __ATOMIC_RELEASE);
-    /* Start after two emulation blocks have primed the ring, not during ROM boot. */
+    /* The producer primes the stream after ROM boot. */
     output = o; ok = 1;
     __android_log_print(ANDROID_LOG_INFO, "SeedlessAudio", "AAudio native=%u Hz, burst=%u, buffer=%d frames, source=44100 stereo", o->rate, o->burst, o->target);
     goto done;
@@ -143,6 +149,7 @@ void low_latency_audio_pause(void) {
     pthread_mutex_lock(&control);
     if (output) {
         __atomic_store_n(&output->running, 0, __ATOMIC_RELEASE);
+        __atomic_store_n(&output->ring.flush, 1, __ATOMIC_RELEASE);
         aaudio_stream_state_t state = api_Stream_getState(output->stream), next;
         if (state == AAUDIO_STREAM_STATE_STARTING || state == AAUDIO_STREAM_STATE_STARTED) {
             api_Stream_requestPause(output->stream);
@@ -157,7 +164,14 @@ void low_latency_audio_resume(void) {
     pthread_mutex_lock(&control);
     if (output) {
         aaudio_stream_state_t state = api_Stream_getState(output->stream);
-        if (state != AAUDIO_STREAM_STATE_STARTING && state != AAUDIO_STREAM_STATE_STARTED) {
+        if (state == AAUDIO_STREAM_STATE_STARTING || state == AAUDIO_STREAM_STATE_STARTED) {
+            // Pause is asynchronous and can fail while a stream is starting.
+            // An already-running stream must regain its callback output gate.
+            output->started = 1;
+            output->progress_at = nds_metrics_now_us();
+            output->observed_callbacks = __atomic_load_n(&output->callbacks, __ATOMIC_ACQUIRE);
+            __atomic_store_n(&output->running, 1, __ATOMIC_RELEASE);
+        } else {
             if (state == AAUDIO_STREAM_STATE_PAUSING) {
                 aaudio_stream_state_t next;
                 api_Stream_waitForStateChange(output->stream,state,&next,100000000);
@@ -172,13 +186,29 @@ void low_latency_audio_resume(void) {
                 output->ring.phase=0;
                 output->started=0;
                 __atomic_store_n(&output->running,1,__ATOMIC_RELEASE);
-            } else close_locked();
+            } else {
+                // The producer performs the complete OpenSL handoff. Closing
+                // here would strand the legacy player in its stopped state.
+                __atomic_store_n(&output->failed, 1, __ATOMIC_RELEASE);
+            }
         }
     }
     pthread_mutex_unlock(&control);
 }
 int low_latency_audio_feed(const int16_t *pcm, unsigned samples, int muted) {
     pthread_mutex_lock(&control);
+    unsigned wanted = __atomic_load_n(&configured, __ATOMIC_ACQUIRE);
+    unsigned latency = (unsigned)__atomic_load_n(&audio_out_mode, __ATOMIC_ACQUIRE);
+    if (latency > 3) latency = 3;
+    if (applied_config >= 0 && ((unsigned)applied_config != wanted || applied_latency != latency)) {
+        // Apply UI requests on the emulation producer. Callback ownership and
+        // the legacy queue are transferred before feeding this audio block.
+        pthread_mutex_unlock(&control);
+        low_latency_audio_start(latency);
+        extern void audio_out_restart_playback(void);
+        audio_out_restart_playback();
+        pthread_mutex_lock(&control);
+    }
     output_t *o = output;
     if (o && __atomic_load_n(&o->failed, __ATOMIC_ACQUIRE)) {
         __android_log_print(ANDROID_LOG_WARN, "SeedlessAudio", "AAudio disconnected, reverting to OpenSL");
@@ -192,15 +222,33 @@ int low_latency_audio_feed(const int16_t *pcm, unsigned samples, int muted) {
     int owned = o != NULL;
     if (o && __atomic_load_n(&sound_enabled, __ATOMIC_ACQUIRE) && __atomic_load_n(&o->running, __ATOMIC_ACQUIRE)) {
         unsigned frames = samples / 2;
+        uint64_t now = nds_metrics_now_us();
         if (muted) __atomic_store_n(&o->ring.flush, 1, __ATOMIC_RELEASE);
         else if (!pcm_ring_push(&o->ring, pcm, frames, o->limit))
             __atomic_fetch_add(&o->overruns, 1, __ATOMIC_RELAXED);
-        if (!o->started && __atomic_load_n(&o->ring.written,__ATOMIC_ACQUIRE)
-            - __atomic_load_n(&o->ring.read,__ATOMIC_ACQUIRE) >= 1470) {
-            if (api_Stream_requestStart(o->stream) == AAUDIO_OK) o->started=1;
+        unsigned available = __atomic_load_n(&o->ring.written, __ATOMIC_ACQUIRE)
+                           - __atomic_load_n(&o->ring.read, __ATOMIC_ACQUIRE);
+        // Fractional DS timing can prime 1469 frames into a 1470-frame ring.
+        // Start before the next block would be rejected indefinitely.
+        if (!o->started && available &&
+            (available >= 1470 || (uint64_t)available + frames > o->limit)) {
+            if (api_Stream_requestStart(o->stream) == AAUDIO_OK) {
+                o->started = 1;
+                o->progress_at = now;
+                o->observed_callbacks = __atomic_load_n(&o->callbacks, __ATOMIC_ACQUIRE);
+            }
             else __atomic_store_n(&o->failed,1,__ATOMIC_RELEASE);
         }
-        uint64_t now = nds_metrics_now_us();
+        if (o->started) {
+            uint64_t callbacks = __atomic_load_n(&o->callbacks, __ATOMIC_ACQUIRE);
+            if (callbacks != o->observed_callbacks) {
+                o->observed_callbacks = callbacks;
+                o->progress_at = now;
+            } else if (now - o->progress_at >= 1000000) {
+                __android_log_print(ANDROID_LOG_WARN, "SeedlessAudio", "AAudio callback stalled, scheduling OpenSL recovery");
+                __atomic_store_n(&o->failed, 1, __ATOMIC_RELEASE);
+            }
+        }
         if (now - o->checked_at >= 1000000) {
             int xruns = api_Stream_getXRunCount(o->stream);
             if (xruns > o->xruns) {

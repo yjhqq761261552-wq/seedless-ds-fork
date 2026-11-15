@@ -357,18 +357,18 @@ void audio_out_restart_playback(void) {
     if (G->active == 0)
         return;
 
-
-    G->buffer_index = 0;
-    __atomic_store_n(&G->accumulated, 0, __ATOMIC_RELAXED);
-    __atomic_store_n(&G->queued, G->buffer_count, __ATOMIC_RELEASE);
-    G->mic_total = 0;
-    G->mic_slot = 0;
+    __atomic_store_n(&G->closed, 1, __ATOMIC_RELEASE);
     {
         void *obj = G->play_itf;
-        long (*m)(void *, long) = (long (*)(void *, long))slot0(obj);
-        m(obj, 3);
+        ((long (*)(void *, long))slot0(obj))(obj, 1);
+        obj = G->player_queue;
+        ((void (*)(void *))(*(void ***)obj)[1])(obj);
     }
-
+    G->buffer_index = 0;
+    __atomic_store_n(&G->accumulated, 0, __ATOMIC_RELAXED);
+    __atomic_store_n(&G->queued, 0, __ATOMIC_RELEASE);
+    G->mic_total = 0;
+    G->mic_slot = 0;
     if (G->buffer_count != 0) {
         unsigned char *elem = G->buffers;
         for (uint64_t i = 0;; i++) {
@@ -377,7 +377,9 @@ void audio_out_restart_playback(void) {
             uint32_t count = G->buffer_samples;
             long (*m)(void *, void *, uint32_t) =
                 (long (*)(void *, void *, uint32_t))slot0(obj);
-            m(obj, elem, count << 1);
+            __atomic_fetch_add(&G->queued, 1, __ATOMIC_RELEASE);
+            if (m(obj, elem, count << 1) != 0)
+                __atomic_fetch_sub(&G->queued, 1, __ATOMIC_ACQ_REL);
 
             uint32_t n = G->buffer_count;
             elem += PLATFORM_AUDIO_BUFFER_BYTES;
@@ -418,6 +420,10 @@ void audio_out_restart_playback(void) {
         }
     }
     __atomic_store_n(&G->closed, 0, __ATOMIC_RELEASE);
+    if (!low_latency_audio_active()) {
+        void *obj = G->play_itf;
+        ((long (*)(void *, long))slot0(obj))(obj, 3);
+    }
 }
 static void *(*core_memset)(void *, int, size_t);
 static int   (*core_mprotect_13)(void *, size_t, int);

@@ -2,7 +2,10 @@ package com.seedlessds.app.emu
 
 /** A separate presenter/device keeps external display acquisition and refresh
  * waits off the main display thread. No live core page crosses either thread. */
-internal class VulkanExternalThread(private val suspended: () -> Boolean) : Thread("DsVulkanExternal") {
+internal class VulkanExternalThread(appCtx: android.content.Context, private val suspended: () -> Boolean) : Thread("DsVulkanExternal") {
+    private val maskBg = MaskBackgrounds(appCtx)
+    private var lastBg: ScreenMasks.Background? = null
+    private var lastBgHandle = 0L
     private val lock = Object()
     @Volatile private var quit = false
     @Volatile var failed = false
@@ -56,6 +59,13 @@ internal class VulkanExternalThread(private val suspended: () -> Boolean) : Thre
                 val screen = ScreenGeometry.externalScreen(config.extDisplayScreen, config.swapScreens)
                 rect.copyInto(geometry, screen * 4)
                 geometry[8 + screen] = 1f
+                val bg = maskBg.current(config, ScreenMasks.slotFor(screen == 0, screen == 1), snap.width, snap.height)
+                if (bg !== lastBg || handle != lastBgHandle) {
+                    lastBg = bg
+                    lastBgHandle = handle
+                    if (bg == null) VulkanNative.setBackground(handle, null, 0, 0, FloatArray(4))
+                    else VulkanNative.setBackground(handle, bg.pixels, bg.bitmap.width, bg.bitmap.height, bg.rect)
+                }
                 if (VulkanNative.draw(handle, geometry, false) < 0) {
                     if (snap.surface.isValid && ExternalSurface.snapshot()?.generation == snap.generation) {
                         failed = true

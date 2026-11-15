@@ -3,6 +3,7 @@ package com.seedlessds.app.emu
 import android.app.Presentation
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Bitmap
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.PixelFormat
@@ -60,13 +61,9 @@ object ExternalLayout {
         if (viewW <= 0 || viewH <= 0) return floatArrayOf(0f, 0f, 0f, 0f)
         val cfg = SettingsRepo.current
         val fullscreen = cfg.extDisplayType == 2
-        var border = (1f - cfg.extDisplayBorder / 100f) * ControlLayout.extScale.coerceIn(0.25f, 1f)
-        var fracW = 1f
-        var fracH = 1f
-        var alignShift = 0f
+        val base: FloatArray
         if (cfg.dualScreenPreset != DualScreenPresets.OFF) {
             dpi.let { d -> DualScreenPresets.publishExternal(DualScreenPresets.panel(viewW, viewH, d?.get(0) ?: 0f, d?.get(1) ?: 0f, d?.get(2)?.toInt() ?: 0)) }
-            if (cfg.dsSameSize) border = 1f
             val r = DualScreenPresets.rect(
                 viewW.toFloat(), viewH.toFloat(),
                 keepRatio = cfg.dsKeepRatio,
@@ -78,26 +75,42 @@ object ExternalLayout {
                 own = DualScreenPresets.panelExternal,
                 other = DualScreenPresets.panelInternal,
             )
-            fracW = r[2] / viewW
-            fracH = r[3] / viewH
-            alignShift = ((viewH - r[3]) / 2f - r[1]) / viewH * 2f
-        } else if (!fullscreen) {
-            val srcAspect = 256f / 192f
-            val dispAspect = viewW.toFloat() / viewH.toFloat()
-            if (dispAspect > srcAspect) fracW = srcAspect / dispAspect else fracH = dispAspect / srcAspect
-            if (cfg.integerScale) {
-                val fitted = viewW * fracW
-                val factor = kotlin.math.floor(fitted / 256f).coerceAtLeast(1f)
-                fracW = (256f * factor) / viewW
-                fracH = (192f * factor) / viewH
+            // The border margin applied around the preset result in this mode
+            // (it was ignored under same-size, matching the previous build).
+            base = if (cfg.dsSameSize) r else scaleAboutCentre(r, 1f - cfg.extDisplayBorder / 100f)
+        } else {
+            var border = 1f - cfg.extDisplayBorder / 100f
+            var fracW = 1f
+            var fracH = 1f
+            if (!fullscreen) {
+                val srcAspect = 256f / 192f
+                val dispAspect = viewW.toFloat() / viewH.toFloat()
+                if (dispAspect > srcAspect) fracW = srcAspect / dispAspect else fracH = dispAspect / srcAspect
+                if (cfg.integerScale) {
+                    val fitted = viewW * fracW
+                    val factor = kotlin.math.floor(fitted / 256f).coerceAtLeast(1f)
+                    fracW = (256f * factor) / viewW
+                    fracH = (192f * factor) / viewH
+                }
             }
+            base = floatArrayOf(
+                (1f - fracW * border) / 2f * viewW,
+                (1f - fracH * border) / 2f * viewH,
+                fracW * border * viewW,
+                fracH * border * viewH,
+            )
         }
-        return floatArrayOf(
-            (1f - fracW * border) / 2f * viewW,
-            ((1f - fracH * border) / 2f - alignShift / 2f) * viewH,
-            fracW * border * viewW,
-            fracH * border * viewH,
-        )
+        // This panel's own free transform, independent of the internal panel
+        // and of same-size matching. Identity by default = previous geometry.
+        // Touch input reads this same rect, so pen mapping follows the edit.
+        return ScreenGeometry.transform(base, viewW.toFloat(), viewH.toFloat(),
+            ControlLayout.extScale, ControlLayout.extOffX, ControlLayout.extOffY)
+    }
+
+    private fun scaleAboutCentre(r: FloatArray, f: Float): FloatArray {
+        if (r.size < 4 || f == 1f) return r
+        val w = r[2] * f; val h = r[3] * f
+        return floatArrayOf(r[0] + (r[2] - w) / 2f, r[1] + (r[3] - h) / 2f, w, h)
     }
 }
 

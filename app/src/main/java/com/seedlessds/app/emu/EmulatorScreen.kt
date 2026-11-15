@@ -1,12 +1,19 @@
 package com.seedlessds.app.emu
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 import com.seedlessds.app.R
+import android.graphics.Bitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.runtime.produceState
 import com.seedlessds.core.SeedlessCore
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +39,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.foundation.focusGroup
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.focus.focusRequester
@@ -269,6 +277,7 @@ fun EmulatorScreen(
             factory = { glView }, modifier = Modifier.fillMaxSize()
         )
 
+
         if (overlay == Overlay.NONE) {
             if (editingControls) {
                 Box(Modifier.fillMaxSize()
@@ -276,14 +285,21 @@ fun EmulatorScreen(
                     .pointerInput(Unit) { detectTapGestures { selectedId = null } })
                 val topRect = remember(rectTick) { glView.topScreenRect }
                 val botRect = remember(rectTick) { glView.bottomScreenRect }
+                // With an external display presenting, this panel shows a single
+                // DS screen whose geometry uses the independent dual-screen
+                // transform; edits here must write that set, not the
+                // single-surface top/bot set it will return to afterwards.
+                val dualEdit = hasExternal() && DualScreenPresets.singleScreen(settings)
                 ScreenEditHandle("screenTop", uiContext.getString(R.string.common_top_2), topRect, selectedId == "screenTop", canvasPx,
                     onSelect = { selectedId = "screenTop" }) { dx, dy ->
-                    ControlLayout.topOffX += dx; ControlLayout.topOffY += dy
+                    if (dualEdit) { ControlLayout.dualOffX += dx; ControlLayout.dualOffY += dy }
+                    else { ControlLayout.topOffX += dx; ControlLayout.topOffY += dy }
                     glView.applyDisplaySettings(); rectTick++
                 }
                 ScreenEditHandle("screenBot", uiContext.getString(R.string.common_bottom_2), botRect, selectedId == "screenBot", canvasPx,
                     onSelect = { selectedId = "screenBot" }) { dx, dy ->
-                    ControlLayout.botOffX += dx; ControlLayout.botOffY += dy
+                    if (dualEdit) { ControlLayout.dualOffX += dx; ControlLayout.dualOffY += dy }
+                    else { ControlLayout.botOffX += dx; ControlLayout.botOffY += dy }
                     glView.applyDisplaySettings(); rectTick++
                 }
             }
@@ -298,7 +314,11 @@ fun EmulatorScreen(
             if (com.seedlessds.app.BuildConfig.FRAME_CONTROLS && !editingControls)
                 FrameControls(Modifier.align(Alignment.TopCenter).padding(top = 16.dp))
             if (editingControls) {
-                if (hasExternal()) ExtScreenHandle(selectedId == "extScreen") { selectedId = "extScreen" }
+                if (hasExternal()) ExtScreenHandle(selectedId == "extScreen", canvasPx,
+                    onSelect = { selectedId = "extScreen" }) { dx, dy ->
+                    ControlLayout.extOffX += dx; ControlLayout.extOffY += dy
+                    onApplyExternal(); rectTick++
+                }
 
                 Column(
                     Modifier.align(Alignment.TopCenter).offset { toolbarOffset }.padding(top = 68.dp),
@@ -325,10 +345,11 @@ fun EmulatorScreen(
                     val sel = selectedId
                     if (sel != null) {
                         val isScreen = sel == "screenTop" || sel == "screenBot" || sel == "extScreen"
-                        val range = if (isScreen) 0.25f..1f else 0.5f..2f
+                        val range = if (isScreen) 0.25f..2f else 0.5f..2f
+                        val dualEditSel = hasExternal() && DualScreenPresets.singleScreen(settings)
                         val curValue = when (sel) {
-                            "screenTop" -> ControlLayout.topScale
-                            "screenBot" -> ControlLayout.botScale
+                            "screenTop" -> if (dualEditSel) ControlLayout.dualScale else ControlLayout.topScale
+                            "screenBot" -> if (dualEditSel) ControlLayout.dualScale else ControlLayout.botScale
                             "extScreen" -> ControlLayout.extScale
                             else -> scales[sel] ?: 1f
                         }
@@ -347,8 +368,8 @@ fun EmulatorScreen(
                             } else null,
                             onValue = { v ->
                                 when (sel) {
-                                    "screenTop" -> { ControlLayout.topScale = v; glView.applyDisplaySettings(); rectTick++ }
-                                    "screenBot" -> { ControlLayout.botScale = v; glView.applyDisplaySettings(); rectTick++ }
+                                    "screenTop" -> { if (dualEditSel) ControlLayout.dualScale = v else ControlLayout.topScale = v; glView.applyDisplaySettings(); rectTick++ }
+                                    "screenBot" -> { if (dualEditSel) ControlLayout.dualScale = v else ControlLayout.botScale = v; glView.applyDisplaySettings(); rectTick++ }
                                     "extScreen" -> { ControlLayout.extScale = v; onApplyExternal(); rectTick++ }
                                     else -> scales[sel] = v
                                 }
@@ -1053,11 +1074,20 @@ private fun ScreenEditHandle(
 }
 
 @Composable
-private fun BoxScope.ExtScreenHandle(selected: Boolean, onSelect: () -> Unit) {
+private fun BoxScope.ExtScreenHandle(
+    selected: Boolean, canvas: IntSize, onSelect: () -> Unit, addOff: (Float, Float) -> Unit
+) {
     val uiContext = androidx.compose.ui.platform.LocalContext.current
     Box(
         Modifier.align(Alignment.CenterStart).padding(start = 10.dp).size(132.dp, 82.dp)
             .dashedOutline(selected)
+            .pointerInput(Unit) {
+                detectDragGestures(onDragStart = { onSelect() }) { change, drag ->
+                    change.consume()
+                    if (canvas.width > 0 && canvas.height > 0)
+                        addOff(drag.x / canvas.width, drag.y / canvas.height)
+                }
+            }
             .pointerInput(Unit) { detectTapGestures { onSelect() } },
         contentAlignment = Alignment.Center
     ) {

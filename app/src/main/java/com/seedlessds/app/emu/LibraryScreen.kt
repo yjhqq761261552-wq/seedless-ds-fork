@@ -729,9 +729,8 @@ private fun RecentCard(
             Modifier
                 .fillMaxWidth()
                 .aspectRatio(DsBoxArtAspectRatio)
-                .shadow(6.dp, shape)
                 .clip(shape)
-                .let { if (focused) it.border(3.dp, colors.red, shape) else it },
+                .let { if (focused) it.border(3.dp, colors.red, shape) else it.border(1.dp, colors.line, shape) },
         ) {
             GameArt(entry.title, art.icon, Modifier.fillMaxSize(),
                 coverUrl = art.coverUrl, raIconUrl = art.raIconUrl, loading = art.resolving)
@@ -827,9 +826,8 @@ private fun GameCard(
             .scale(pressScale)
             .fillMaxWidth()
             .aspectRatio(DsBoxArtAspectRatio)
-            .shadow(5.dp, shape, ambientColor = colors.shadow, spotColor = colors.shadow)
             .clip(shape)
-            .let { if (focused) it.border(3.dp, colors.red, shape) else it }
+            .let { if (focused) it.border(3.dp, colors.red, shape) else it.border(1.dp, colors.line, shape) }
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = null,

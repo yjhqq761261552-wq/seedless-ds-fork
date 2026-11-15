@@ -10,6 +10,7 @@
 #include <dlfcn.h>
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
@@ -64,8 +65,10 @@ struct Push {
     int32_t rotation;
     int32_t filterMode;
     float padding;
+    float outputRect[4];
 };
-static_assert(sizeof(Push)==64, "push constant layout");
+static_assert(sizeof(Push)==80, "push constant layout");
+static_assert(offsetof(Push,outputRect)==64, "output rectangle GLSL offset");
 
 class Presenter {
     void *loader = nullptr;
@@ -98,6 +101,23 @@ class Presenter {
     VkDescriptorSetLayout descriptorLayout = VK_NULL_HANDLE;
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
     VkDescriptorSet descriptor = VK_NULL_HANDLE;
+    // Screen mask: a still image drawn under the screens (WatermelonDS-style
+    // background layer). Pixels arrive via setBackground, upload happens in
+    // record() after the frame fence wait, so no in-flight command can be
+    // using the image being replaced.
+    VkImage bgImage = VK_NULL_HANDLE;
+    VkDeviceMemory bgMemory = VK_NULL_HANDLE;
+    VkImageView bgView = VK_NULL_HANDLE;
+    VkSampler bgSampler = VK_NULL_HANDLE;
+    VkDescriptorSet bgDescriptor = VK_NULL_HANDLE;
+    VkBuffer bgStaging = VK_NULL_HANDLE;
+    VkDeviceMemory bgStagingMemory = VK_NULL_HANDLE;
+    void *bgMapped = nullptr;
+    VkDeviceSize bgStagingBytes = 0;
+    std::vector<unsigned char> bgPixels;
+    uint32_t bgWidth = 0, bgHeight = 0;
+    float bgRect[4]{};
+    bool bgPending = false, bgReady = false;
     VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
     VkPipeline pipeline = VK_NULL_HANDLE;
     VkRenderPass renderPass = VK_NULL_HANDLE;
@@ -260,13 +280,22 @@ class Presenter {
         si.addressModeU=si.addressModeV=si.addressModeW=VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
         si.maxLod=0;
         CHECK(vkCreateSampler(device,&si,nullptr,&sampler));
-        VkDescriptorPoolSize size{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,1};
+        auto bsi=info<VkSamplerCreateInfo>(VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO);
+        bsi.magFilter=bsi.minFilter=VK_FILTER_LINEAR;
+        bsi.mipmapMode=VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        bsi.addressModeU=bsi.addressModeV=bsi.addressModeW=VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        bsi.maxLod=0;
+        CHECK(vkCreateSampler(device,&bsi,nullptr,&bgSampler));
+        VkDescriptorPoolSize size{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,2};
         auto dp=info<VkDescriptorPoolCreateInfo>(VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO);
-        dp.maxSets=1; dp.poolSizeCount=1; dp.pPoolSizes=&size;
+        dp.maxSets=2; dp.poolSizeCount=1; dp.pPoolSizes=&size;
         CHECK(vkCreateDescriptorPool(device,&dp,nullptr,&descriptorPool));
+        VkDescriptorSetLayout layouts[2]={descriptorLayout,descriptorLayout};
         auto da=info<VkDescriptorSetAllocateInfo>(VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO);
-        da.descriptorPool=descriptorPool; da.descriptorSetCount=1; da.pSetLayouts=&descriptorLayout;
-        CHECK(vkAllocateDescriptorSets(device,&da,&descriptor));
+        da.descriptorPool=descriptorPool; da.descriptorSetCount=2; da.pSetLayouts=layouts;
+        VkDescriptorSet sets[2]{};
+        CHECK(vkAllocateDescriptorSets(device,&da,sets));
+        descriptor=sets[0]; bgDescriptor=sets[1];
         VkDescriptorImageInfo di{sampler,atlasView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL};
         auto write=info<VkWriteDescriptorSet>(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET);
         write.dstSet=descriptor; write.dstBinding=0; write.descriptorCount=1;
@@ -379,11 +408,82 @@ class Presenter {
         if (swapchain) vkDestroySwapchainKHR(device,swapchain,nullptr);
         swapchain=VK_NULL_HANDLE;
     }
+public:
+    /** BGRA bytes (Android ARGB_8888 memory layout), rect in surface pixels.
+     *  Null pixels clear the background. Render-thread only. */
+    void setBackground(const unsigned char *bgra, uint32_t w, uint32_t h, const float *rect) {
+        if (rect) std::memcpy(bgRect, rect, sizeof bgRect);
+        if (!bgra || !w || !h) { bgPixels.clear(); bgPending = true; return; }
+        bgPixels.assign(bgra, bgra + (size_t)w * h * 4);
+        bgWidth = w; bgHeight = h;
+        bgPending = true;
+    }
+private:
     void record(uint32_t image, const float *rects, bool bottomFirst) {
         CHECK(vkResetCommandBuffer(command,0));
         auto begin=info<VkCommandBufferBeginInfo>(VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO);
         begin.flags=VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
         CHECK(vkBeginCommandBuffer(command,&begin));
+        if (bgPending) {
+            bgPending=false;
+            if (bgImage) {
+                vkDestroyImageView(device,bgView,nullptr);
+                vkDestroyImage(device,bgImage,nullptr);
+                vkFreeMemory(device,bgMemory,nullptr);
+                bgImage=VK_NULL_HANDLE; bgView=VK_NULL_HANDLE; bgMemory=VK_NULL_HANDLE;
+            }
+            bgReady=false;
+            if (!bgPixels.empty()) {
+                VkDeviceSize need=(VkDeviceSize)bgWidth*bgHeight*4;
+                if (bgStagingBytes<need) {
+                    if (bgMapped) vkUnmapMemory(device,bgStagingMemory);
+                    if (bgStaging) vkDestroyBuffer(device,bgStaging,nullptr);
+                    if (bgStagingMemory) vkFreeMemory(device,bgStagingMemory,nullptr);
+                    bgMapped=nullptr; bgStaging=VK_NULL_HANDLE; bgStagingMemory=VK_NULL_HANDLE; bgStagingBytes=0;
+                    auto buffer=info<VkBufferCreateInfo>(VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO);
+                    buffer.size=need; buffer.usage=VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+                    CHECK(vkCreateBuffer(device,&buffer,nullptr,&bgStaging));
+                    VkMemoryRequirements req{}; vkGetBufferMemoryRequirements(device,bgStaging,&req);
+                    bgStagingMemory=allocate(req,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+                    CHECK(vkBindBufferMemory(device,bgStaging,bgStagingMemory,0));
+                    CHECK(vkMapMemory(device,bgStagingMemory,0,need,0,&bgMapped));
+                    bgStagingBytes=need;
+                }
+                std::memcpy(bgMapped,bgPixels.data(),(size_t)need);
+                bgPixels.clear(); bgPixels.shrink_to_fit();
+                auto image=info<VkImageCreateInfo>(VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO);
+                image.imageType=VK_IMAGE_TYPE_2D; image.format=VK_FORMAT_B8G8R8A8_UNORM;
+                image.extent={bgWidth,bgHeight,1}; image.mipLevels=1; image.arrayLayers=1;
+                image.samples=VK_SAMPLE_COUNT_1_BIT; image.tiling=VK_IMAGE_TILING_OPTIMAL;
+                image.usage=VK_IMAGE_USAGE_TRANSFER_DST_BIT|VK_IMAGE_USAGE_SAMPLED_BIT;
+                CHECK(vkCreateImage(device,&image,nullptr,&bgImage));
+                VkMemoryRequirements req{}; vkGetImageMemoryRequirements(device,bgImage,&req);
+                bgMemory=allocate(req,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+                CHECK(vkBindImageMemory(device,bgImage,bgMemory,0));
+                bgView=imageView(bgImage,VK_FORMAT_B8G8R8A8_UNORM);
+                auto barrier=info<VkImageMemoryBarrier>(VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER);
+                barrier.dstAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
+                barrier.oldLayout=VK_IMAGE_LAYOUT_UNDEFINED;
+                barrier.newLayout=VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+                barrier.srcQueueFamilyIndex=barrier.dstQueueFamilyIndex=VK_QUEUE_FAMILY_IGNORED;
+                barrier.image=bgImage; barrier.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1};
+                vkCmdPipelineBarrier(command,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                    VK_PIPELINE_STAGE_TRANSFER_BIT,0,0,nullptr,0,nullptr,1,&barrier);
+                VkBufferImageCopy region{};
+                region.imageSubresource={VK_IMAGE_ASPECT_COLOR_BIT,0,0,1};
+                region.imageExtent={bgWidth,bgHeight,1};
+                vkCmdCopyBufferToImage(command,bgStaging,bgImage,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,1,&region);
+                barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT; barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
+                barrier.oldLayout=VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL; barrier.newLayout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                vkCmdPipelineBarrier(command,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,0,0,nullptr,0,nullptr,1,&barrier);
+                VkDescriptorImageInfo di{bgSampler,bgView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL};
+                auto write=info<VkWriteDescriptorSet>(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET);
+                write.dstSet=bgDescriptor; write.dstBinding=0; write.descriptorCount=1;
+                write.descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER; write.pImageInfo=&di;
+                vkUpdateDescriptorSets(device,1,&write,0,nullptr);
+                bgReady=true;
+            }
+        }
         if (snapshot.serial) {
         auto barrier=info<VkImageMemoryBarrier>(VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER);
         barrier.srcAccessMask=atlasInitialized?VK_ACCESS_SHADER_READ_BIT:0;
@@ -418,6 +518,18 @@ class Presenter {
         VkRect2D scissor{{0,0},extent};
         vkCmdSetViewport(command,0,1,&viewport); vkCmdSetScissor(command,0,1,&scissor);
         vkCmdBindPipeline(command,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        if (bgReady) {
+            vkCmdBindDescriptorSets(command,VK_PIPELINE_BIND_POINT_GRAPHICS,pipelineLayout,0,1,&bgDescriptor,0,nullptr);
+            Push p{};
+            p.rect[0]=bgRect[0]/logicalWidth*2-1; p.rect[1]=bgRect[1]/logicalHeight*2-1;
+            p.rect[2]=bgRect[2]/logicalWidth*2; p.rect[3]=bgRect[3]/logicalHeight*2;
+            p.uv[0]=0; p.uv[1]=0; p.uv[2]=1; p.uv[3]=1;
+            p.clamp[0]=.5f/bgWidth; p.clamp[1]=.5f/bgHeight;
+            p.clamp[2]=(bgWidth-.5f)/bgWidth; p.clamp[3]=(bgHeight-.5f)/bgHeight;
+            p.alpha=1; p.rotation=rotate; p.filterMode=0;
+            vkCmdPushConstants(command,pipelineLayout,VK_SHADER_STAGE_VERTEX_BIT|VK_SHADER_STAGE_FRAGMENT_BIT,0,sizeof p,&p);
+            vkCmdDraw(command,6,1,0,0);
+        }
         vkCmdBindDescriptorSets(command,VK_PIPELINE_BIND_POINT_GRAPHICS,pipelineLayout,0,1,&descriptor,0,nullptr);
         for (int order=0;snapshot.serial && order<2;++order) {
             unsigned s=bottomFirst?1-order:order;
@@ -431,6 +543,7 @@ class Presenter {
             p.clamp[0]=.5f/atlasWidth; p.clamp[1]=(s*screenHeight+.5f)/(screenHeight*2);
             p.clamp[2]=(snapshot.width[s]-.5f)/atlasWidth; p.clamp[3]=(s*screenHeight+snapshot.height[s]-.5f)/(screenHeight*2);
             p.alpha=std::clamp(rects[8+s],0.f,1.f); p.rotation=rotate; p.filterMode=filterMode;
+            std::copy(r,r+4,p.outputRect);
             vkCmdPushConstants(command,pipelineLayout,VK_SHADER_STAGE_VERTEX_BIT|VK_SHADER_STAGE_FRAGMENT_BIT,0,sizeof p,&p);
             vkCmdDraw(command,6,1,0,0);
         }
@@ -511,18 +624,28 @@ public:
         uint64_t cpuStart=nds_metrics_now_us();
         if (submitted) {
             VkResult ready=vkGetFenceStatus(device,fence);
-            if (ready==VK_NOT_READY) return 0;
+            if (ready==VK_NOT_READY) {
+                // Wait briefly in place instead of dropping the frame: at
+                // 120Hz the previous frame is normally microseconds from
+                // done, while a dropped present costs a whole 8.3ms slot
+                // of visible judder and a full caller-loop respin.
+                vkWaitForFences(device,1,&fence,VK_TRUE,2000000);
+                ready=vkGetFenceStatus(device,fence);
+                if (ready==VK_NOT_READY) return 0;
+            }
             CHECK(ready); submitted=false;
             if (releaseRetiredAfterSubmit) {
                 releaseRetired(); releaseRetiredAfterSubmit=false;
             }
         }
-        bool changed=!hasRects || bottomFirst!=previousOrder || std::memcmp(rects,previousRects,sizeof previousRects)!=0;
+        bool changed=!hasRects || bottomFirst!=previousOrder || bgPending || std::memcmp(rects,previousRects,sizeof previousRects)!=0;
         uint64_t availableSerial=external?sharedFrames.serial():nds_video_latest_serial();
         if (!changed && availableSerial==lastSerial) return 0;
         if (external && !availableSerial) return 0;
         uint32_t image=0;
-        VkResult result=vkAcquireNextImageKHR(device,swapchain,0,acquired,VK_NULL_HANDLE,&image);
+        // 1ms acquire timeout (was 0): an image that is about to free up is
+        // worth waiting for instead of an instant miss + respin.
+        VkResult result=vkAcquireNextImageKHR(device,swapchain,1000000,acquired,VK_NULL_HANDLE,&image);
         if (result==VK_NOT_READY || result==VK_TIMEOUT) { ++acquisitionMisses; return 0; }
         if (result==VK_ERROR_OUT_OF_DATE_KHR) { makeSwapchain(logicalWidth,logicalHeight); return 0; }
         bool suboptimal=result==VK_SUBOPTIMAL_KHR;
@@ -601,6 +724,13 @@ public:
             if (renderPass) vkDestroyRenderPass(device,renderPass,nullptr);
             if (descriptorPool) vkDestroyDescriptorPool(device,descriptorPool,nullptr);
             if (descriptorLayout) vkDestroyDescriptorSetLayout(device,descriptorLayout,nullptr);
+            if (bgMapped && vkUnmapMemory) vkUnmapMemory(device,bgStagingMemory);
+            if (bgStaging) vkDestroyBuffer(device,bgStaging,nullptr);
+            if (bgStagingMemory) vkFreeMemory(device,bgStagingMemory,nullptr);
+            if (bgSampler) vkDestroySampler(device,bgSampler,nullptr);
+            if (bgView) vkDestroyImageView(device,bgView,nullptr);
+            if (bgImage) vkDestroyImage(device,bgImage,nullptr);
+            if (bgMemory) vkFreeMemory(device,bgMemory,nullptr);
             if (sampler) vkDestroySampler(device,sampler,nullptr);
             if (atlasView) vkDestroyImageView(device,atlasView,nullptr);
             if (atlas) vkDestroyImage(device,atlas,nullptr);
@@ -642,6 +772,22 @@ Java_com_seedlessds_app_emu_VulkanNative_draw(JNIEnv *env,jobject,jlong handle,j
     try { return ((Presenter *)(uintptr_t)handle)->draw(rects,bottomFirst!=JNI_FALSE); }
     catch (const std::exception &e) {
         __android_log_print(ANDROID_LOG_WARN,"SeedlessVulkan","Presentation failed: %s",e.what()); return -1;
+    }
+}
+extern "C" JNIEXPORT void JNICALL
+Java_com_seedlessds_app_emu_VulkanNative_setBackground(JNIEnv *env,jobject,jlong handle,jobject buffer,jint w,jint h,jfloatArray rect) {
+    if (!handle) return;
+    float r[4]{};
+    if (rect && env->GetArrayLength(rect)>=4) env->GetFloatArrayRegion(rect,0,4,r);
+    if (env->ExceptionCheck()) return;
+    const unsigned char *pixels=nullptr;
+    if (buffer && w>0 && h>0) {
+        pixels=(const unsigned char *)env->GetDirectBufferAddress(buffer);
+        if (!pixels || env->GetDirectBufferCapacity(buffer)<(jlong)w*h*4) return;
+    }
+    try { ((Presenter *)(uintptr_t)handle)->setBackground(pixels,(uint32_t)(w>0?w:0),(uint32_t)(h>0?h:0),r); }
+    catch (const std::exception &e) {
+        __android_log_print(ANDROID_LOG_WARN,"SeedlessVulkan","Background failed: %s",e.what());
     }
 }
 extern "C" JNIEXPORT void JNICALL

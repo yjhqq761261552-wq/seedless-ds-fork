@@ -16,12 +16,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,6 +32,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -256,6 +267,15 @@ fun SettingsScreen(
         onConfirm = { confirmReset = false; onReset(); onBack() },
         onDismiss = { confirmReset = false },
     )
+
+    if (openCat == 1 && subPage == LAYOUT_PAGE) {
+        // The per-screen layout editor takes over the whole window: the DS
+        // screens are drawn at the size and position they will really have on
+        // this panel, with the parameters in a floating panel on top, instead
+        // of a shrunk diagram inside the scrolling settings column.
+        LayoutEditorScreen(s = s, onDone = { subPage = null })
+        return
+    }
 
     SeedlessScreenScaffold(
         title = if (openCat < 0) uiContext.getString(R.string.common_settings) else categories[openCat].title,
@@ -493,6 +513,72 @@ fun SettingsScreen(
     // they must stay selectable everywhere (global settings, in-game settings).
     val presetLive = presetOn && DualScreenPresets.live(s)
     val panelNote = DeviceProfiles.current(LocalContext.current)?.let { uiContext.getString(R.string.presets_panel_sizes_from_the_profile, it.name) } ?: ""
+    // Per-screen free layout values live in ControlLayout (its own prefs file),
+    // not in DsSettings. Load them once so this page edits the live values, and
+    // re-read them whenever a slider on the layout subpage changes one.
+    val clContext = remember(uiContext) { ControlLayout.load(uiContext); uiContext }
+    var clTick by remember { mutableStateOf(0) }
+    val clTickNow = clTick
+    var layoutDrawerOpen by remember { mutableStateOf(false) }
+    var layoutTab by remember { mutableStateOf(-1) }
+    if (subPage == LAYOUT_PAGE) {
+        val colors = seedless
+        val unit = uiContext.getString(R.string.percent_unit)
+        fun persist() { ControlLayout.saveScreens(clContext); clTick++ }
+        val tab = if (layoutTab >= 0) layoutTab else if (presetOn) 1 else 0
+        DropdownRow(uiContext.getString(R.string.layout_preview_mode), uiContext.getString(R.string.layout_preview_mode_desc),
+            listOf(uiContext.getString(R.string.layout_tab_single), uiContext.getString(R.string.layout_tab_dual)), tab) { layoutTab = it }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Box(Modifier.weight(1f)) {
+                if (tab == 0) SingleLayoutPreview(s, clTickNow)
+                else DualLayoutPreview(s, clTickNow)
+            }
+            if (layoutDrawerOpen) {
+                Column(
+                    Modifier.width(292.dp).height(432.dp).clip(RoundedCornerShape(14.dp))
+                        .background(colors.surface).border(1.dp, colors.line, RoundedCornerShape(14.dp))
+                        .verticalScroll(rememberScrollState()).padding(10.dp)
+                ) {
+                    if (tab == 0) {
+                        Group(uiContext.getString(R.string.layout_single_group))
+                        ScreenAdjustRows(
+                            uiContext.getString(R.string.common_top_screen), unit,
+                            ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY,
+                        ) { sc, x, y -> ControlLayout.topScale = sc; ControlLayout.topOffX = x; ControlLayout.topOffY = y; persist() }
+                        ScreenAdjustRows(
+                            uiContext.getString(R.string.common_bottom_screen), unit,
+                            ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY,
+                        ) { sc, x, y -> ControlLayout.botScale = sc; ControlLayout.botOffX = x; ControlLayout.botOffY = y; persist() }
+                    } else {
+                        Group(uiContext.getString(R.string.layout_dual_group))
+                        ScreenAdjustRows(
+                            uiContext.getString(R.string.layout_internal_screen), unit,
+                            ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY,
+                        ) { sc, x, y -> ControlLayout.dualScale = sc; ControlLayout.dualOffX = x; ControlLayout.dualOffY = y; persist() }
+                        ScreenAdjustRows(
+                            uiContext.getString(R.string.menu_external_screen), unit,
+                            ControlLayout.extScale, ControlLayout.extOffX, ControlLayout.extOffY,
+                        ) { sc, x, y -> ControlLayout.extScale = sc; ControlLayout.extOffX = x; ControlLayout.extOffY = y; persist() }
+                    }
+                    NavRow(uiContext.getString(R.string.layout_reset), uiContext.getString(R.string.layout_reset_desc)) {
+                        ControlLayout.resetScreens(clContext); clTick++
+                    }
+                }
+            }
+        }
+        NavRow(
+            uiContext.getString(if (layoutDrawerOpen) R.string.layout_close_params else R.string.layout_edit_params),
+            uiContext.getString(R.string.layout_edit_desc)
+        ) { layoutDrawerOpen = !layoutDrawerOpen }
+        SectionNote(uiContext.getString(R.string.layout_preview_note))
+        SectionNote(uiContext.getString(R.string.layout_dual_note))
+        SectionNote(uiContext.getString(R.string.layout_drag_note))
+        return
+    }
+    if (subPage == MASK_PAGE) {
+        MaskSettingsPage(s, set)
+        return
+    }
     if (subPage == PRESETS_PAGE) {
         Group(uiContext.getString(R.string.common_scaling))
         SwitchRow(uiContext.getString(R.string.common_keep_ds_ratio), uiContext.getString(R.string.common_each_screen_holds_256_192_inside_its_panel),
@@ -531,6 +617,12 @@ fun SettingsScreen(
     }
 
     Group(uiContext.getString(R.string.settings_layout))
+    NavRow(uiContext.getString(R.string.layout_adjust), uiContext.getString(R.string.layout_adjust_desc)) {
+        onSubPage(LAYOUT_PAGE)
+    }
+    NavRow(uiContext.getString(R.string.mask_title), uiContext.getString(R.string.mask_desc)) {
+        onSubPage(MASK_PAGE)
+    }
     if (!presetLive) {
         DropdownRow(uiContext.getString(R.string.settings_screen_layout), uiContext.getString(R.string.settings_how_the_ds_s_two_screens_are_arranged),
             options.screenLayout, s.screenLayout) { set(s.copy(screenLayout = it)) }
@@ -563,6 +655,9 @@ fun SettingsScreen(
             "pixel_aa_fast" -> "Pixel AA Fast"
             "LCD3x+nds_color" -> "LCD3x + NDS Color"
             "Quilez+nds_color" -> "Quilez + NDS Color"
+            "rpduo_sharp" -> "RP Duo LCD 点对点"
+            "rpduo_grain" -> "RP Duo DS Grid · 柔和颗粒"
+            "rpduo_grain_plus" -> "RP Duo DS Grid · 柔和颗粒＋"
             else -> options.filterPairs.firstOrNull { it.first == value }?.second ?: value
         }
     }
@@ -1157,6 +1252,13 @@ fun SettingsScreen(
 private val LocalSettingsCrumb = androidx.compose.runtime.compositionLocalOf { "" }
 
 private const val PRESETS_PAGE = "presets"
+private const val LAYOUT_PAGE = "layout"
+private const val MASK_PAGE = "masks"
+
+private const val SCR_TOP = 0
+private const val SCR_BOT = 1
+private const val SCR_DUAL = 2
+private const val SCR_EXT = 3
 
 private class SettingsRowCursor {
     var next = 0
@@ -1243,6 +1345,625 @@ private val LocalSettingsRows = androidx.compose.runtime.compositionLocalOf<Sett
             modifier = Modifier.padding(top = 2.dp),
         )
     }
+}
+
+private val PreviewTopColor = Color(0xFF43A047)
+private val PreviewBotColor = Color(0xFFFB8C00)
+
+private class PreviewRect(val rect: FloatArray, val label: String, val color: Color)
+
+private fun previewScaleAboutCentre(r: FloatArray, f: Float): FloatArray {
+    if (r.size < 4 || f == 1f) return r
+    val w = r[2] * f; val h = r[3] * f
+    return floatArrayOf(r[0] + (r[2] - w) / 2f, r[1] + (r[3] - h) / 2f, w, h)
+}
+
+/** Mirror of the single-surface geometry in DsGlView (rawRects + transforms), in preview units. */
+private fun singlePreviewRects(s: DsSettings, w: Float, h: Float, topLabel: String, botLabel: String): List<PreviewRect> {
+    fun fit(maxW: Float, maxH: Float) = ScreenGeometry.fitted(maxW, maxH, true, s.integerScale)
+    if (DualScreenPresets.singleScreen(s)) {
+        val base = if (s.dualScreenPreset != DualScreenPresets.OFF) {
+            // No external display is attached on this page, so same-size has no
+            // partner panel; the preset rect without it is the closest diagram.
+            DualScreenPresets.rect(w, h, s.dsKeepRatio, s.integerScale, s.dsIntFillW, s.dsIntFillH, s.dsIntAlign, false, null, null)
+        } else if (s.screenLayout == 4) floatArrayOf(0f, 0f, w, h)
+        else { val (sw, sh) = fit(w, h); floatArrayOf((w - sw) / 2f, (h - sh) / 2f, sw, sh) }
+        val showingBottom = DualScreenPresets.singleBottom(s) != s.swapScreens
+        val r = if (showingBottom) ScreenGeometry.transform(base, w, h, ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY)
+            else ScreenGeometry.transform(base, w, h, ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY)
+        return listOf(PreviewRect(r, if (showingBottom) botLabel else topLabel, if (showingBottom) PreviewBotColor else PreviewTopColor))
+    }
+    var slot0: FloatArray; var slot1: FloatArray
+    when (s.screenLayout) {
+        2 -> { val (sw, sh) = fit(w, h / 2f); val x = (w - sw) / 2f
+            slot0 = floatArrayOf(x, h / 2f - sh, sw, sh); slot1 = floatArrayOf(x, h / 2f, sw, sh) }
+        1 -> { val (bw, bh) = fit(w * 0.72f, h); slot0 = floatArrayOf(0f, (h - bh) / 2f, bw, bh)
+            val smW = w * 0.24f; val smH = smW / (256f / 192f); slot1 = floatArrayOf(w - smW - 8f, h - smH - 8f, smW, smH) }
+        4 -> { val halfW = w / 2f; slot0 = floatArrayOf(0f, 0f, halfW, h); slot1 = floatArrayOf(halfW, 0f, halfW, h) }
+        5 -> { slot0 = floatArrayOf(0f, 0f, w, h)
+            val k = s.pipScale.coerceIn(0, 25) / 25f
+            if (k <= 0f) { slot1 = floatArrayOf(w + 8f, h + 8f, 0f, 0f) } else {
+                val maxW = (w / 2f - 16f) * k; val maxH = (h / 2f - 16f) * k; val a = 256f / 192f
+                var bw = maxW; var bh = maxW / a; if (bh > maxH) { bh = maxH; bw = maxH * a }
+                slot1 = floatArrayOf(w - bw - 8f, h - bh - 8f, bw, bh) } }
+        else -> { val halfW = w / 2f; val (sw, sh) = fit(halfW, h); val y = (h - sh) / 2f
+            slot0 = floatArrayOf((halfW - sw) / 2f, y, sw, sh); slot1 = floatArrayOf(halfW + (halfW - sw) / 2f, y, sw, sh) }
+    }
+    // No raw-rect exchange: swap only relabels which content each rect shows,
+    // mirroring DsGlView (the final rects stay, the contents exchange).
+    val topRect = ScreenGeometry.transform(slot0, w, h, ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY)
+    val botRect = ScreenGeometry.transform(slot1, w, h, ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY)
+    return listOf(
+        PreviewRect(topRect, if (s.swapScreens) botLabel else topLabel, if (s.swapScreens) PreviewBotColor else PreviewTopColor),
+        PreviewRect(botRect, if (s.swapScreens) topLabel else botLabel, if (s.swapScreens) PreviewTopColor else PreviewBotColor),
+    )
+}
+
+@Composable private fun previewPanelAspect(): Float {
+    val cfg = LocalConfiguration.current
+    val ratio = if (cfg.screenHeightDp > 0) cfg.screenWidthDp.toFloat() / cfg.screenHeightDp.toFloat() else 16f / 9f
+    return if (ratio >= 1f) ratio.coerceAtMost(2.4f) else 16f / 9f
+}
+
+@Composable private fun PreviewPanel(w: Float, h: Float, caption: String, rects: List<PreviewRect>) {
+    val colors = seedless
+    Column {
+        Box(
+            Modifier.width(w.dp).height(h.dp).clip(RoundedCornerShape(10.dp))
+                .background(Color.Black).border(1.dp, colors.line, RoundedCornerShape(10.dp))
+        ) {
+            for (pr in rects) {
+                if (pr.rect[2] <= 0f || pr.rect[3] <= 0f) continue
+                Box(
+                    Modifier.offset(x = pr.rect[0].dp, y = pr.rect[1].dp).size(pr.rect[2].dp, pr.rect[3].dp)
+                        .background(pr.color.copy(alpha = 0.85f)).border(1.dp, Color.White.copy(alpha = 0.6f)),
+                    contentAlignment = Alignment.Center
+                ) { Text(pr.label, color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            }
+        }
+        if (caption.isNotEmpty())
+            Text(caption, color = colors.text3, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
+    }
+}
+
+@Composable private fun SingleLayoutPreview(s: DsSettings, tick: Int) {
+    val uiContext = LocalContext.current
+    val aspect = previewPanelAspect()
+    val topLabel = uiContext.getString(R.string.common_top_screen)
+    val botLabel = uiContext.getString(R.string.common_bottom_screen)
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val w = maxWidth.value
+        val h = (w / aspect).coerceAtMost(300f)
+        val rects = singlePreviewRects(s, w, h, topLabel, botLabel)
+        PreviewPanel(w, h, "", rects)
+    }
+}
+
+@Composable private fun DualLayoutPreview(s: DsSettings, tick: Int) {
+    val uiContext = LocalContext.current
+    val aspect = previewPanelAspect()
+    val topLabel = uiContext.getString(R.string.common_top_screen)
+    val botLabel = uiContext.getString(R.string.common_bottom_screen)
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val total = maxWidth.value
+        val gap = 12f
+        val pw = (total - gap) / 2f
+        val intH = pw / aspect
+        val extH = pw / (16f / 9f)
+        val intPanel = floatArrayOf(pw, intH, 300f, 300f, 300f)
+        val extPanel = floatArrayOf(pw, extH, 300f, 300f, 300f)
+        val internalRects: List<PreviewRect> = when {
+            s.dualScreenPreset != DualScreenPresets.OFF -> {
+                val base = DualScreenPresets.rect(pw, intH, s.dsKeepRatio, s.integerScale,
+                    s.dsIntFillW, s.dsIntFillH, s.dsIntAlign, s.dsSameSize, intPanel, extPanel)
+                val r = ScreenGeometry.transform(base, pw, intH, ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY)
+                val isBottom = s.dualScreenPreset == DualScreenPresets.INTERNAL_BOTTOM
+                listOf(PreviewRect(r, if (isBottom) botLabel else topLabel, if (isBottom) PreviewBotColor else PreviewTopColor))
+            }
+            s.singleScreen -> {
+                val base = if (s.screenLayout == 4) floatArrayOf(0f, 0f, pw, intH)
+                    else { val (sw, sh) = ScreenGeometry.fitted(pw, intH, true, s.integerScale)
+                        floatArrayOf((pw - sw) / 2f, (intH - sh) / 2f, sw, sh) }
+                val r = ScreenGeometry.transform(base, pw, intH, ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY)
+                listOf(PreviewRect(r, if (s.singleBottom) botLabel else topLabel, if (s.singleBottom) PreviewBotColor else PreviewTopColor))
+            }
+            else -> singlePreviewRects(s, pw, intH, topLabel, botLabel)
+        }
+        val externalRects: List<PreviewRect> = run {
+            val contentBottom = ScreenGeometry.externalScreen(s.extDisplayScreen, s.swapScreens) == 1
+            val base = when {
+                s.dualScreenPreset != DualScreenPresets.OFF -> {
+                    val r = DualScreenPresets.rect(pw, extH, s.dsKeepRatio, s.integerScale,
+                        s.dsExtFillW, s.dsExtFillH, s.dsExtAlign, s.dsSameSize, extPanel, intPanel)
+                    if (s.dsSameSize) r else previewScaleAboutCentre(r, 1f - s.extDisplayBorder / 100f)
+                }
+                s.extDisplayType == 2 -> floatArrayOf(0f, 0f, pw, extH)
+                else -> {
+                    val (sw, sh) = ScreenGeometry.fitted(pw, extH, true, s.integerScale)
+                    previewScaleAboutCentre(floatArrayOf((pw - sw) / 2f, (extH - sh) / 2f, sw, sh), 1f - s.extDisplayBorder / 100f)
+                }
+            }
+            val r = ScreenGeometry.transform(base, pw, extH, ControlLayout.extScale, ControlLayout.extOffX, ControlLayout.extOffY)
+            listOf(PreviewRect(r, if (contentBottom) botLabel else topLabel, if (contentBottom) PreviewBotColor else PreviewTopColor))
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(gap.dp)) {
+            PreviewPanel(pw, intH, uiContext.getString(R.string.layout_internal_screen), internalRects)
+            PreviewPanel(pw, extH, uiContext.getString(R.string.menu_external_screen), externalRects)
+        }
+    }
+}
+
+/** One DS screen in the layout editor: its untransformed base rect, the
+ * displayed rect (transformed, clamped inside the panel), and which
+ * ControlLayout value set edits it. */
+private class EditorScreen(val base: FloatArray, val rect: FloatArray, val key: Int, val label: String, val color: Color)
+
+private fun screenValues(key: Int): FloatArray = when (key) {
+    SCR_BOT -> floatArrayOf(ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY)
+    SCR_DUAL -> floatArrayOf(ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY)
+    SCR_EXT -> floatArrayOf(ControlLayout.extScale, ControlLayout.extOffX, ControlLayout.extOffY)
+    else -> floatArrayOf(ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY)
+}
+
+private fun editorScreen(base: FloatArray, w: Float, h: Float, key: Int, label: String, color: Color): EditorScreen {
+    val v = screenValues(key)
+    val c = ScreenGeometry.clampInside(base, w, h, v[0], v[1], v[2])
+    return EditorScreen(base, ScreenGeometry.transform(base, w, h, c[0], c[1], c[2]), key, label, color)
+}
+
+/** Mirror of the single-surface geometry in DsGlView (rawRects + transforms), in editor units. */
+private fun singleEditorScreens(s: DsSettings, w: Float, h: Float, topLabel: String, botLabel: String): List<EditorScreen> {
+    fun fit(maxW: Float, maxH: Float) = ScreenGeometry.fitted(maxW, maxH, true, s.integerScale)
+    if (DualScreenPresets.singleScreen(s)) {
+        val base = if (s.dualScreenPreset != DualScreenPresets.OFF) {
+            DualScreenPresets.rect(w, h, s.dsKeepRatio, s.integerScale, s.dsIntFillW, s.dsIntFillH, s.dsIntAlign, false, null, null)
+        } else if (s.screenLayout == 4) floatArrayOf(0f, 0f, w, h)
+        else { val (sw, sh) = fit(w, h); floatArrayOf((w - sw) / 2f, (h - sh) / 2f, sw, sh) }
+        val showingBottom = DualScreenPresets.singleBottom(s) != s.swapScreens
+        return listOf(
+            if (showingBottom) editorScreen(base, w, h, SCR_BOT, botLabel, PreviewBotColor)
+            else editorScreen(base, w, h, SCR_TOP, topLabel, PreviewTopColor)
+        )
+    }
+    var slot0: FloatArray; var slot1: FloatArray
+    when (s.screenLayout) {
+        2 -> { val (sw, sh) = fit(w, h / 2f); val x = (w - sw) / 2f
+            slot0 = floatArrayOf(x, h / 2f - sh, sw, sh); slot1 = floatArrayOf(x, h / 2f, sw, sh) }
+        1 -> { val (bw, bh) = fit(w * 0.72f, h); slot0 = floatArrayOf(0f, (h - bh) / 2f, bw, bh)
+            val smW = w * 0.24f; val smH = smW / (256f / 192f); slot1 = floatArrayOf(w - smW - 8f, h - smH - 8f, smW, smH) }
+        4 -> { val halfW = w / 2f; slot0 = floatArrayOf(0f, 0f, halfW, h); slot1 = floatArrayOf(halfW, 0f, halfW, h) }
+        5 -> { slot0 = floatArrayOf(0f, 0f, w, h)
+            val k = s.pipScale.coerceIn(0, 25) / 25f
+            if (k <= 0f) { slot1 = floatArrayOf(w + 8f, h + 8f, 0f, 0f) } else {
+                val maxW = (w / 2f - 16f) * k; val maxH = (h / 2f - 16f) * k; val a = 256f / 192f
+                var bw = maxW; var bh = maxW / a; if (bh > maxH) { bh = maxH; bw = maxH * a }
+                slot1 = floatArrayOf(w - bw - 8f, h - bh - 8f, bw, bh) } }
+        else -> { val halfW = w / 2f; val (sw, sh) = fit(halfW, h); val y = (h - sh) / 2f
+            slot0 = floatArrayOf((halfW - sw) / 2f, y, sw, sh); slot1 = floatArrayOf(halfW + (halfW - sw) / 2f, y, sw, sh) }
+    }
+    // Same as the preview: bases stay with their own transforms; swap only
+    // changes which content label each editor screen carries.
+    return listOf(
+        editorScreen(slot0, w, h, SCR_TOP, if (s.swapScreens) botLabel else topLabel, if (s.swapScreens) PreviewBotColor else PreviewTopColor),
+        editorScreen(slot1, w, h, SCR_BOT, if (s.swapScreens) topLabel else botLabel, if (s.swapScreens) PreviewTopColor else PreviewBotColor),
+    )
+}
+
+/** Internal-panel screens for the dual setup, in a panel of w x h (editor units). */
+private fun editorInternalScreens(s: DsSettings, w: Float, h: Float, topLabel: String, botLabel: String): List<EditorScreen> {
+    val extArr = DualScreenPresets.panelExternal
+    val extAspect = if (extArr != null && extArr[1] > 0f) extArr[0] / extArr[1] else 16f / 9f
+    val own = floatArrayOf(w, h, 300f, 300f, 300f)
+    val other = floatArrayOf(h * extAspect, h, 300f, 300f, 300f)
+    return when {
+        s.dualScreenPreset != DualScreenPresets.OFF -> {
+            val base = DualScreenPresets.rect(w, h, s.dsKeepRatio, s.integerScale,
+                s.dsIntFillW, s.dsIntFillH, s.dsIntAlign, s.dsSameSize, own, other)
+            val isBottom = s.dualScreenPreset == DualScreenPresets.INTERNAL_BOTTOM
+            listOf(editorScreen(base, w, h, SCR_DUAL, if (isBottom) botLabel else topLabel, if (isBottom) PreviewBotColor else PreviewTopColor))
+        }
+        s.singleScreen -> {
+            val base = if (s.screenLayout == 4) floatArrayOf(0f, 0f, w, h)
+                else { val (sw, sh) = ScreenGeometry.fitted(w, h, true, s.integerScale)
+                    floatArrayOf((w - sw) / 2f, (h - sh) / 2f, sw, sh) }
+            listOf(editorScreen(base, w, h, SCR_DUAL, if (s.singleBottom) botLabel else topLabel, if (s.singleBottom) PreviewBotColor else PreviewTopColor))
+        }
+        else -> singleEditorScreens(s, w, h, topLabel, botLabel)
+    }
+}
+
+/** External-panel screens for the dual setup, in a panel of w x h (editor units). */
+private fun editorExternalScreens(s: DsSettings, w: Float, h: Float, topLabel: String, botLabel: String): List<EditorScreen> {
+    val intArr = DualScreenPresets.panelInternal
+    val intAspect = if (intArr != null && intArr[1] > 0f) intArr[0] / intArr[1] else 16f / 9f
+    val own = floatArrayOf(w, h, 300f, 300f, 300f)
+    val other = floatArrayOf(h * intAspect, h, 300f, 300f, 300f)
+    val contentBottom = ScreenGeometry.externalScreen(s.extDisplayScreen, s.swapScreens) == 1
+    val base = when {
+        s.dualScreenPreset != DualScreenPresets.OFF -> {
+            val r = DualScreenPresets.rect(w, h, s.dsKeepRatio, s.integerScale,
+                s.dsExtFillW, s.dsExtFillH, s.dsExtAlign, s.dsSameSize, own, other)
+            if (s.dsSameSize) r else previewScaleAboutCentre(r, 1f - s.extDisplayBorder / 100f)
+        }
+        s.extDisplayType == 2 -> floatArrayOf(0f, 0f, w, h)
+        else -> {
+            val (sw, sh) = ScreenGeometry.fitted(w, h, true, s.integerScale)
+            previewScaleAboutCentre(floatArrayOf((w - sw) / 2f, (h - sh) / 2f, sw, sh), 1f - s.extDisplayBorder / 100f)
+        }
+    }
+    return listOf(editorScreen(base, w, h, SCR_EXT, if (contentBottom) botLabel else topLabel, if (contentBottom) PreviewBotColor else PreviewTopColor))
+}
+
+@Composable private fun EditorChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    val colors = seedless
+    Box(
+        Modifier.clip(RoundedCornerShape(50))
+            .background(if (selected) colors.green else colors.surface.copy(alpha = 0.92f))
+            .border(1.dp, colors.line, RoundedCornerShape(50))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 13.dp, vertical = 7.dp)
+    ) {
+        Text(label, color = if (selected) Color.White else colors.text,
+            fontFamily = Manrope, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+/** One numeric pixel field: shows the live value, commits typed values at once. */
+@Composable private fun PixelField(label: String, valuePx: Int, modifier: Modifier = Modifier, onCommit: (Int) -> Unit) {
+    val colors = seedless
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
+    var text by remember { mutableStateOf(valuePx.toString()) }
+    var focused by remember { mutableStateOf(false) }
+    androidx.compose.runtime.LaunchedEffect(valuePx) {
+        if (!focused && text != valuePx.toString()) text = valuePx.toString()
+    }
+    Column(modifier) {
+        Text(label, color = colors.text3, fontFamily = Manrope, fontSize = 10.5.sp, modifier = Modifier.padding(bottom = 2.dp))
+        OutlinedTextField(
+            value = text,
+            onValueChange = { t ->
+                val clean = t.filter { ch -> ch.isDigit() || ch == '-' }.take(6)
+                text = clean
+                clean.toIntOrNull()?.let { onCommit(it) }
+            },
+            singleLine = true,
+            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+            ),
+            keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+                onDone = { focusManager.clearFocus() },
+            ),
+            shape = RoundedCornerShape(8.dp),
+            textStyle = androidx.compose.ui.text.TextStyle(fontFamily = SeedlessMono, fontSize = 12.5.sp, color = colors.text),
+            colors = androidx.compose.material3.TextFieldDefaults.colors(
+                focusedContainerColor = colors.surface2,
+                unfocusedContainerColor = colors.surface2,
+                focusedIndicatorColor = colors.green,
+                unfocusedIndicatorColor = colors.line,
+            ),
+            modifier = Modifier.fillMaxWidth().onFocusChanged { focused = it.isFocused },
+        )
+    }
+}
+
+/** Pixel-exact size/position fields for one editor screen, in physical pixels of its panel. */
+@Composable private fun ScreenPixelFields(
+    es: EditorScreen?, densityF: Float,
+    onSize: (Boolean, Int) -> Unit, onPos: (Boolean, Int) -> Unit,
+) {
+    if (es == null) return
+    val uiContext = LocalContext.current
+    val wPx = Math.round(es.rect[2] * densityF)
+    val hPx = Math.round(es.rect[3] * densityF)
+    val xPx = Math.round(es.rect[0] * densityF)
+    val yPx = Math.round(es.rect[1] * densityF)
+    Column(Modifier.padding(top = 2.dp, bottom = 6.dp)) {
+        Group(uiContext.getString(R.string.layout_pixel_group))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            PixelField(uiContext.getString(R.string.layout_px_w), wPx, Modifier.weight(1f)) { onSize(true, it) }
+            PixelField(uiContext.getString(R.string.layout_px_h), hPx, Modifier.weight(1f)) { onSize(false, it) }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 6.dp)) {
+            PixelField(uiContext.getString(R.string.layout_px_x), xPx, Modifier.weight(1f)) { onPos(true, it) }
+            PixelField(uiContext.getString(R.string.layout_px_y), yPx, Modifier.weight(1f)) { onPos(false, it) }
+        }
+    }
+}
+
+/**
+ * Full-screen per-screen layout editor. The whole window stands in for the
+ * physical panel being edited, so the DS screens appear at exactly the size
+ * and position they will have in game on this device. Editing is clamped to
+ * the panel: [ScreenGeometry.clampInside] caps size and offsets for every
+ * change, whether it comes from the floating parameter panel (collapsed by
+ * default, tap outside to dismiss) or from dragging a screen directly —
+ * drag moves it, the corner dot resizes it, and both write the same
+ * ControlLayout values the sliders show. Changes bump [tick], which is read
+ * in the plain Box composition below, so the picture follows immediately.
+ */
+@Composable private fun LayoutEditorScreen(s: DsSettings, onDone: () -> Unit) {
+    val uiContext = LocalContext.current
+    val colors = seedless
+    val unit = uiContext.getString(R.string.percent_unit)
+    val topLabel = uiContext.getString(R.string.common_top_screen)
+    val botLabel = uiContext.getString(R.string.common_bottom_screen)
+    val clContext = remember(uiContext) { ControlLayout.load(uiContext); uiContext }
+    var tick by remember { androidx.compose.runtime.mutableIntStateOf(0) }
+    var scene by remember { androidx.compose.runtime.mutableIntStateOf(if (s.dualScreenPreset != DualScreenPresets.OFF) 1 else 0) }
+    var panelOpen by remember { mutableStateOf(false) }
+    var winSize by remember { mutableStateOf(androidx.compose.ui.unit.IntSize.Zero) }
+    fun persist() { ControlLayout.saveScreens(clContext); tick++ }
+    fun writeValues(key: Int, c: FloatArray) {
+        when (key) {
+            SCR_BOT -> { ControlLayout.botScale = c[0]; ControlLayout.botOffX = c[1]; ControlLayout.botOffY = c[2] }
+            SCR_DUAL -> { ControlLayout.dualScale = c[0]; ControlLayout.dualOffX = c[1]; ControlLayout.dualOffY = c[2] }
+            SCR_EXT -> { ControlLayout.extScale = c[0]; ControlLayout.extOffX = c[1]; ControlLayout.extOffY = c[2] }
+            else -> { ControlLayout.topScale = c[0]; ControlLayout.topOffX = c[1]; ControlLayout.topOffY = c[2] }
+        }
+        persist()
+    }
+
+    Box(Modifier.fillMaxSize().background(Color.Black).onSizeChanged { winSize = it }) {
+        val tickNow = tick
+        val densityObj = androidx.compose.ui.platform.LocalDensity.current
+        val wDp = if (winSize.width > 0) with(densityObj) { winSize.width.toDp().value } else 0f
+        val hDp = if (winSize.height > 0) with(densityObj) { winSize.height.toDp().value } else 0f
+        // Panel being edited: the internal scenes use the whole window
+        // (that IS the physical panel); the external scene fits the real
+        // external aspect into the window, since it cannot be 1:1 here.
+        val extArr = DualScreenPresets.panelExternal
+        var pw = wDp; var ph = hDp
+        if (scene == 2 && wDp > 0f) {
+            val extAspect = if (extArr != null && extArr[1] > 0f) extArr[0] / extArr[1] else 16f / 9f
+            pw = minOf(wDp, hDp * extAspect); ph = pw / extAspect
+            if (ph > hDp) { ph = hDp; pw = ph * extAspect }
+        }
+        val ox = (wDp - pw) / 2f; val oy = (hDp - ph) / 2f
+        val screens: List<EditorScreen> = if (wDp > 0f && hDp > 0f) when (scene) {
+            1 -> editorInternalScreens(s, pw, ph, topLabel, botLabel)
+            2 -> editorExternalScreens(s, pw, ph, topLabel, botLabel)
+            else -> singleEditorScreens(s, pw, ph, topLabel, botLabel)
+        } else emptyList()
+        fun sliderChange(key: Int, sc: Float, x: Float, y: Float) {
+            val base = screens.firstOrNull { it.key == key }?.base
+            val c = if (base != null && pw > 0f) ScreenGeometry.clampInside(base, pw, ph, sc, x, y)
+                else floatArrayOf(sc, x, y)
+            writeValues(key, c)
+        }
+        fun centreScreen(key: Int) {
+            val es = screens.firstOrNull { it.key == key } ?: return
+            val v = screenValues(key)
+            val o = ScreenGeometry.offsetsFor(es.base, pw, ph, v[0], (pw - es.base[2] * v[0]) / 2f, (ph - es.base[3] * v[0]) / 2f)
+            writeValues(key, ScreenGeometry.clampInside(es.base, pw, ph, v[0], o[0], o[1]))
+        }
+        fun pixelSize(key: Int, isWidth: Boolean, px: Int) {
+            val es = screens.firstOrNull { it.key == key } ?: return
+            val v = screenValues(key)
+            val dpVal = px / densityObj.density
+            val sc = if (isWidth) { if (es.base[2] > 0f) dpVal / es.base[2] else v[0] }
+                else { if (es.base[3] > 0f) dpVal / es.base[3] else v[0] }
+            writeValues(key, ScreenGeometry.clampInside(es.base, pw, ph, sc, v[1], v[2]))
+        }
+        fun pixelPos(key: Int, isX: Boolean, px: Int) {
+            val es = screens.firstOrNull { it.key == key } ?: return
+            val v = screenValues(key)
+            val sc = if (es.base[2] > 0f && es.rect[2] > 0f) es.rect[2] / es.base[2] else v[0]
+            val cur = ScreenGeometry.transform(es.base, pw, ph, sc, v[1], v[2])
+            val o = ScreenGeometry.offsetsFor(es.base, pw, ph, sc,
+                if (isX) px / densityObj.density else cur[0],
+                if (isX) cur[1] else px / densityObj.density)
+            writeValues(key, ScreenGeometry.clampInside(es.base, pw, ph, sc, o[0], o[1]))
+        }
+        fun snapBottom(edge: Int) {
+            val top = screens.firstOrNull { it.key == SCR_TOP } ?: return
+            val bot = screens.firstOrNull { it.key == SCR_BOT } ?: return
+            val bw = bot.rect[2]; val bh = bot.rect[3]
+            if (bw <= 0f || bh <= 0f || bot.base[2] <= 0f) return
+            val sc = bw / bot.base[2]
+            val tx: Float; val ty: Float
+            when (edge) {
+                0 -> { tx = top.rect[0]; ty = top.rect[1] - bh }
+                2 -> { tx = top.rect[0] - bw; ty = top.rect[1] }
+                3 -> { tx = top.rect[0] + top.rect[2]; ty = top.rect[1] }
+                else -> { tx = top.rect[0]; ty = top.rect[1] + top.rect[3] }
+            }
+            val o = ScreenGeometry.offsetsFor(bot.base, pw, ph, sc, tx, ty)
+            writeValues(SCR_BOT, ScreenGeometry.clampInside(bot.base, pw, ph, sc, o[0], o[1]))
+        }
+        // tickNow is intentionally consumed here so every persist()
+        // recomposes this block even when the window size is unchanged.
+        @Suppress("UNUSED_EXPRESSION") tickNow
+
+        // A tap on the empty canvas dismisses the parameter panel.
+        Box(Modifier.fillMaxSize().pointerInput(panelOpen) {
+            detectTapGestures { if (panelOpen) panelOpen = false }
+        })
+
+        if (screens.isNotEmpty()) {
+            Box(Modifier.offset(x = ox.dp, y = oy.dp).size(pw.dp, ph.dp)
+                .background(Color(0xFF101418)).border(1.dp, Color.White.copy(alpha = 0.35f)))
+            Box(Modifier.offset(x = (ox + pw / 2f).dp, y = oy.dp).size(1.dp, ph.dp)
+                .background(Color.White.copy(alpha = 0.13f)))
+            Box(Modifier.offset(x = ox.dp, y = (oy + ph / 2f).dp).size(pw.dp, 1.dp)
+                .background(Color.White.copy(alpha = 0.13f)))
+            Box(Modifier.offset(x = ox.dp, y = oy.dp).size(pw.dp, ph.dp).clipToBounds()) {
+                for (es in screens) {
+                    if (es.rect[2] <= 0f || es.rect[3] <= 0f) continue
+                    Box(
+                        Modifier.offset(x = es.rect[0].dp, y = es.rect[1].dp)
+                            .size(es.rect[2].dp, es.rect[3].dp)
+                            .background(es.color.copy(alpha = 0.88f))
+                            .border(2.dp, Color.White.copy(alpha = 0.85f))
+                            .pointerInput(es.key, pw, ph) {
+                                detectDragGestures { change, drag ->
+                                    change.consume()
+                                    val v = screenValues(es.key)
+                                    val c = ScreenGeometry.clampInside(es.base, pw, ph, v[0],
+                                        v[1] + (drag.x / density) / pw, v[2] + (drag.y / density) / ph)
+                                    writeValues(es.key, c)
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(Modifier.fillMaxSize().padding(9.dp).border(1.dp, Color.White.copy(alpha = 0.5f)))
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(es.label, color = Color.White, fontFamily = Manrope,
+                                fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            Text("${es.rect[2].toInt()} × ${es.rect[3].toInt()} dp",
+                                color = Color.White.copy(alpha = 0.9f), fontFamily = SeedlessMono, fontSize = 11.sp)
+                        }
+                        if (es.rect[2] >= 64f && es.rect[3] >= 64f) {
+                            Box(
+                                Modifier.align(Alignment.BottomEnd).padding(5.dp).size(26.dp)
+                                    .clip(CircleShape).background(Color.White.copy(alpha = 0.4f))
+                                    .border(1.dp, Color.White.copy(alpha = 0.75f), CircleShape)
+                                    .pointerInput(es.key, pw, ph) {
+                                        detectDragGestures { change, drag ->
+                                            change.consume()
+                                            val v = screenValues(es.key)
+                                            val curW = es.base[2] * v[0]
+                                            if (curW > 1f) {
+                                                val factor = ((curW + drag.x / density) / curW).coerceIn(0.85f, 1.18f)
+                                                val c = ScreenGeometry.clampInside(es.base, pw, ph, v[0] * factor, v[1], v[2])
+                                                writeValues(es.key, c)
+                                            }
+                                        }
+                                    })
+                        }
+                    }
+                }
+            }
+            val caption = when (scene) {
+                2 -> uiContext.getString(R.string.layout_editor_caption_external,
+                    if (extArr != null) "${extArr[0].toInt()}×${extArr[1].toInt()}" else "16:9")
+                else -> uiContext.getString(R.string.layout_editor_caption_live)
+            }
+            Box(Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(10.dp)
+                .clip(RoundedCornerShape(8.dp)).background(colors.surface.copy(alpha = 0.85f))
+                .padding(horizontal = 10.dp, vertical = 6.dp)) {
+                Text(caption, color = colors.text, fontFamily = Manrope, fontSize = 11.5.sp)
+            }
+        }
+
+        Row(Modifier.align(Alignment.TopStart).statusBarsPadding().padding(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            EditorChip(uiContext.getString(R.string.layout_editor_done), false) { onDone() }
+            EditorChip(uiContext.getString(R.string.layout_tab_single), scene == 0) { scene = 0 }
+            EditorChip(uiContext.getString(R.string.layout_tab_dual) + " · " + uiContext.getString(R.string.layout_internal_screen), scene == 1) { scene = 1 }
+            EditorChip(uiContext.getString(R.string.layout_tab_dual) + " · " + uiContext.getString(R.string.menu_external_screen), scene == 2) { scene = 2 }
+        }
+
+        if (panelOpen) {
+            Column(
+                Modifier.align(Alignment.TopEnd).statusBarsPadding()
+                    .padding(top = 54.dp, end = 10.dp, bottom = 10.dp)
+                    .width(300.dp).fillMaxHeight().clip(RoundedCornerShape(14.dp))
+                    .background(colors.surface.copy(alpha = 0.96f)).border(1.dp, colors.line, RoundedCornerShape(14.dp))
+                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {}
+                    .verticalScroll(rememberScrollState()).padding(10.dp)
+            ) {
+                when (scene) {
+                    0 -> {
+                        Group(uiContext.getString(R.string.layout_single_group))
+                        ScreenAdjustRows(
+                            topLabel, unit,
+                            ControlLayout.topScale, ControlLayout.topOffX, ControlLayout.topOffY,
+                        ) { sc, x, y -> sliderChange(SCR_TOP, sc, x, y) }
+                        ScreenPixelFields(screens.firstOrNull { it.key == SCR_TOP }, densityObj.density,
+                            onSize = { isW, px -> pixelSize(SCR_TOP, isW, px) },
+                            onPos = { isX, px -> pixelPos(SCR_TOP, isX, px) })
+                        Row(Modifier.padding(top = 2.dp, bottom = 4.dp)) {
+                            EditorChip(uiContext.getString(R.string.presets_centre), false) { centreScreen(SCR_TOP) }
+                        }
+                        ScreenAdjustRows(
+                            botLabel, unit,
+                            ControlLayout.botScale, ControlLayout.botOffX, ControlLayout.botOffY,
+                        ) { sc, x, y -> sliderChange(SCR_BOT, sc, x, y) }
+                        ScreenPixelFields(screens.firstOrNull { it.key == SCR_BOT }, densityObj.density,
+                            onSize = { isW, px -> pixelSize(SCR_BOT, isW, px) },
+                            onPos = { isX, px -> pixelPos(SCR_BOT, isX, px) })
+                        Row(Modifier.padding(top = 2.dp, bottom = 4.dp)) {
+                            EditorChip(uiContext.getString(R.string.presets_centre), false) { centreScreen(SCR_BOT) }
+                        }
+                        if (screens.any { it.key == SCR_TOP } && screens.any { it.key == SCR_BOT }) {
+                            Group(uiContext.getString(R.string.layout_snap_title))
+                            SectionNote(uiContext.getString(R.string.layout_snap_desc))
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(bottom = 6.dp)) {
+                                EditorChip(uiContext.getString(R.string.layout_snap_below), false) { snapBottom(1) }
+                                EditorChip(uiContext.getString(R.string.layout_snap_above), false) { snapBottom(0) }
+                            }
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(bottom = 6.dp)) {
+                                EditorChip(uiContext.getString(R.string.layout_snap_left), false) { snapBottom(2) }
+                                EditorChip(uiContext.getString(R.string.layout_snap_right), false) { snapBottom(3) }
+                            }
+                        }
+                    }
+                    1 -> {
+                        Group(uiContext.getString(R.string.layout_dual_group))
+                        ScreenAdjustRows(
+                            uiContext.getString(R.string.layout_internal_screen), unit,
+                            ControlLayout.dualScale, ControlLayout.dualOffX, ControlLayout.dualOffY,
+                        ) { sc, x, y -> sliderChange(SCR_DUAL, sc, x, y) }
+                        ScreenPixelFields(screens.firstOrNull { it.key == SCR_DUAL }, densityObj.density,
+                            onSize = { isW, px -> pixelSize(SCR_DUAL, isW, px) },
+                            onPos = { isX, px -> pixelPos(SCR_DUAL, isX, px) })
+                        Row(Modifier.padding(top = 2.dp, bottom = 4.dp)) {
+                            EditorChip(uiContext.getString(R.string.presets_centre), false) { centreScreen(SCR_DUAL) }
+                        }
+                    }
+                    else -> {
+                        Group(uiContext.getString(R.string.layout_dual_group))
+                        ScreenAdjustRows(
+                            uiContext.getString(R.string.menu_external_screen), unit,
+                            ControlLayout.extScale, ControlLayout.extOffX, ControlLayout.extOffY,
+                        ) { sc, x, y -> sliderChange(SCR_EXT, sc, x, y) }
+                        ScreenPixelFields(screens.firstOrNull { it.key == SCR_EXT }, densityObj.density,
+                            onSize = { isW, px -> pixelSize(SCR_EXT, isW, px) },
+                            onPos = { isX, px -> pixelPos(SCR_EXT, isX, px) })
+                        Row(Modifier.padding(top = 2.dp, bottom = 4.dp)) {
+                            EditorChip(uiContext.getString(R.string.presets_centre), false) { centreScreen(SCR_EXT) }
+                        }
+                    }
+                }
+                NavRow(uiContext.getString(R.string.layout_reset), uiContext.getString(R.string.layout_reset_desc)) {
+                    ControlLayout.resetScreens(clContext); tick++
+                }
+                NavRow(uiContext.getString(R.string.layout_close_params), uiContext.getString(R.string.layout_editor_collapse_desc)) {
+                    panelOpen = false
+                }
+                SectionNote(uiContext.getString(R.string.layout_editor_drag_hint))
+                SectionNote(uiContext.getString(R.string.layout_drag_note))
+            }
+        } else {
+            Box(Modifier.align(Alignment.CenterEnd).padding(end = 10.dp)) {
+                EditorChip(uiContext.getString(R.string.layout_edit_params), false) { panelOpen = true }
+            }
+        }
+    }
+}
+
+/** Size + horizontal/vertical position sliders for one screen's free layout transform. */
+@Composable private fun ScreenAdjustRows(
+    name: String, unit: String, scale: Float, offX: Float, offY: Float,
+    onChange: (Float, Float, Float) -> Unit
+) {
+    val uiContext = LocalContext.current
+    SliderRow(
+        uiContext.getString(R.string.layout_row, name, uiContext.getString(R.string.layout_size)),
+        uiContext.getString(R.string.layout_size_desc),
+        (scale * 100).toInt().coerceIn(25, 200), 25, 200, unit
+    ) { onChange(it / 100f, offX, offY) }
+    SliderRow(
+        uiContext.getString(R.string.layout_row, name, uiContext.getString(R.string.layout_horizontal)),
+        uiContext.getString(R.string.layout_offset_desc),
+        (offX * 100).toInt().coerceIn(-50, 50), -50, 50, unit
+    ) { onChange(scale, it / 100f, offY) }
+    SliderRow(
+        uiContext.getString(R.string.layout_row, name, uiContext.getString(R.string.layout_vertical)),
+        uiContext.getString(R.string.layout_offset_desc),
+        (offY * 100).toInt().coerceIn(-50, 50), -50, 50, unit
+    ) { onChange(scale, offX, it / 100f) }
 }
 
 @Composable private fun NumberFieldRow(
@@ -1481,4 +2202,63 @@ private fun daysInMonth(m: Int) = when (m) { 2 -> 29; 4, 6, 9, 11 -> 30; else ->
             else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp, textAlign = TextAlign.End, modifier = Modifier.width(120.dp))
     }
+}
+
+/** Per-screen mask images (WatermelonDS-style backgrounds): each DS screen
+ *  has its own slot, plus one for single-surface layouts. Picking copies the
+ *  image into app storage; the settings value is the slot's file name. */
+@Composable
+fun MaskSettingsPage(s: DsSettings, set: (DsSettings) -> Unit) {
+    val uiContext = androidx.compose.ui.platform.LocalContext.current
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    var pendingSlot by remember { mutableStateOf<ScreenMasks.Slot?>(null) }
+    var importFailed by remember { mutableStateOf(false) }
+    val picker = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
+        val slot = pendingSlot
+        pendingSlot = null
+        if (uri != null && slot != null) {
+            if (ScreenMasks.importImage(ctx, slot, uri)) {
+                importFailed = false
+                set(s.withMask(slot, slot.fileName, s.maskMode(slot)))
+            } else {
+                importFailed = true
+            }
+        }
+    }
+    val modes = listOf(
+        uiContext.getString(R.string.mask_mode_stretch),
+        uiContext.getString(R.string.mask_mode_fit_center),
+        uiContext.getString(R.string.mask_mode_fit_top),
+        uiContext.getString(R.string.mask_mode_fit_left),
+        uiContext.getString(R.string.mask_mode_fit_bottom),
+        uiContext.getString(R.string.mask_mode_fit_right),
+    )
+    for (slot in ScreenMasks.Slot.entries) {
+        val label = when (slot) {
+            ScreenMasks.Slot.TOP -> uiContext.getString(R.string.mask_top)
+            ScreenMasks.Slot.BOTTOM -> uiContext.getString(R.string.mask_bottom)
+            ScreenMasks.Slot.SINGLE -> uiContext.getString(R.string.mask_single)
+        }
+        val isSet = s.maskFile(slot).isNotEmpty()
+        Group(label)
+        NavRow(
+            uiContext.getString(R.string.mask_pick),
+            uiContext.getString(if (isSet) R.string.mask_set else R.string.mask_unset),
+        ) {
+            pendingSlot = slot
+            picker.launch(arrayOf("image/*"))
+        }
+        DropdownRow(uiContext.getString(R.string.mask_mode), "", modes, s.maskMode(slot).coerceIn(0, modes.lastIndex)) {
+            set(s.withMask(slot, s.maskFile(slot), it))
+        }
+        if (isSet) {
+            NavRow(uiContext.getString(R.string.mask_clear), "") {
+                ScreenMasks.clear(ctx, slot)
+                set(s.withMask(slot, "", s.maskMode(slot)))
+            }
+        }
+    }
+    if (importFailed) SectionNote(uiContext.getString(R.string.mask_import_failed))
+    SectionNote(uiContext.getString(R.string.mask_note))
 }

@@ -42,12 +42,14 @@ static void fake_free(void *v){(void)v;}
 static void *fake_malloc(size_t n){return failures==5?NULL:(n<=sizeof raw?raw:compressed);}
 static unsigned long fake_bound(unsigned long n){return n+64;}
 static int fake_compress(void *d,unsigned long *n,const void *s,unsigned long size){(void)d;(void)s;(void)size;*n=32;return failures==6?-1:0;}
+static int fake_compress2(void *d,unsigned long *n,const void *s,unsigned long size,int level){(void)level;return fake_compress(d,n,s,size);}
 static int fake_sleep(unsigned usec){(void)usec;return 0;}
 static char *fake_strncpy(char *d,const char *s,size_t n){size_t i=0;while(i<n&&s[i]){d[i]=s[i];++i;}while(i<n)d[i++]=0;return d;}
-static void *sym_libc_fwrite=fake_write,*sym_libc_free=fake_free,*sym_libc_fclose=fake_close,*sym_libc_compressBound=fake_bound,*sym_libc_malloc=fake_malloc,*sym_libc_compress=fake_compress,*sym_libc_memcpy=memcpy,*sym_libc_usleep=fake_sleep,*sym_libc_strncpy=fake_strncpy;
+static void *sym_libc_fwrite=fake_write,*sym_libc_free=fake_free,*sym_libc_fclose=fake_close,*sym_libc_compressBound=fake_bound,*sym_libc_malloc=fake_malloc,*sym_libc_compress=fake_compress,*sym_libc_compress2=fake_compress2,*sym_libc_memcpy=memcpy,*sym_libc_usleep=fake_sleep,*sym_libc_strncpy=fake_strncpy;
 typedef size_t(*fn_fwrite)(const void*,size_t,size_t,void*);
 typedef void(*fn_free_26)(void*);typedef int(*fn_fclose)(void*);
 typedef unsigned long(*fn_compress_bound)(unsigned long);typedef void*(*fn_malloc_26)(size_t);typedef int(*fn_compress)(void*,unsigned long*,const void*,unsigned long);
+typedef int(*fn_compress2)(void*,unsigned long*,const void*,unsigned long,int);
 typedef void*(*fn_malloc_29)(size_t);typedef void(*fn_free_29)(void*);typedef void*(*fn_memcpy_29)(void*,const void*,size_t);typedef int(*fn_usleep)(unsigned);typedef char*(*fn_strncpy)(char*,const char*,size_t);typedef void*(*fn_start_thread)(void*);typedef int(*fn_pthread_create)(void*,const void*,fn_start_thread,void*);
 int str_vsprintf_caller_limit_4(char *d,size_t n,const char *fmt,...){(void)n;(void)fmt;d[0]='x';d[1]=0;return 1;}
 int files_jni_env_invoke_and_release(const char *a,const char *b){(void)a;(void)b;++renames;return failures==7?-1:0;}
@@ -131,7 +133,7 @@ with tempfile.TemporaryDirectory(prefix='seedless-safety-') as folder:
     start_failed=fail in [5,8,9]
     assert dll.fixture_stat(1)==0
     if not start_failed:
-     assert dll.nds_state_request_status(ticket)==0
+     assert dll.nds_state_request_status(ticket)==2
      assert dll.state_write_pending()==1
      before=dll.fixture_stat(0);assert dll.fixture_save()==-1;assert dll.fixture_stat(0)==before
      dll.fixture_finish()

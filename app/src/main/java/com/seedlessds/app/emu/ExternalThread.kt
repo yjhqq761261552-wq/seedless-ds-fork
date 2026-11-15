@@ -12,7 +12,9 @@ import com.seedlessds.core.SeedlessCore
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-internal class ExternalThread(private val dpy: EGLDisplay, private val shared: EGLContext) : Thread("DsExternal") {
+internal class ExternalThread(private val dpy: EGLDisplay, private val shared: EGLContext, appCtx: android.content.Context) : Thread("DsExternal") {
+    private val maskBg = MaskBackgrounds(appCtx)
+    private val glMask = GlMaskBackground()
     private val lock = Object()
     private var pending = false
     private var producerFence = 0L
@@ -154,6 +156,7 @@ internal class ExternalThread(private val dpy: EGLDisplay, private val shared: E
         if (!EGL14.eglMakeCurrent(dpy, next, next, ctx)) { EGL14.eglDestroySurface(dpy, next); return false }
         surface = next; surfaceGen = snap.generation; surfaceW = snap.width; surfaceH = snap.height
         chainW = 0
+        glMask.forget()
         return true
     }
 
@@ -214,6 +217,7 @@ internal class ExternalThread(private val dpy: EGLDisplay, private val shared: E
         GLES20.glClearColor(0f, 0f, 0f, 1f); GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
         val settings = SettingsRepo.current
         val screen = ScreenGeometry.externalScreen(settings.extDisplayScreen, settings.swapScreens)
+        glMask.draw(maskBg.current(settings, ScreenMasks.slotFor(screen == 0, screen == 1), snap.width, snap.height), snap.height)
         val texture = if (screen == 1) frame.bottom else frame.top
         if (texture != 0) {
             GLES20.glDisable(GLES20.GL_BLEND)

@@ -97,7 +97,7 @@ data class DsSettings(
     val dsIntAlign: Int = 2,
     val dsExtAlign: Int = 1,
 
-    val dsSameSize: Boolean = true,
+    val dsSameSize: Boolean = false,
     val saveLocation: Int = 0,
     val saveFolder: String = "",
     val cpuLoad: Int = 0,
@@ -108,6 +108,12 @@ data class DsSettings(
     val customClock: Long = 0L,
     val autoload: Boolean = false,
     val smartEdit: Boolean = true,
+    val maskTop: String = "",
+    val maskBottom: String = "",
+    val maskSingle: String = "",
+    val maskTopMode: Int = 0,
+    val maskBottomMode: Int = 0,
+    val maskSingleMode: Int = 0,
 ) {
     fun withFrameskip(type: Int): DsSettings = copy(frameskipType = type, dynamicRes = dynamicRes && type == 0)
     fun withDynamicRes(on: Boolean): DsSettings = copy(dynamicRes = on, frameskipType = if (on) 0 else frameskipType)
@@ -333,6 +339,12 @@ object SettingsRepo {
             customClock = p.getLong("_CustomClock", d.customClock),
             autoload = p.getBoolean("_ShortcutAutoResume", d.autoload),
             smartEdit = p.getBoolean("_SmartEdit", d.smartEdit),
+            maskTop = p.getString("_MaskTop", d.maskTop) ?: d.maskTop,
+            maskBottom = p.getString("_MaskBottom", d.maskBottom) ?: d.maskBottom,
+            maskSingle = p.getString("_MaskSingle", d.maskSingle) ?: d.maskSingle,
+            maskTopMode = p.getInt("_MaskTopMode", d.maskTopMode),
+            maskBottomMode = p.getInt("_MaskBottomMode", d.maskBottomMode),
+            maskSingleMode = p.getInt("_MaskSingleMode", d.maskSingleMode),
         ).let { RendererPolicy.normalize(it.withFrameskip(it.frameskipType)) }
     }
 
@@ -439,6 +451,12 @@ object SettingsRepo {
             putLong("_CustomClock", s.customClock)
             putBoolean("_ShortcutAutoResume", s.autoload)
             putBoolean("_SmartEdit", s.smartEdit)
+            putString("_MaskTop", s.maskTop)
+            putString("_MaskBottom", s.maskBottom)
+            putString("_MaskSingle", s.maskSingle)
+            putInt("_MaskTopMode", s.maskTopMode)
+            putInt("_MaskBottomMode", s.maskBottomMode)
+            putInt("_MaskSingleMode", s.maskSingleMode)
         }
     }
 
@@ -549,6 +567,12 @@ object SettingsRepo {
         dl("_CustomClock", s.customClock, b.customClock)
         db("_ShortcutAutoResume", s.autoload, b.autoload)
         db("_SmartEdit", s.smartEdit, b.smartEdit)
+        ds("_MaskTop", s.maskTop, b.maskTop)
+        ds("_MaskBottom", s.maskBottom, b.maskBottom)
+        ds("_MaskSingle", s.maskSingle, b.maskSingle)
+        di("_MaskTopMode", s.maskTopMode, b.maskTopMode)
+        di("_MaskBottomMode", s.maskBottomMode, b.maskBottomMode)
+        di("_MaskSingleMode", s.maskSingleMode, b.maskSingleMode)
     }
 
     fun runtimeUpdate(s: DsSettings) { current = s }

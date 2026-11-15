@@ -1,0 +1,5 @@
+https://github.com/JorreFog/SuperDrastic
+Commit 930c4c5bb3e904557cd8cc42a01a4e27834f5ba1
+Original path shaders/ds-grid.frag
+The Vulkan port uses actual per-draw output rectangles and extends area sampling to footprints up to two source texels per axis.
+The 1.0.35 presentation aperture uses a continuous pixel-area-integrated cosine in two grain strengths, calibrated through RP Duo screenshots and user feedback.

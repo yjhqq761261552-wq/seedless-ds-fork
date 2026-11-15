@@ -566,6 +566,45 @@
     <string name="settings_landscape_x_1">"Landscape x:1"</string>
     <string name="settings_lavender">"Lavender"</string>
     <string name="settings_layout">"Layout"</string>
+    <string name="layout_adjust">"Per-screen layout"</string>
+    <string name="layout_preview_mode">"Preview"</string>
+    <string name="layout_preview_mode_desc">"Which setup the diagram shows. It is computed live from the current layout, preset and per-screen values."</string>
+    <string name="layout_tab_single">"Single display"</string>
+    <string name="layout_tab_dual">"Dual display"</string>
+    <string name="layout_edit_params">"Edit parameters"</string>
+    <string name="layout_close_params">"Close parameters"</string>
+    <string name="layout_edit_desc">"Opens the parameter drawer on the right. The diagram next to it updates as you move the sliders."</string>
+    <string name="layout_editor_done">"Done"</string>
+    <string name="layout_editor_caption_live">"This is the real size and position on this panel. Drag a slider and the picture follows at once."</string>
+    <string name="layout_editor_caption_external">"External display %1$s, shown at its real aspect ratio fitted to this screen (not 1:1 size)."</string>
+    <string name="layout_editor_collapse_desc">"Hide the panel and see the layout on its own. The Edit chip brings it back."</string>
+    <string name="layout_editor_drag_hint">"You can also drag a screen directly to move it, or drag the dot at its bottom-right corner to resize it. The values above follow, and every screen stays inside its panel."</string>
+    <string name="layout_pixel_group">"Pixels (type exact values)"</string>
+    <string name="layout_px_w">"Width (px)"</string>
+    <string name="layout_px_h">"Height (px)"</string>
+    <string name="layout_px_x">"X (px)"</string>
+    <string name="layout_px_y">"Y (px)"</string>
+    <string name="layout_snap_title">"Snap bottom screen to top screen"</string>
+    <string name="layout_snap_desc">"Moves the bottom screen (size unchanged) so it touches the chosen edge of the top screen, still inside the panel."</string>
+    <string name="layout_snap_above">"Snap above"</string>
+    <string name="layout_snap_below">"Snap below"</string>
+    <string name="layout_snap_left">"Snap left"</string>
+    <string name="layout_snap_right">"Snap right"</string>
+    <string name="layout_preview_note">"The diagram is a schematic at the panels' aspect ratios, computed from the same geometry the game uses. The real picture is the final check."</string>
+    <string name="layout_adjust_desc">"Size and position of each screen on its own, for one display or two"</string>
+    <string name="layout_single_group">"Single display (both DS screens on one panel)"</string>
+    <string name="layout_dual_group">"Dual display (two physical panels)"</string>
+    <string name="layout_dual_note">"These two apply automatically while an external display is connected, on top of the preset and same-size result. Unplug it and the single-display values above take over again, unchanged."</string>
+    <string name="layout_internal_screen">"This device"</string>
+    <string name="layout_row">"%1$s · %2$s"</string>
+    <string name="layout_size">"Size"</string>
+    <string name="layout_horizontal">"Horizontal position"</string>
+    <string name="layout_vertical">"Vertical position"</string>
+    <string name="layout_size_desc" formatted="false">"Scales around the centre of the panel. 100% is the size the layout or preset gives."</string>
+    <string name="layout_offset_desc">"Shift as a percentage of the panel width or height. 0 is where the layout or preset puts it."</string>
+    <string name="layout_reset">"Reset screen layout"</string>
+    <string name="layout_reset_desc" formatted="false">"Put every screen above back to 100% size and no shift. Button layout is not touched."</string>
+    <string name="layout_drag_note">"Tip: in a game, Menu → Edit controls also lets you drag each screen directly and resize it there. Both paths edit the same values."</string>
     <string name="settings_layout_filter_rotation_external_display">"Layout, filter, rotation, external display"</string>
     <string name="settings_lcd1x" translatable="false">"lcd1x"</string>
     <string name="settings_lcd1x_nds_color" translatable="false">"lcd1x+nds_color"</string>
@@ -815,7 +854,7 @@
     <string name="tools_no_valid_bios_recognized_check_the_size">"No valid BIOS recognized (check the size)."</string>
     <string name="ui_nav">"NAV"</string>
     <string name="unknown_symbol" translatable="false">"?"</string>
-    <string name="presets_scaling_priority_note">\nInteger scaling takes priority over exact physical size. Fill and screen edits are disabled while matching sizes. Areas smaller than 256×192 downscale to fit.</string>
+    <string name="presets_scaling_priority_note">\nInteger scaling takes priority over exact physical size. Fill is disabled while matching sizes; per-screen layout edits still apply on top of the matched size. Areas smaller than 256×192 downscale to fit.</string>
     <string name="settings_low_latency_touch">Low-latency DS touch</string>
     <string name="settings_low_latency_touch_desc">Request immediate delivery for the DS pen. Disable to compare system batching and resampling. Does not change physical-button dispatch.</string>
     <string name="licenses_title">Licenses and acknowledgements</string>
@@ -840,7 +879,7 @@
     <string name="state_loading_progress">"Loading…"</string>
     <string name="state_delete_error">"Could not delete the state. Check folder access."</string>
     <string name="audio_low_latency_title">"AAudio low latency audio"</string>
-    <string name="audio_low_latency_description">"Use native sample rate on Android 8.0 or later; fall back to OpenSL if unavailable. Reopen the game to apply."</string>
+    <string name="audio_low_latency_description">"Use native-rate low-latency audio on Android 8.0 or later. Changes apply when returning to the game. Recover through OpenSL if audio fails."</string>
     <string name="rewind_sampling_title">"Rewind capture interval"</string>
     <string name="rewind_sampling_description">"A longer interval reduces capture work and makes rewind steps larger."</string>
     <string name="state_overwrite_question">Overwrite %1$s? The previous state will be replaced.</string>
@@ -851,4 +890,22 @@
     <string name="vulkan_filter_summary">Built-in Vulkan effects: interpolation, Pixel AA, LCD grids and NDS color variants. OpenGL shader files are not used.</string>
     <string name="renderer_opengl_active">Current display backend: OpenGL</string>
     <string name="renderer_delay_opengl_only">External display delay calibration is available with OpenGL. Vulkan uses the latest shared frame.</string>
+    <string name="mask_title">Screen masks</string>
+    <string name="mask_desc">Decorative images framing each screen, like WatermelonDS backgrounds</string>
+    <string name="mask_top">Top screen mask</string>
+    <string name="mask_bottom">Bottom screen mask</string>
+    <string name="mask_single">Single-screen mask</string>
+    <string name="mask_pick">Choose image</string>
+    <string name="mask_set">Image set</string>
+    <string name="mask_unset">Not set</string>
+    <string name="mask_clear">Remove mask</string>
+    <string name="mask_mode">Scaling</string>
+    <string name="mask_mode_stretch">Stretch</string>
+    <string name="mask_mode_fit_center">Fit centre</string>
+    <string name="mask_mode_fit_top">Fit top</string>
+    <string name="mask_mode_fit_left">Fit left</string>
+    <string name="mask_mode_fit_bottom">Fit bottom</string>
+    <string name="mask_mode_fit_right">Fit right</string>
+    <string name="mask_note">On dual screens the top and bottom masks apply to their own panels; on a single screen both screens share the single-screen mask. The game area is always left clear.</string>
+    <string name="mask_import_failed">That image could not be read; the previous mask was kept.</string>
 </resources>

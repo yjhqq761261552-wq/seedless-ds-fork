@@ -28,3 +28,11 @@ float filter_quilez(float pixel) {
     f = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
     return base + f - 0.5;
 }
+float filter_box_coverage(float center, float halfFootprint, float texel) {
+    // Length of the overlap between the output pixel's footprint interval
+    // [center-half, center+half] and one source texel's cell [t, t+1].
+    // Exact area weights for box ("point-to-point") sampling at any scale.
+    float lo = center - halfFootprint;
+    float hi = center + halfFootprint;
+    return clamp(min(hi, texel + 1.0) - max(lo, texel), 0.0, 1.0);
+}

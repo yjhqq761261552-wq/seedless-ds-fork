@@ -58,9 +58,9 @@ void *memcpy(void *d,const void *s,size_t n) { unsigned char *a=d; const unsigne
 void *memset(void *d,int v,size_t n) { unsigned char *a=d;for(size_t i=0;i<n;++i)a[i]=(unsigned char)v;return d; }
 void nds_video_wake(void) {}
 void test_loading(unsigned loading) { mock_frontend.frame_state=loading; }
-uint64_t test_publish(void) {
+uint64_t test_publish_scale(unsigned scale) {
     uint64_t next=nds_video_latest_serial()+1;
-    unsigned scale=1+(unsigned)(next&1u), page=mock_video.page_parity;
+    unsigned page=mock_video.page_parity;
     // Emulation writes the active page outside the flip mutex, like the core.
     memset(pages[page],(int)(next&255u),2*0xc0000);
     lock(mock_video.mutex);
@@ -71,6 +71,9 @@ uint64_t test_publish(void) {
     nds_video_published_locked();
     unlock(mock_video.mutex);
     return next;
+}
+uint64_t test_publish(void) {
+    return test_publish_scale(1+(unsigned)((nds_video_latest_serial()+1)&1u));
 }
 void test_disturb_live_metadata(void) {
     lock(mock_video.mutex);
@@ -107,6 +110,32 @@ with tempfile.TemporaryDirectory(prefix='seedless-vulkan-test-') as tmp:
         ndk=Path(args.ndk); bin_dir=ndk/'toolchains/llvm/prebuilt/windows-x86_64/bin'
         cc,cxx,linker=bin_dir/'clang.exe',bin_dir/'clang++.exe',bin_dir/'ld.lld.exe'
         vkinc=ndk/'sources/third_party/vulkan/src/include'
+        fixtures['stdlib.h']='#include <stddef.h>\nvoid *malloc(size_t);\nvoid free(void *);\n'
+        mock += '''
+__declspec(dllimport) void *GetProcessHeap(void);
+__declspec(dllimport) void *HeapAlloc(void *, unsigned long, size_t);
+__declspec(dllimport) int HeapFree(void *, unsigned long, void *);
+static int fail_next_allocation;
+static unsigned char *tracked_allocation;
+static size_t tracked_size;
+void test_fail_next_allocation(void) { fail_next_allocation = 1; }
+int test_allocation_intact(void) {
+    for (unsigned i = 0; i < 16; ++i)
+        if (tracked_allocation && tracked_allocation[tracked_size + i] != 0xcd) return 0;
+    return 1;
+}
+void *malloc(size_t bytes) {
+    if (fail_next_allocation) { fail_next_allocation = 0; return NULL; }
+    // Spare backing keeps the regression safe even against the old overflow.
+    unsigned char *p = HeapAlloc(GetProcessHeap(), 0, bytes + 2 * 0xc0000);
+    if (p) {
+        tracked_allocation = p; tracked_size = bytes;
+        for (unsigned i = 0; i < 16; ++i) p[bytes + i] = 0xcd;
+    }
+    return p;
+}
+void free(void *p) { if (p) HeapFree(GetProcessHeap(), 0, p); }
+'''
         fixtures['pthread.h']='#ifndef VK_HOST_MUTEX\n#define VK_HOST_MUTEX\ntypedef struct { void *value; } pthread_mutex_t;\n#define PTHREAD_MUTEX_INITIALIZER {0}\n__declspec(dllimport) void AcquireSRWLockExclusive(void *);\n__declspec(dllimport) void ReleaseSRWLockExclusive(void *);\nstatic inline int pthread_mutex_lock(pthread_mutex_t *m) { AcquireSRWLockExclusive(m);return 0; }\nstatic inline int pthread_mutex_unlock(pthread_mutex_t *m) { ReleaseSRWLockExclusive(m);return 0; }\n#endif\n'
     else:
         cc,cxx=args.cc,args.cxx
@@ -126,13 +155,14 @@ with tempfile.TemporaryDirectory(prefix='seedless-vulkan-test-') as tmp:
                  '-ffreestanding','-fno-builtin','-fno-stack-protector','-fno-exceptions','-fno-rtti','-O2',*flags,'-c',p,'-o',obj])
             objects.append(obj)
         definition=temp/'kernel.def'
-        definition.write_text('LIBRARY KERNEL32.dll\nEXPORTS\nAcquireSRWLockExclusive\nReleaseSRWLockExclusive\n')
+        definition.write_text('LIBRARY KERNEL32.dll\nEXPORTS\nAcquireSRWLockExclusive\nReleaseSRWLockExclusive\nGetProcessHeap\nHeapAlloc\nHeapFree\n')
         imp=temp/'kernel.lib'
         run([linker,'-flavor','link','/dll','/noentry','/nodefaultlib','/force:unresolved',
              '/def:'+str(definition),'/machine:x64','/implib:'+str(imp),'/out:'+str(temp/'kernel32.dll')])
         library=temp/'vulkan_test.dll'
         names=['nds_video_pack_rgba','nds_video_downsample_base','nds_video_copy_latest','nds_video_latest_serial',
-               'test_publish','test_loading','test_disturb_live_metadata','test_linear_filter','test_choose_normal','test_choose','test_count','test_rotate','test_rotation']
+               'test_publish','test_publish_scale','test_fail_next_allocation','test_allocation_intact',
+               'test_loading','test_disturb_live_metadata','test_linear_filter','test_choose_normal','test_choose','test_count','test_rotate','test_rotation']
         run([linker,'-flavor','link','/dll','/noentry','/nodefaultlib','/out:'+str(library),
              *['/export:'+n for n in names],*objects,imp])
     else:
@@ -210,6 +240,22 @@ with tempfile.TemporaryDirectory(prefix='seedless-vulkan-test-') as tmp:
     # Real production copy API selects the completed page and its latched metadata.
     capacity=0x180000;dest=C.create_string_buffer(capacity);info=Snapshot()
     assert dll.nds_video_copy_latest(dest,capacity,0,C.byref(info))==0
+    if windows:
+        dll.test_publish_scale.argtypes=[C.c_uint];dll.test_publish_scale.restype=C.c_uint64
+        # Grow a 1x private scratch to 2x while its allocation fails. The real
+        # copy API must use its in-lock fallback and preserve the old capacity.
+        first=dll.test_publish_scale(1)
+        assert dll.nds_video_copy_latest(dest,capacity,0,C.byref(info))==1
+        assert list(info.width)==[256,256]
+        dll.test_fail_next_allocation()
+        second=dll.test_publish_scale(2)
+        assert dll.nds_video_copy_latest(dest,capacity,first,C.byref(info))==1
+        assert dll.test_allocation_intact()==1,'scratch allocation failure overflowed the old buffer'
+        assert info.serial==second and list(info.width)==[512,512]
+        assert C.string_at(dest,info.bytes)==bytes([second&255])*info.bytes
+        # The failed growth is retried successfully on the next copy.
+        assert dll.nds_video_copy_latest(dest,capacity,0,C.byref(info))==1
+        assert dll.test_allocation_intact()==1
     serial=dll.test_publish();dll.test_disturb_live_metadata()
     assert dll.nds_video_copy_latest(dest,capacity,0,C.byref(info))==1 and info.serial==serial
     assert dll.nds_video_copy_latest(dest,capacity,serial,C.byref(info))==0
@@ -239,7 +285,7 @@ with tempfile.TemporaryDirectory(prefix='seedless-vulkan-test-') as tmp:
     for modes,expected in [([2,0,1,3],1),([2,0],0),([2,3],3),([2],2),([],2)]:
         assert dll.test_choose((C.c_int*len(modes))(*modes),len(modes))==expected
     dll.test_linear_filter.argtypes=[C.c_int];dll.test_linear_filter.restype=C.c_int
-    for mode in range(16):assert dll.test_linear_filter(mode)==int(mode in [1,2,7,8,9,10,14,15])
+    for mode in range(19):assert dll.test_linear_filter(mode)==int(mode in [1,2,7,8,9,10,14,15,17,18])
     dll.test_choose_normal.argtypes=[C.POINTER(C.c_int),C.c_uint];dll.test_choose_normal.restype=C.c_int
     for modes in [[0,1,2,3],[1,2],[2],[3,2]]:
         assert dll.test_choose_normal((C.c_int*len(modes))(*modes),len(modes))==2
@@ -255,6 +301,7 @@ with tempfile.TemporaryDirectory(prefix='seedless-vulkan-test-') as tmp:
         'tests':{'baseScreenshotAllScalesModesAndFormats':'passed','rgbaPacking':'passed','rgb565Conversion':'passed','capacityGuards':'passed',
                  'completedPageAndMetadata':'passed','loadingAndNoNewFrame':'passed',
                  'concurrentSnapshots':'passed','presentModeAndImageCount':'passed','normalVulkanUsesFifo':'passed','lcdUsesNearestSampler':'passed','interpolationSamplerPolicy':'passed','preRotation':'passed'},
+        'allocationFailureGrowthFallback':'passed' if windows else 'Windows fixture only',
         'scope':'Production pixel/snapshot code and WSI policy; fixture core state and host mutex; no Android Vulkan driver execution'},indent=2))
     if windows:
         kernel=C.WinDLL('kernel32',use_last_error=True);kernel.FreeLibrary.argtypes=[C.c_void_p]

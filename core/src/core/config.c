@@ -96,6 +96,7 @@ void config_unpack_word(unsigned char *obj) {
     audio_out_set_runtime_flag(BIT(31) ^ 1u);
 
     uint32_t low = (uint32_t)FRONTEND->config_bits;
+    audio_out_set_mode_word((low >> 8) & 3u);
     audio_out_set_enabled_flag((low >> 26) & 1u);
     #undef BIT
     #undef FIELD
