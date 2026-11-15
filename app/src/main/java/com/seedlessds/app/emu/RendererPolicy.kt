@@ -5,7 +5,7 @@ package com.seedlessds.app.emu
 object RendererPolicy {
     const val OPENGL = "OpenGL"
     const val VULKAN = "Vulkan"
-    val vulkanFilters = listOf("None", "Linear", "FXAA", "lcd1x", "lcd1x+nds_color", "zfast_lcd", "zfast_lcd+nds_color", "sharp_bilinear", "sharp_bilinear+nds_color", "sharp_shimmerless", "sharp_shimmerless+nds_color", "pixel_aa_fast", "LCD3x", "LCD3x+nds_color", "Quilez", "Quilez+nds_color", "rpduo_sharp", "rpduo_grain", "rpduo_grain_plus")
+    val vulkanFilters = listOf("None", "Linear", "FXAA", "lcd1x", "lcd1x+nds_color", "zfast_lcd", "zfast_lcd+nds_color", "sharp_bilinear", "sharp_bilinear+nds_color", "sharp_shimmerless", "sharp_shimmerless+nds_color", "pixel_aa_fast", "LCD3x", "LCD3x+nds_color", "Quilez", "Quilez+nds_color", "rpduo_sharp", "rpduo_grain", "rpduo_grain_plus", "rpduo_nova")
 
     /** IDs shared with the native shader; append new modes without reordering. */
     fun vulkanFilterMode(filter: String): Int = vulkanFilters.indexOf(filter).coerceAtLeast(0)

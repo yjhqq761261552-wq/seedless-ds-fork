@@ -1,10 +1,10 @@
 # SeedlessDS · 自制优化分支
 
-基于 [SapphireRhodonite/SeedlessDS](https://github.com/SapphireRhodonite/SeedlessDS) 的 Android NDS 模拟器改进分支，侧重双屏布局、输入响应、可绑定回溯、存档可靠性与 Vulkan 呈现。当前版本：**1.0.36-audiofix / versionCode 146**。
+基于 [SapphireRhodonite/SeedlessDS](https://github.com/SapphireRhodonite/SeedlessDS) 的 Android NDS 模拟器改进分支，侧重双屏布局、输入响应、可绑定回溯、存档可靠性与 Vulkan 呈现。当前版本：**1.0.37-novadot / versionCode 147**。
 
 **特别感谢 SapphireRhodonite、WatermelonDS / SeedlessDS 制作组及所有贡献者开源与维护。** Vulkan 低延迟等优化参考了 [WatermelonDS 0.8.0.rc3](https://github.com/SapphireRhodonite/WatermelonDS/releases/tag/0.8.0.rc3)；完整归属见 [致谢](CREDITS.md)。这是第三方修改分支，自制版本号与官方发布相互独立。
 
-[全部版本改进](CHANGELOG.md) · [最新音频修复与验证](AUDIO_FIX_1.0.36.md) · [许可](LICENSING.md) · [上游衍生英文说明](README.upstream-derived.md)
+[全部版本改进](CHANGELOG.md) · [Nova 磷光点与验证](NOVA_1.0.37.md) · [最新音频修复与验证](AUDIO_FIX_1.0.36.md) · [许可](LICENSING.md) · [上游衍生英文说明](README.upstream-derived.md)
 
 [下载最新 APK（GitHub Releases）](https://github.com/yjhqq761261552-wq/seedless-ds-fork/releases/latest)。感谢 OpenGL 滤镜的原算法作者与移植者，完整名单及源码依据见 [OpenGL / GLES 滤镜来源致谢](CREDITS.md#opengl--gles-滤镜来源)。
 
@@ -15,7 +15,7 @@
 - 添加了一键回溯功能：在“设置 → 按键”启用并绑定按键，支持按住回退；压缩移到后台，忙时跳过记录，采样间隔可调。
 - 音频与存档：可选 AAudio、OpenSL 回退；异步存档完成反馈、失败恢复及成就状态关联检查。
 - 呈现：屏幕菜单独立选择 OpenGL / Vulkan，默认 OpenGL；按后端筛选滤镜，仅 Vulkan 显示低延迟开关。
-- 针对Vulkan渲染移植 共 19 项内置滤镜效果：无滤镜、线性、FXAA、LCD1x、zFast LCD、Sharp Bilinear、Sharp Shimmerless、Pixel AA Fast、LCD3x、Quilez，以及适用效果的 NDS Color 组合、RP Duo LCD 点对点、RP Duo 柔和颗粒与柔和颗粒＋。
+- 针对Vulkan渲染移植 共 20 项内置滤镜效果：无滤镜、线性、FXAA、LCD1x、zFast LCD、Sharp Bilinear、Sharp Shimmerless、Pixel AA Fast、LCD3x、Quilez，以及适用效果的 NDS Color 组合、RP Duo LCD 点对点、RP Duo 柔和颗粒、柔和颗粒＋与 Nova 磷光点。
 - 集成了社区常用游戏的金手指以及opengl下的滤镜
 
 这里的 Vulkan 用于呈现软件渲染的 DS 帧，不代表新增 Vulkan 硬件 3D 模拟核心。低延迟开关关闭时使用 FIFO，开启时优先 Mailbox / Immediate，实际模式依驱动支持而定。运行中可改滤镜和低延迟，切换渲染器需关闭游戏。

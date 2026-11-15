@@ -20,8 +20,8 @@ android {
         applicationId = "com.seedlessds.app"
         minSdk = 21
         targetSdk = 35
-        versionCode = 146
-        versionName = "1.0.36-audiofix"
+        versionCode = 147
+        versionName = "1.0.37-novadot"
 
         ndk {
             abiFilters += "arm64-v8a"

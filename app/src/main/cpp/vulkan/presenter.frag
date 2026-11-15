@@ -467,6 +467,8 @@ vec3 lcd3Screen(vec2 pos) {
     return rgb * yfactor * xfactor;
 }
 
+#include "nova_phosphor.glsl"
+
 void main() {
     vec2 pos=clamp(uv,draw.uvClamp.xy,draw.uvClamp.zw);
     vec3 rgb;
@@ -480,6 +482,7 @@ void main() {
     else if (draw.filterMode == 16) rgb=rpDuoSharpScreen();
     else if (draw.filterMode == 17) rgb=rpDuoDsGridScreen(vec2(0.22, 0.18));
     else if (draw.filterMode == 18) rgb=rpDuoDsGridScreen(vec2(0.30, 0.24));
+    else if (draw.filterMode == 19) rgb=rpDuoNovaScreen();
     else rgb=sampleScreen(screens,pos).rgb;
     color=vec4(rgb,draw.alpha);
 }

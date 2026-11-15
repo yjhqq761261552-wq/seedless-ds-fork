@@ -658,6 +658,7 @@ fun SettingsScreen(
             "rpduo_sharp" -> "RP Duo LCD 点对点"
             "rpduo_grain" -> "RP Duo DS Grid · 柔和颗粒"
             "rpduo_grain_plus" -> "RP Duo DS Grid · 柔和颗粒＋"
+            "rpduo_nova" -> "RP Duo · Nova 磷光点"
             else -> options.filterPairs.firstOrNull { it.first == value }?.second ?: value
         }
     }

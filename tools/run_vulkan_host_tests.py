@@ -285,7 +285,7 @@ void free(void *p) { if (p) HeapFree(GetProcessHeap(), 0, p); }
     for modes,expected in [([2,0,1,3],1),([2,0],0),([2,3],3),([2],2),([],2)]:
         assert dll.test_choose((C.c_int*len(modes))(*modes),len(modes))==expected
     dll.test_linear_filter.argtypes=[C.c_int];dll.test_linear_filter.restype=C.c_int
-    for mode in range(19):assert dll.test_linear_filter(mode)==int(mode in [1,2,7,8,9,10,14,15,17,18])
+    for mode in range(20):assert dll.test_linear_filter(mode)==int(mode in [1,2,7,8,9,10,14,15,17,18,19])
     dll.test_choose_normal.argtypes=[C.POINTER(C.c_int),C.c_uint];dll.test_choose_normal.restype=C.c_int
     for modes in [[0,1,2,3],[1,2],[2],[3,2]]:
         assert dll.test_choose_normal((C.c_int*len(modes))(*modes),len(modes))==2

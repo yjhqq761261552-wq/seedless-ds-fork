@@ -5,8 +5,9 @@ namespace seedless_vk {
 // 16 RP Duo LCD Sharp (manual exact box-coverage taps + LCD grid).
 // 17 RP Duo DS Grid (hardware-linear area reconstruction + integrated soft DS grain).
 // 18 RP Duo DS Grid Soft+ (stronger grain aperture with the same reconstruction).
+// 19 RP Duo Nova (area-reconstructed color and brightness-adaptive phosphor dots).
 inline bool linear_filter(int mode) {
     return mode == 1 || mode == 2 || mode == 7 || mode == 8 ||
-        mode == 9 || mode == 10 || mode == 14 || mode == 15 || mode == 17 || mode == 18;
+        mode == 9 || mode == 10 || mode == 14 || mode == 15 || mode == 17 || mode == 18 || mode == 19;
 }
 }
