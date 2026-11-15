@@ -53,6 +53,10 @@ typedef struct platform_audio {
 } platform_audio_t;
 
 extern platform_audio_t platform_audio_state;
+void platform_audio_mark_discontinuity(void);
+/* Never acquire the AAudio control lock while holding this queue lock. */
+void platform_audio_queue_lock(void);
+void platform_audio_queue_unlock(void);
 
 typedef const struct SLInterfaceID_ *SLInterfaceID;
 

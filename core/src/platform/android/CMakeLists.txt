@@ -1,5 +1,7 @@
 target_sources(recon_fn PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/audio.c
+    ${CMAKE_CURRENT_LIST_DIR}/audio_speed.c
+    ${CMAKE_CURRENT_LIST_DIR}/audio_rate.c
     ${CMAKE_CURRENT_LIST_DIR}/pcm_ring.c
     ${CMAKE_CURRENT_LIST_DIR}/low_latency_audio.c
     ${CMAKE_CURRENT_LIST_DIR}/crash.c

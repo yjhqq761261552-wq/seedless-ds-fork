@@ -256,9 +256,12 @@ typedef void *(*fn_memset)(void *, int, size_t);
 void nds_subsystem_shutdown_release_objects(void)
 {
     low_latency_audio_close();
-
-    if (PLATFORM_AUDIO->active == 0)
+    platform_audio_queue_lock();
+    if (PLATFORM_AUDIO->active == 0) {
+        platform_audio_queue_unlock();
         return;
+    }
+    __atomic_store_n(&PLATFORM_AUDIO->closed, 1, __ATOMIC_RELEASE);
 
     void *obj_b = PLATFORM_AUDIO->play_itf;
     PLATFORM_AUDIO->active = 0;
@@ -312,13 +315,16 @@ void nds_subsystem_shutdown_release_objects(void)
     }
 
     void *obj_j = PLATFORM_AUDIO->engine;
-    if (obj_j == NULL)
+    if (obj_j == NULL) {
+        platform_audio_queue_unlock();
         return;
+    }
 
     void *vt_j = rd_ptr(obj_j);
     ((fn_this)vt_slot(vt_j, 6))(obj_j);
     PLATFORM_AUDIO->engine = 0;
     PLATFORM_AUDIO->engine_itf = 0;
+    platform_audio_queue_unlock();
 }
 
 uint64_t nds_subsystem_hook_noop_1(uint64_t x0)
@@ -352,10 +358,16 @@ static void *slot0(void *obj) {
 }
 
 void audio_out_restart_playback(void) {
+    platform_audio_mark_discontinuity();
+    if (low_latency_audio_active()) low_latency_audio_resume();
+    int use_low_latency = low_latency_audio_active();
+    platform_audio_queue_lock();
     platform_audio_t *G = PLATFORM_AUDIO;
 
-    if (G->active == 0)
+    if (G->active == 0) {
+        platform_audio_queue_unlock();
         return;
+    }
 
     __atomic_store_n(&G->closed, 1, __ATOMIC_RELEASE);
     {
@@ -409,21 +421,19 @@ void audio_out_restart_playback(void) {
         long (*m)(void *, uint32_t) = (long (*)(void *, uint32_t))slot0(obj);
         m(obj, v);
     }
-    if (low_latency_audio_active()) {
-        low_latency_audio_resume();
-        if (low_latency_audio_active()) {
+    if (use_low_latency) {
             void *obj = G->play_itf;
             ((long (*)(void *, long))slot0(obj))(obj, 1);
             obj = G->player_queue;
             ((void (*)(void *))(*(void ***)obj)[1])(obj);
             __atomic_store_n(&G->queued, 0, __ATOMIC_RELEASE);
-        }
     }
     __atomic_store_n(&G->closed, 0, __ATOMIC_RELEASE);
-    if (!low_latency_audio_active()) {
+    if (!use_low_latency) {
         void *obj = G->play_itf;
         ((long (*)(void *, long))slot0(obj))(obj, 3);
     }
+    platform_audio_queue_unlock();
 }
 static void *(*core_memset)(void *, int, size_t);
 static int   (*core_mprotect_13)(void *, size_t, int);

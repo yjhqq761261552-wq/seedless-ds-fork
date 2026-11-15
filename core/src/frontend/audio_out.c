@@ -76,6 +76,7 @@ static void *method(void *obj, int shift) {
 }
 
 int audio_out_start(unsigned char *machine) {
+    platform_audio_mark_discontinuity();
 
     platform_audio_t *g = PLATFORM_AUDIO;
     unsigned char *out = (unsigned char *)&((spu_t *)machine)->mixer.output_capacity;
@@ -194,7 +195,9 @@ int audio_out_start(unsigned char *machine) {
 }
 
 int audio_out_stop_and_mute(spu_t *spu) {
+    platform_audio_mark_discontinuity();
     low_latency_audio_pause();
+    platform_audio_queue_lock();
     platform_audio_t *bl = PLATFORM_AUDIO;
 
     if (bl->active != 0) {
@@ -220,6 +223,7 @@ int audio_out_stop_and_mute(spu_t *spu) {
     }
 
     spu->mixer.muted = 1;
+    platform_audio_queue_unlock();
     return 0;
 }
 
@@ -247,11 +251,13 @@ typedef void *(*fn_memset)(void *, int, size_t);
 
 void audio_out_flush_queues(void)
 {
-
-    if (PLATFORM_AUDIO->active == 0)
-        return;
-
+    platform_audio_mark_discontinuity();
     low_latency_audio_pause();
+    platform_audio_queue_lock();
+    if (PLATFORM_AUDIO->active == 0) {
+        platform_audio_queue_unlock();
+        return;
+    }
     __atomic_store_n(&PLATFORM_AUDIO->closed, 1, __ATOMIC_RELEASE);
 
     void *obj_a = PLATFORM_AUDIO->player_queue;
@@ -265,12 +271,16 @@ void audio_out_flush_queues(void)
     ((fn_memset)sym_libc_memset)(PLATFORM_AUDIO->buffers, 0,
                                        sizeof PLATFORM_AUDIO->buffers);
 
-    if (PLATFORM_AUDIO->mic_started == 0)
+    if (PLATFORM_AUDIO->mic_started == 0) {
+        platform_audio_queue_unlock();
         return;
+    }
 
     void *obj_c = PLATFORM_AUDIO->record_itf;
-    if (obj_c == NULL)
+    if (obj_c == NULL) {
+        platform_audio_queue_unlock();
         return;
+    }
 
     void *vt_c = rd_ptr(obj_c);
     ((fn_this_i)vt_slot(vt_c, 0))(obj_c, 1);
@@ -278,6 +288,7 @@ void audio_out_flush_queues(void)
     void *obj_d = PLATFORM_AUDIO->recorder_queue;
     void *vt_d  = rd_ptr(obj_d);
     ((fn_this)vt_slot(vt_d, 1))(obj_d);
+    platform_audio_queue_unlock();
 }
 #undef OFF_FLAG2
 

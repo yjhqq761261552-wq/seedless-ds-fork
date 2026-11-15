@@ -11,5 +11,7 @@ void low_latency_audio_resume(void);
 void low_latency_audio_close(void);
 /* Returns 1 when the adapter owns output, 0 for legacy fallback. */
 int low_latency_audio_feed(const int16_t *pcm, unsigned samples, int muted);
+/* Queue occupancy in [0, 1], or -1 while the adapter cannot be measured. */
+float low_latency_audio_buffer_fraction(void);
 void low_latency_audio_stats(uint64_t values[6]);
 #endif

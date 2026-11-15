@@ -36,21 +36,101 @@ typedef struct {
     int running, started, failed, xruns, target;
     uint64_t underruns, overruns, callbacks, checked_at;
     uint64_t observed_callbacks, progress_at;
+    int reset_envelope;
+    int16_t last_output[2], fade_in_start[2], fade_out_start[2];
+    unsigned fade_in_remaining, fade_out_remaining, needs_fade_in;
 } output_t;
 /* Lifetime is stable until stream close has joined all callbacks. Control APIs
  * and the producer share a short lock; the real-time callback never takes it. */
 static output_t *output;
 static uint64_t last_stats[6];
+/* Protected by control; prevents pointer reuse from confusing a waiting feed. */
+static uint64_t output_generation;
+
+/* Implemented by the platform audio producer. The callback never waits. */
+extern void platform_audio_wait_for_output(unsigned microseconds);
+
+/* Callback-owned state. Pause/mute only request a reset atomically. */
+static void reset_output_envelope(output_t *o, unsigned fade_in) {
+    o->last_output[0] = o->last_output[1] = 0;
+    o->fade_in_start[0] = o->fade_in_start[1] = 0;
+    o->fade_out_start[0] = o->fade_out_start[1] = 0;
+    o->fade_in_remaining = o->fade_out_remaining = 0;
+    o->needs_fade_in = fade_in;
+}
+
+#define UNDERRUN_FADE_FRAMES 64u
+static void smooth_underrun(output_t *o, int16_t *samples, unsigned frames, unsigned got) {
+    const unsigned span = UNDERRUN_FADE_FRAMES - 1;
+    if (got) {
+        o->fade_out_remaining = 0;
+        if (o->needs_fade_in) {
+            o->fade_in_start[0] = o->last_output[0];
+            o->fade_in_start[1] = o->last_output[1];
+            o->fade_in_remaining = UNDERRUN_FADE_FRAMES;
+            o->needs_fade_in = 0;
+        }
+        for (unsigned i = 0; i < got && o->fade_in_remaining; ++i) {
+            unsigned position = UNDERRUN_FADE_FRAMES - o->fade_in_remaining;
+            for (unsigned channel = 0; channel < 2; ++channel) {
+                int32_t value = (int32_t)o->fade_in_start[channel] * (int32_t)(span - position)
+                              + (int32_t)samples[i * 2 + channel] * (int32_t)position;
+                samples[i * 2 + channel] = (int16_t)(value / (int32_t)span);
+            }
+            --o->fade_in_remaining;
+        }
+    }
+    if (got < frames) {
+        o->needs_fade_in = 1;
+        o->fade_in_remaining = 0;
+        if (got >= UNDERRUN_FADE_FRAMES) {
+            unsigned first = got - UNDERRUN_FADE_FRAMES;
+            for (unsigned i = 0; i < UNDERRUN_FADE_FRAMES; ++i) {
+                for (unsigned channel = 0; channel < 2; ++channel) {
+                    unsigned index = (first + i) * 2 + channel;
+                    samples[index] = (int16_t)((int32_t)samples[index] * (int32_t)(span - i) / (int32_t)span);
+                }
+            }
+            o->fade_out_remaining = 0;
+        } else if (got) {
+            o->fade_out_start[0] = samples[(got - 1) * 2];
+            o->fade_out_start[1] = samples[(got - 1) * 2 + 1];
+            o->fade_out_remaining = UNDERRUN_FADE_FRAMES;
+        } else if (!o->fade_out_remaining && (o->last_output[0] || o->last_output[1])) {
+            o->fade_out_start[0] = o->last_output[0];
+            o->fade_out_start[1] = o->last_output[1];
+            o->fade_out_remaining = UNDERRUN_FADE_FRAMES;
+        }
+        for (unsigned i = got; i < frames && o->fade_out_remaining; ++i) {
+            unsigned remaining = o->fade_out_remaining - 1;
+            for (unsigned channel = 0; channel < 2; ++channel)
+                samples[i * 2 + channel] = (int16_t)((int32_t)o->fade_out_start[channel] * (int32_t)remaining / (int32_t)span);
+            --o->fade_out_remaining;
+        }
+    }
+    if (frames) {
+        o->last_output[0] = samples[(frames - 1) * 2];
+        o->last_output[1] = samples[(frames - 1) * 2 + 1];
+    }
+}
+
 static aaudio_data_callback_result_t on_audio(AAudioStream *stream, void *user, void *data, int32_t frames) {
     (void)stream;
     output_t *o = user;
-    if (!__atomic_load_n(&o->running, __ATOMIC_ACQUIRE)) { memset(data, 0, (size_t)frames * 4); return AAUDIO_CALLBACK_RESULT_CONTINUE; }
+    if (__atomic_exchange_n(&o->reset_envelope, 0, __ATOMIC_ACQ_REL)) reset_output_envelope(o, 1);
+    if (!__atomic_load_n(&o->running, __ATOMIC_ACQUIRE)) {
+        reset_output_envelope(o, 1);
+        memset(data, 0, (size_t)frames * 4);
+        return AAUDIO_CALLBACK_RESULT_CONTINUE;
+    }
     unsigned got = pcm_ring_render(&o->ring, data, (unsigned)frames, o->rate);
     unsigned gain = __atomic_load_n(&gain_q15, __ATOMIC_RELAXED);
     if (gain != 32768) {
         int16_t *samples = data;
         for (int32_t i = 0; i < frames * 2; ++i) samples[i] = (int16_t)(((int32_t)samples[i] * (int32_t)gain) / 32768);
     }
+    if (gain == 0) reset_output_envelope(o, got < (unsigned)frames);
+    else smooth_underrun(o, data, (unsigned)frames, got);
     __atomic_fetch_add(&o->callbacks, 1, __ATOMIC_RELAXED);
     if (got < (unsigned)frames) __atomic_fetch_add(&o->underruns, 1, __ATOMIC_RELAXED);
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
@@ -82,6 +162,7 @@ static void stats_locked(uint64_t values[6]) {
 }
 static void close_locked(void) {
     if (!output) return;
+    ++output_generation;
     __atomic_store_n(&output->running, 0, __ATOMIC_RELEASE);
     stats_locked(last_stats);
     api_Stream_close(output->stream);
@@ -149,6 +230,7 @@ void low_latency_audio_pause(void) {
     pthread_mutex_lock(&control);
     if (output) {
         __atomic_store_n(&output->running, 0, __ATOMIC_RELEASE);
+        __atomic_store_n(&output->reset_envelope, 1, __ATOMIC_RELEASE);
         __atomic_store_n(&output->ring.flush, 1, __ATOMIC_RELEASE);
         aaudio_stream_state_t state = api_Stream_getState(output->stream), next;
         if (state == AAUDIO_STREAM_STATE_STARTING || state == AAUDIO_STREAM_STATE_STARTED) {
@@ -195,6 +277,21 @@ void low_latency_audio_resume(void) {
     }
     pthread_mutex_unlock(&control);
 }
+
+static void start_primed_output(output_t *o, unsigned available, unsigned frames, uint64_t now) {
+    // Fractional DS timing can prime 1469 frames into a 1470-frame ring.
+    // Start before the next block would be rejected indefinitely.
+    if (o->started || __atomic_load_n(&o->failed, __ATOMIC_ACQUIRE) || !available ||
+        (available < 1470 && (uint64_t)available + frames <= o->limit)) return;
+    if (api_Stream_requestStart(o->stream) == AAUDIO_OK) {
+        o->started = 1;
+        o->progress_at = now;
+        o->observed_callbacks = __atomic_load_n(&o->callbacks, __ATOMIC_ACQUIRE);
+    } else {
+        __atomic_store_n(&o->failed, 1, __ATOMIC_RELEASE);
+    }
+}
+
 int low_latency_audio_feed(const int16_t *pcm, unsigned samples, int muted) {
     pthread_mutex_lock(&control);
     unsigned wanted = __atomic_load_n(&configured, __ATOMIC_ACQUIRE);
@@ -223,22 +320,73 @@ int low_latency_audio_feed(const int16_t *pcm, unsigned samples, int muted) {
     if (o && __atomic_load_n(&sound_enabled, __ATOMIC_ACQUIRE) && __atomic_load_n(&o->running, __ATOMIC_ACQUIRE)) {
         unsigned frames = samples / 2;
         uint64_t now = nds_metrics_now_us();
-        if (muted) __atomic_store_n(&o->ring.flush, 1, __ATOMIC_RELEASE);
-        else if (!pcm_ring_push(&o->ring, pcm, frames, o->limit))
-            __atomic_fetch_add(&o->overruns, 1, __ATOMIC_RELAXED);
+        if (muted) {
+            __atomic_store_n(&o->reset_envelope, 1, __ATOMIC_RELEASE);
+            __atomic_store_n(&o->ring.flush, 1, __ATOMIC_RELEASE);
+        } else {
+            unsigned written = 0;
+            unsigned waits = 0;
+            uint64_t generation = output_generation;
+            while (written < frames) {
+                if (output != o || output_generation != generation) {
+                    // Another control operation owns the replacement backend.
+                    // Do not send this partially handled block to OpenSL.
+                    pthread_mutex_unlock(&control);
+                    return 1;
+                }
+                if (__atomic_load_n(&o->failed, __ATOMIC_ACQUIRE)) {
+                    __android_log_print(ANDROID_LOG_WARN, "SeedlessAudio", "AAudio disconnected, reverting to OpenSL");
+                    close_locked();
+                    extern void audio_out_restart_playback(void);
+                    pthread_mutex_unlock(&control);
+                    audio_out_restart_playback();
+                    return 0;
+                }
+                unsigned current_latency = (unsigned)__atomic_load_n(&audio_out_mode, __ATOMIC_ACQUIRE);
+                if (current_latency > 3) current_latency = 3;
+                if (!__atomic_load_n(&sound_enabled, __ATOMIC_ACQUIRE) ||
+                    !__atomic_load_n(&o->running, __ATOMIC_ACQUIRE) ||
+                    __atomic_load_n(&configured, __ATOMIC_ACQUIRE) != (unsigned)applied_config ||
+                    current_latency != applied_latency) {
+                    pthread_mutex_unlock(&control);
+                    return 1;
+                }
+
+                unsigned flushing = __atomic_load_n(&o->ring.flush, __ATOMIC_ACQUIRE);
+                if (flushing && !o->started) {
+                    // Before the first callback the consumer is quiescent.
+                    // Clear stale priming data so new input survives unmute.
+                    unsigned at = __atomic_load_n(&o->ring.written, __ATOMIC_ACQUIRE);
+                    __atomic_store_n(&o->ring.read, at, __ATOMIC_RELEASE);
+                    __atomic_store_n(&o->ring.flush, 0, __ATOMIC_RELEASE);
+                    o->ring.phase = 0;
+                    flushing = 0;
+                }
+                unsigned available = __atomic_load_n(&o->ring.written, __ATOMIC_ACQUIRE)
+                                   - __atomic_load_n(&o->ring.read, __ATOMIC_ACQUIRE);
+                unsigned space = !flushing && available < o->limit ? o->limit - available : 0;
+                unsigned part = frames - written;
+                if (part > space) part = space;
+                if (part) written += pcm_ring_push(&o->ring, pcm + written * 2, part, o->limit);
+
+                available = __atomic_load_n(&o->ring.written, __ATOMIC_ACQUIRE)
+                          - __atomic_load_n(&o->ring.read, __ATOMIC_ACQUIRE);
+                start_primed_output(o, available, frames, now);
+                if (__atomic_load_n(&o->failed, __ATOMIC_ACQUIRE)) break;
+                if (written == frames) break;
+                if (waits++ >= 32) {
+                    __atomic_fetch_add(&o->overruns, 1, __ATOMIC_RELAXED);
+                    break;
+                }
+                // The consumer must run, and pause/close must acquire control.
+                pthread_mutex_unlock(&control);
+                platform_audio_wait_for_output(1000);
+                pthread_mutex_lock(&control);
+            }
+        }
         unsigned available = __atomic_load_n(&o->ring.written, __ATOMIC_ACQUIRE)
                            - __atomic_load_n(&o->ring.read, __ATOMIC_ACQUIRE);
-        // Fractional DS timing can prime 1469 frames into a 1470-frame ring.
-        // Start before the next block would be rejected indefinitely.
-        if (!o->started && available &&
-            (available >= 1470 || (uint64_t)available + frames > o->limit)) {
-            if (api_Stream_requestStart(o->stream) == AAUDIO_OK) {
-                o->started = 1;
-                o->progress_at = now;
-                o->observed_callbacks = __atomic_load_n(&o->callbacks, __ATOMIC_ACQUIRE);
-            }
-            else __atomic_store_n(&o->failed,1,__ATOMIC_RELEASE);
-        }
+        start_primed_output(o, available, frames, now);
         if (o->started) {
             uint64_t callbacks = __atomic_load_n(&o->callbacks, __ATOMIC_ACQUIRE);
             if (callbacks != o->observed_callbacks) {
@@ -268,4 +416,24 @@ int low_latency_audio_feed(const int16_t *pcm, unsigned samples, int muted) {
 }
 void low_latency_audio_stats(uint64_t values[6]) {
     pthread_mutex_lock(&control); stats_locked(values); pthread_mutex_unlock(&control);
+}
+float low_latency_audio_buffer_fraction(void) {
+    pthread_mutex_lock(&control);
+    output_t *o = output;
+    float fraction = -1.0f;
+    unsigned latency = (unsigned)__atomic_load_n(&audio_out_mode, __ATOMIC_ACQUIRE);
+    if (latency > 3) latency = 3;
+    if (o && o->started && __atomic_load_n(&o->running, __ATOMIC_ACQUIRE) &&
+        __atomic_load_n(&sound_enabled, __ATOMIC_ACQUIRE) &&
+        __atomic_load_n(&configured, __ATOMIC_ACQUIRE) == (unsigned)applied_config &&
+        latency == applied_latency &&
+        !__atomic_load_n(&o->failed, __ATOMIC_ACQUIRE) &&
+        !__atomic_load_n(&o->ring.flush, __ATOMIC_ACQUIRE)) {
+        unsigned available = __atomic_load_n(&o->ring.written, __ATOMIC_ACQUIRE)
+                           - __atomic_load_n(&o->ring.read, __ATOMIC_ACQUIRE);
+        if (available > o->limit) available = o->limit;
+        fraction = (float)available / (float)o->limit;
+    }
+    pthread_mutex_unlock(&control);
+    return fraction;
 }

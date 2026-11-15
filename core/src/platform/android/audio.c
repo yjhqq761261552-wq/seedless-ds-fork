@@ -1,4 +1,6 @@
 #include "low_latency_audio.h"
+#include "audio_rate.h"
+#include "audio_speed.h"
 #include "hires_runtime.h"
 #include "blob_symbols.h"
 #include "core/nds_state.h"
@@ -9,9 +11,159 @@
 #include "frontend/mic_default_sample.h"
 #include "core_internals.h"
 #include "seedlessds/rewind.h"
+#include "seedlessds/metrics.h"
+#include "seedlessds/platform.h"
 #include "mem_access.h"
+#include <pthread.h>
 
 typedef uint32_t (*fn_vcall3)(void*, void*, int32_t);
+
+/* The output state belongs to the emulation producer, never the callback. */
+static audio_speed_t output_speed;
+static audio_rate_t output_rate;
+static uint32_t output_epoch;
+static uint32_t applied_epoch;
+static unsigned fade_remaining;
+static int output_initialized;
+static int output_was_muted;
+static uint64_t output_wait_us;
+static pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void platform_audio_queue_lock(void) { pthread_mutex_lock(&queue_mutex); }
+void platform_audio_queue_unlock(void) { pthread_mutex_unlock(&queue_mutex); }
+
+void platform_audio_mark_discontinuity(void) {
+    __atomic_add_fetch(&output_epoch, 1, __ATOMIC_RELEASE);
+}
+
+void platform_audio_wait_for_output(unsigned microseconds) {
+    uint64_t before = nds_metrics_now_us();
+    nds_platform_default()->threads.sleep_us(microseconds);
+    uint64_t after = nds_metrics_now_us();
+    if (after >= before) output_wait_us += after - before;
+}
+
+static float legacy_buffer_fraction(void) {
+    platform_audio_queue_lock();
+    platform_audio_t *audio = PLATFORM_AUDIO;
+    if (!audio->active || !audio->buffer_count || !audio->buffer_samples ||
+        audio->buffer_count > PLATFORM_AUDIO_BUFFERS || audio->buffer_index >= audio->buffer_count) {
+        platform_audio_queue_unlock();
+        return -1.0f;
+    }
+    unsigned queued = __atomic_load_n(&audio->queued, __ATOMIC_ACQUIRE);
+    if (queued > audio->buffer_count) queued = audio->buffer_count;
+    uint64_t filled = (uint64_t)queued * audio->buffer_samples + audio->buffer_fill[audio->buffer_index];
+    uint64_t capacity = (uint64_t)audio->buffer_count * audio->buffer_samples;
+    float fraction = filled >= capacity ? 1.0f : (float)filled / (float)capacity;
+    platform_audio_queue_unlock();
+    return fraction;
+}
+
+static int legacy_feed(const int16_t *samples, unsigned count, int muted) {
+    platform_audio_t *audio = PLATFORM_AUDIO;
+    unsigned waits = 0;
+    while (count) {
+        platform_audio_queue_lock();
+        if (!audio->active || !audio->player_queue || !audio->buffer_count ||
+            audio->buffer_count > PLATFORM_AUDIO_BUFFERS || !audio->buffer_samples ||
+            audio->buffer_samples > PLATFORM_AUDIO_BUFFER_BYTES / sizeof(int16_t) ||
+            __atomic_load_n(&audio->closed, __ATOMIC_ACQUIRE) || audio->buffer_index >= audio->buffer_count) {
+            platform_audio_queue_unlock();
+            return 0;
+        }
+        if (__atomic_load_n(&audio->queued, __ATOMIC_ACQUIRE) >= audio->buffer_count) {
+            platform_audio_queue_unlock();
+            if (waits++ >= 150) return 0;
+            platform_audio_wait_for_output(1000);
+            continue;
+        }
+        unsigned index = audio->buffer_index;
+        unsigned filled = audio->buffer_fill[index];
+        if (filled >= audio->buffer_samples) {
+            platform_audio_queue_unlock();
+            return 0;
+        }
+        unsigned take = audio->buffer_samples - filled;
+        if (take > count) take = count;
+        unsigned char *buffer = audio->buffers + (size_t)index * PLATFORM_AUDIO_BUFFER_BYTES;
+        if (muted) memset(buffer + (size_t)filled * 2, 0, (size_t)take * 2);
+        else memcpy(buffer + (size_t)filled * 2, samples, (size_t)take * 2);
+        filled += take;
+        audio->buffer_fill[index] = filled;
+        samples += take;
+        count -= take;
+        if (filled == audio->buffer_samples) {
+            void *queue = audio->player_queue;
+            fn_vcall3 enqueue = (fn_vcall3)rd_ptr(rd_ptr(queue));
+            __atomic_fetch_add(&audio->queued, 1, __ATOMIC_RELEASE);
+            if (enqueue(queue, buffer, (int32_t)(audio->buffer_samples * 2)) != 0) {
+                __atomic_fetch_sub(&audio->queued, 1, __ATOMIC_ACQ_REL);
+                audio->buffer_fill[index] = 0;
+                platform_audio_mark_discontinuity();
+                platform_audio_queue_unlock();
+                return 0;
+            }
+            audio->buffer_fill[index] = 0;
+            audio->buffer_index = (index + 1u) % audio->buffer_count;
+            waits = 0;
+        }
+        platform_audio_queue_unlock();
+    }
+    return 1;
+}
+
+static void output_game_pcm(spu_t *spu, unsigned samples, int muted) {
+    const unsigned CHUNK_FRAMES = 735;
+    int16_t converted[(735 * 2 + 1) * 2];
+    unsigned frames = samples / 2;
+    uint32_t epoch = __atomic_load_n(&output_epoch, __ATOMIC_ACQUIRE);
+    if (!output_initialized || epoch != applied_epoch) {
+        audio_speed_init(&output_speed, 1.0f);
+        audio_rate_init(&output_rate);
+        applied_epoch = epoch;
+        fade_remaining = 128;
+        output_was_muted = muted;
+        output_initialized = 1;
+    }
+    if (output_was_muted && !muted) fade_remaining = 128;
+    output_was_muted = muted;
+
+    const nds_config_t *config = spu->machine ? &spu->machine->config : NULL;
+    float buffered = low_latency_audio_buffer_fraction();
+    if (buffered < 0.0f) buffered = legacy_buffer_fraction();
+    uint64_t now = nds_metrics_now_us();
+    uint64_t active_time = now >= output_wait_us ? now - output_wait_us : 0;
+    float rate = audio_rate_update(&output_rate, frames, active_time,
+                                   config && config->fast_forward,
+                                   config ? config->fast_forward_speed : 0, buffered);
+    audio_speed_set_rate(&output_speed, rate);
+
+    const int16_t *source = spu->output_samples;
+    while (frames) {
+        unsigned take = frames < CHUNK_FRAMES ? frames : CHUNK_FRAMES;
+        unsigned produced = 0;
+        if (!audio_speed_process(&output_speed, source, take, converted,
+                                 CHUNK_FRAMES * 2 + 1, &produced)) {
+            platform_audio_mark_discontinuity();
+            return;
+        }
+        for (unsigned frame = 0; frame < produced && fade_remaining; ++frame) {
+            unsigned gain = 129 - fade_remaining;
+            converted[frame * 2] = (int16_t)((int32_t)converted[frame * 2] * (int32_t)gain / 128);
+            converted[frame * 2 + 1] = (int16_t)((int32_t)converted[frame * 2 + 1] * (int32_t)gain / 128);
+            --fade_remaining;
+        }
+        unsigned converted_samples = produced * 2;
+        if (!low_latency_audio_feed(converted, converted_samples, muted) &&
+            !legacy_feed(converted, converted_samples, muted)) {
+            platform_audio_mark_discontinuity();
+            return;
+        }
+        source += take * 2;
+        frames -= take;
+    }
+}
 
 void platform_audio_output_feed_frame(spu_t *spu)
 {
@@ -75,52 +227,8 @@ void platform_audio_output_feed_frame(spu_t *spu)
         if (PLATFORM_AUDIO->mic_enabled != 0) goto L_4;
 
     L_2:
-        if (low_latency_audio_feed((const int16_t *)ctx, count & 0x7fffffffu,
-                                  (nds_rewind_status() & 1u) != 0)) goto L_4;
-
-        {
-            uint32_t w9 = __atomic_load_n(&PLATFORM_AUDIO->queued, __ATOMIC_ACQUIRE);
-            uint32_t w8 = PLATFORM_AUDIO->buffer_count;
-            if (w9 >= w8) goto L_4;
-        }
-
-        {
-            uint32_t idx = au->buffer_index;
-            uint32_t table_val = au->buffer_fill[idx];
-            unsigned char *channel = au->buffers + (size_t)idx * PLATFORM_AUDIO_BUFFER_BYTES;
-            unsigned char *dst   = channel + (size_t)table_val * 2;
-
-            if (nds_rewind_status() & 1u) s_memset(dst, 0, (size_t)count << 1);
-            else s_memcpy(dst, ctx, (size_t)count << 1);
-
-            uint32_t table_val2 = au->buffer_fill[idx];
-            uint32_t updated = table_val2 + PLATFORM_AUDIO_SAMPLES_PER_FRAME;
-            au->buffer_fill[idx] = updated;
-
-            uint32_t cap = au->buffer_samples;
-            if (updated < cap) goto L_4;
-
-            {
-
-                void *obj1 = au->player_queue;
-                unsigned char *arg1 = channel;
-                void *vt1 = rd_ptr(obj1);
-                fn_vcall3 fn1 = (fn_vcall3)rd_ptr(vt1);
-                __atomic_fetch_add(&au->queued, 1, __ATOMIC_RELEASE);
-                if (fn1(obj1, arg1, (int32_t)(cap << 1)) != 0)
-                    __atomic_fetch_sub(&au->queued, 1, __ATOMIC_ACQ_REL);
-            }
-            {
-                uint32_t idx2 = au->buffer_index;
-                au->buffer_fill[idx2] = 0;
-                uint32_t cap2 = au->buffer_count;
-                uint32_t nw   = idx2 + 1;
-                uint32_t q    = nw / cap2;
-                uint32_t r    = nw - q * cap2;
-                au->buffer_index = r;
-            }
-            goto L_4;
-        }
+        output_game_pcm(spu, count & 0x7fffffffu, (nds_rewind_status() & 1u) != 0);
+        goto L_4;
 
     L_conv:
 

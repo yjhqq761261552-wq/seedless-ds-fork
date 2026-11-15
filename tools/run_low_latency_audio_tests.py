@@ -86,8 +86,10 @@ struct AAudioStream { DataCallback data; ErrorCallback error; void *data_user, *
     int state, buffer; };
 static AAudioStream *current;
 static uint64_t clock_us=1000;
-static int pause_mode, start_failure, open_failure;
+static int pause_mode, start_failure, open_failure, wait_mode, wait_calls;
 static int starts, closes, opens, restarts, legacy_playing, xruns;
+static unsigned sample_rate=48000, captured_frames, capture_enabled;
+static int16_t captured[8192];
 int32_t audio_out_mode;
 int _fltused;
 
@@ -175,7 +177,7 @@ aaudio_result_t AAudioStream_requestPause(AAudioStream *s) {
 aaudio_result_t AAudioStream_close(AAudioStream *s) {
     if (current==s) current=0; ++closes; free(s); return 0;
 }
-int32_t AAudioStream_getSampleRate(AAudioStream *s) { (void)s; return 48000; }
+int32_t AAudioStream_getSampleRate(AAudioStream *s) { (void)s; return (int32_t)sample_rate; }
 int32_t AAudioStream_getChannelCount(AAudioStream *s) { (void)s; return 2; }
 int32_t AAudioStream_getFormat(AAudioStream *s) { (void)s; return AAUDIO_FORMAT_PCM_I16; }
 int32_t AAudioStream_getFramesPerBurst(AAudioStream *s) { (void)s; return 192; }
@@ -200,7 +202,8 @@ void audio_out_restart_playback(void) {
 void test_reset(int latency) {
     extern void mock_legacy_init(void);
     low_latency_audio_close();
-    pause_mode=start_failure=open_failure=0;
+    pause_mode=start_failure=open_failure=wait_mode=wait_calls=0;
+    sample_rate=48000; captured_frames=capture_enabled=0;
     starts=closes=opens=restarts=legacy_playing=xruns=0;
     clock_us=1000; audio_out_mode=latency;
     mock_legacy_init();
@@ -228,9 +231,27 @@ int test_callback(unsigned frames) {
     if (!current || frames>2048) return -1;
     memset(data,0x5a,(size_t)frames*4);
     current->data(current,current->data_user,data,(int32_t)frames);
+    if (capture_enabled && captured_frames+frames<=4096) {
+        memcpy(captured+captured_frames*2,data,(size_t)frames*4);
+        captured_frames+=frames;
+    }
     int nonzero=0;
     for (unsigned i=0;i<frames*2;++i) if (data[i]) ++nonzero;
     return nonzero;
+}
+void test_wait_mode(int value) { wait_mode=value; wait_calls=0; }
+int test_wait_calls(void) { return wait_calls; }
+void test_sample_rate(unsigned value) { sample_rate=value; }
+void test_capture(int enabled) { capture_enabled=enabled; captured_frames=0; }
+int test_captured_frames(void) { return (int)captured_frames; }
+int test_captured_sample(unsigned index) { return index<captured_frames*2?captured[index]:0; }
+void platform_audio_wait_for_output(unsigned microseconds) {
+    clock_us+=microseconds;
+    ++wait_calls;
+    if (wait_mode==1) test_callback(192);
+    else if (wait_mode==2) low_latency_audio_pause();
+    else if (wait_mode==3) low_latency_audio_close();
+    else if (wait_mode==4) test_disconnect();
 }
 '''
 
@@ -244,6 +265,11 @@ FIXTURES = {
 
 LEGACY_MOCK = r'''
 #include "platform/android/audio.h"
+#include <pthread.h>
+static pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
+void platform_audio_queue_lock(void) { pthread_mutex_lock(&queue_mutex); }
+void platform_audio_queue_unlock(void) { pthread_mutex_unlock(&queue_mutex); }
+void platform_audio_mark_discontinuity(void) {}
 platform_audio_t platform_audio_state;
 static int physical_queued, enqueue_attempts, enqueue_fail_every;
 static long mock_play(void *object, long state) {
@@ -342,11 +368,12 @@ void free(void *p) { if (p) HeapFree(GetProcessHeap(),0,p); }
     exported = ['low_latency_audio_start', 'low_latency_audio_active', 'low_latency_audio_close',
                 'low_latency_audio_sound', 'low_latency_audio_pause', 'low_latency_audio_resume',
                 'low_latency_audio_configure', 'low_latency_audio_feed', 'low_latency_audio_stats',
-                'low_latency_audio_volume', 'test_reset', 'test_pause_mode', 'test_start_failure',
+                'low_latency_audio_volume', 'low_latency_audio_buffer_fraction', 'test_reset', 'test_pause_mode', 'test_start_failure',
                 'test_open_failure', 'test_state', 'test_latency', 'test_advance', 'test_xruns',
                 'test_starts', 'test_closes', 'test_opens', 'test_restarts', 'test_legacy_playing',
                 'test_buffer', 'test_disconnect', 'test_callback', 'test_queue_failure',
-                'test_physical_queued', 'test_queued', 'test_restart']
+                'test_physical_queued', 'test_queued', 'test_restart', 'test_wait_mode', 'test_wait_calls',
+                'test_sample_rate', 'test_capture', 'test_captured_frames', 'test_captured_sample']
     if windows:
         definition = temp / 'kernel.def'
         definition.write_text('LIBRARY KERNEL32.dll\nEXPORTS\nAcquireSRWLockExclusive\nReleaseSRWLockExclusive\nGetProcessHeap\nHeapAlloc\nHeapFree\n', encoding='utf-8')
@@ -364,12 +391,14 @@ void free(void *p) { if (p) HeapFree(GetProcessHeap(),0,p); }
     for name in ['test_reset', 'test_pause_mode', 'test_start_failure', 'test_open_failure',
                  'test_state', 'test_latency', 'test_xruns', 'low_latency_audio_sound',
                  'low_latency_audio_configure', 'low_latency_audio_volume', 'low_latency_audio_start',
-                 'test_queue_failure']:
+                 'test_queue_failure', 'test_wait_mode', 'test_sample_rate', 'test_capture',
+                 'test_captured_sample']:
         getattr(dll, name).argtypes = [C.c_int]
     dll.test_advance.argtypes = [C.c_uint64]
     dll.test_callback.argtypes = [C.c_uint]
     dll.low_latency_audio_feed.argtypes = [C.POINTER(C.c_int16), C.c_uint, C.c_int]
     dll.low_latency_audio_stats.argtypes = [C.POINTER(C.c_uint64)]
+    dll.low_latency_audio_buffer_fraction.restype = C.c_float
     pcm = (C.c_int16 * 4096)(*[12000 if i % 2 == 0 else -8000 for i in range(4096)])
 
     def feed(frames=735, muted=False):
@@ -393,6 +422,108 @@ void free(void *p) { if (p) HeapFree(GetProcessHeap(),0,p); }
     assert feed(735) == 1 and dll.test_starts() == 1
     assert dll.test_callback(256) > 0
     passed.append('minimumLatency1469FramePriming')
+
+    begin()
+    assert dll.low_latency_audio_buffer_fraction() < 0
+    prime()
+    assert abs(dll.low_latency_audio_buffer_fraction() - 1469 / 1470) < 0.0001
+    assert dll.test_callback(1598) > 0  # Leave one source frame in the ring.
+    dll.test_wait_mode(1)
+    assert feed(1471) == 1
+    assert dll.test_wait_calls() == 1
+    assert abs(dll.low_latency_audio_buffer_fraction() - 1296 / 1470) < 0.0001
+    values = (C.c_uint64 * 6)()
+    dll.low_latency_audio_stats(values)
+    assert values[3] == 0
+    passed.append('oneRemainingFrameAnd1471FrameBlockAreFullyQueued')
+
+    dll.test_reset(0)
+    dll.test_sample_rate(44100)
+    assert dll.low_latency_audio_start(0) == 1
+    prime()
+    assert dll.test_callback(1468) > 0  # Exactly one old frame remains.
+    for i in range(1471):
+        pcm[2 * i] = 1000 + i
+        pcm[2 * i + 1] = -1000 - i
+    dll.test_capture(1)
+    dll.test_wait_mode(1)
+    assert feed(1471) == 1 and dll.test_wait_calls() == 1
+    assert feed(1) == 1  # A lookahead frame lets the callback render the tail.
+    assert dll.test_callback(1280) > 0
+    assert dll.test_captured_frames() == 1472
+    for i in range(1471):
+        assert dll.test_captured_sample(2 * (i + 1)) == 1000 + i
+        assert dll.test_captured_sample(2 * (i + 1) + 1) == -1000 - i
+    dll.test_capture(0)
+    pcm = (C.c_int16 * 4096)(*[12000 if i % 2 == 0 else -8000 for i in range(4096)])
+    passed.append('segmentedInputPreservesEveryStereoFrameInOrder')
+
+    begin()
+    dll.test_wait_mode(1)
+    assert feed(2048) == 1
+    assert dll.test_starts() == 1 and dll.test_wait_calls() >= 4
+    dll.low_latency_audio_stats(values)
+    assert values[3] == 0 and 0 < dll.low_latency_audio_buffer_fraction() <= 1
+    passed.append('longInputIsSegmentedWhileCallbackDrains')
+
+    begin()
+    prime()
+    dll.test_wait_mode(2)
+    assert feed() == 1 and dll.test_wait_calls() == 1
+    assert dll.low_latency_audio_active() == 1 and dll.low_latency_audio_buffer_fraction() < 0
+    dll.low_latency_audio_resume()
+    dll.test_wait_mode(0)
+    prime()
+    assert dll.test_callback(128) > 0
+    passed.append('pauseDuringBackpressureReleasesControlAndResumes')
+
+    begin()
+    prime()
+    dll.test_wait_mode(3)
+    assert feed() == 1 and dll.test_wait_calls() == 1
+    assert dll.low_latency_audio_active() == 0 and feed() == 0
+    assert dll.low_latency_audio_buffer_fraction() < 0
+    passed.append('closeDuringBackpressureAvoidsStaleOutput')
+
+    begin()
+    prime()
+    dll.test_wait_mode(4)
+    assert feed() == 0 and dll.test_wait_calls() == 1
+    assert dll.low_latency_audio_active() == 0 and dll.test_legacy_playing() == 1
+    passed.append('disconnectDuringBackpressureTransfersToOpenSl')
+
+    begin()
+    dll.test_wait_mode(0)
+    assert feed(1471) == 1
+    assert dll.test_wait_calls() == 32
+    dll.low_latency_audio_stats(values)
+    assert values[3] == 1
+    passed.append('backpressureWaitIsBoundedWhenCallbacksStall')
+
+    begin()
+    prime()
+    assert feed(muted=True) == 1
+    assert dll.low_latency_audio_buffer_fraction() < 0
+    assert dll.test_callback(128) == 0
+    assert dll.low_latency_audio_buffer_fraction() == 0
+    passed.append('pendingFlushDoesNotExposeStaleBacklog')
+
+    begin()
+    prime()
+    assert feed(muted=True) == 1
+    dll.test_wait_mode(1)
+    assert feed(735) == 1 and dll.test_wait_calls() == 1
+    assert abs(dll.low_latency_audio_buffer_fraction() - 0.5) < 0.0001
+    assert dll.test_callback(128) > 0
+    passed.append('firstUnmutedBlockWaitsForPendingFlush')
+
+    begin()
+    assert feed(734) == 1 and dll.test_starts() == 0
+    assert feed(muted=True) == 1 and dll.test_starts() == 0
+    assert feed(735) == 1 and dll.test_starts() == 0
+    assert feed(735) == 1 and dll.test_starts() == 1
+    assert dll.test_callback(128) > 0
+    passed.append('unmuteBeforeFirstCallbackClearsStalePriming')
 
     begin()
     prime()
@@ -579,6 +710,34 @@ void free(void *p) { if (p) HeapFree(GetProcessHeap(),0,p); }
     prime()
     assert dll.test_callback(128) > 0
     passed.append('realOpenSlRestartTransfersExclusiveOwnershipToAAudio')
+
+    # Read actual callback PCM at 44.1 kHz to isolate the underrun envelope.
+    begin()
+    dll.low_latency_audio_close()
+    dll.test_sample_rate(44100)
+    assert dll.low_latency_audio_start(0) == 1
+    prime()
+    assert dll.test_callback(1468) > 0
+    dll.test_capture(1)
+    assert dll.test_callback(128) > 0
+    tail = [dll.test_captured_sample(i * 2) for i in range(128)]
+    assert tail[0] == 12000 and tail[63:] == [0] * 65
+    assert max(abs(tail[i] - tail[i-1]) for i in range(1,128)) < 200
+    passed.append('emptyCallbackFadesLastSampleToSilence')
+
+    dll.test_capture(1)
+    assert feed() == 1
+    assert dll.test_callback(128) > 0
+    recovery = [dll.test_captured_sample(i * 2) for i in range(128)]
+    assert recovery[0] == 0 and recovery[63:] == [12000] * 65
+    assert max(abs(recovery[i] - recovery[i-1]) for i in range(1,128)) < 200
+    passed.append('underrunRecoveryFadesBackIntoRealPcm')
+
+    dll.low_latency_audio_volume(0)
+    dll.test_capture(1)
+    assert dll.test_callback(1024) == 0
+    assert all(dll.test_captured_sample(i) == 0 for i in range(2048))
+    passed.append('zeroVolumeCannotLeakUnderrunTail')
 
     dll.low_latency_audio_close()
     print(json.dumps({'productionSources': ['core/src/platform/android/low_latency_audio.c',
