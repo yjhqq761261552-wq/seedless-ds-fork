@@ -256,6 +256,7 @@ typedef void *(*fn_memset)(void *, int, size_t);
 void nds_subsystem_shutdown_release_objects(void)
 {
     low_latency_audio_close();
+    platform_audio_release_output();
     platform_audio_queue_lock();
     if (PLATFORM_AUDIO->active == 0) {
         platform_audio_queue_unlock();

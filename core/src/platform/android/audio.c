@@ -19,13 +19,16 @@
 typedef uint32_t (*fn_vcall3)(void*, void*, int32_t);
 
 /* The output state belongs to the emulation producer, never the callback. */
-static audio_speed_t output_speed;
+static audio_speed_t *output_speed;
 static audio_rate_t output_rate;
 static uint32_t output_epoch;
 static uint32_t applied_epoch;
 static unsigned fade_remaining;
 static int output_initialized;
 static int output_was_muted;
+static int output_was_stretched;
+static int16_t last_output[2];
+static int16_t transition_from[2];
 static uint64_t output_wait_us;
 static pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -34,6 +37,14 @@ void platform_audio_queue_unlock(void) { pthread_mutex_unlock(&queue_mutex); }
 
 void platform_audio_mark_discontinuity(void) {
     __atomic_add_fetch(&output_epoch, 1, __ATOMIC_RELEASE);
+}
+
+void platform_audio_release_output(void) {
+    /* The emulation producer has stopped before core objects are released. */
+    audio_speed_destroy(output_speed);
+    output_speed = NULL;
+    output_initialized = 0;
+    output_wait_us = 0;
 }
 
 void platform_audio_wait_for_output(unsigned microseconds) {
@@ -113,23 +124,57 @@ static int legacy_feed(const int16_t *samples, unsigned count, int muted) {
     return 1;
 }
 
+static int send_game_pcm(int16_t *samples, unsigned frames, int muted) {
+    for (unsigned frame = 0; frame < frames && fade_remaining; ++frame) {
+        unsigned gain = 128 - fade_remaining;
+        for (unsigned channel = 0; channel < 2; ++channel) {
+            unsigned index = frame * 2 + channel;
+            samples[index] = (int16_t)(((int32_t)samples[index] * (int32_t)gain +
+                (int32_t)transition_from[channel] * (int32_t)(128 - gain)) / 128);
+        }
+        --fade_remaining;
+    }
+    if (frames) {
+        last_output[0] = muted ? 0 : samples[(frames - 1) * 2];
+        last_output[1] = muted ? 0 : samples[(frames - 1) * 2 + 1];
+    }
+    return low_latency_audio_feed(samples, frames * 2, muted) ||
+           legacy_feed(samples, frames * 2, muted);
+}
+
 static void output_game_pcm(spu_t *spu, unsigned samples, int muted) {
-    const unsigned CHUNK_FRAMES = 735;
-    int16_t converted[(735 * 2 + 1) * 2];
+    int16_t converted[735 * 2];
     unsigned frames = samples / 2;
+    const nds_config_t *config = spu->machine ? &spu->machine->config : NULL;
+    int stretched = config && config->fast_forward;
     uint32_t epoch = __atomic_load_n(&output_epoch, __ATOMIC_ACQUIRE);
     if (!output_initialized || epoch != applied_epoch) {
-        audio_speed_init(&output_speed, 1.0f);
+        audio_speed_reset(output_speed);
         audio_rate_init(&output_rate);
         applied_epoch = epoch;
         fade_remaining = 128;
+        last_output[0] = last_output[1] = 0;
+        transition_from[0] = transition_from[1] = 0;
         output_was_muted = muted;
+        output_was_stretched = stretched;
         output_initialized = 1;
     }
-    if (output_was_muted && !muted) fade_remaining = 128;
+    if (output_was_stretched != stretched || output_was_muted != muted) {
+        audio_speed_reset(output_speed);
+        fade_remaining = 128;
+        transition_from[0] = last_output[0];
+        transition_from[1] = last_output[1];
+    }
     output_was_muted = muted;
+    output_was_stretched = stretched;
+    if (stretched && !muted && !output_speed) {
+        output_speed = audio_speed_create();
+        if (!output_speed) {
+            platform_audio_mark_discontinuity();
+            return;
+        }
+    }
 
-    const nds_config_t *config = spu->machine ? &spu->machine->config : NULL;
     float buffered = low_latency_audio_buffer_fraction();
     if (buffered < 0.0f) buffered = legacy_buffer_fraction();
     uint64_t now = nds_metrics_now_us();
@@ -137,26 +182,31 @@ static void output_game_pcm(spu_t *spu, unsigned samples, int muted) {
     float rate = audio_rate_update(&output_rate, frames, active_time,
                                    config && config->fast_forward,
                                    config ? config->fast_forward_speed : 0, buffered);
-    audio_speed_set_rate(&output_speed, rate);
-
     const int16_t *source = spu->output_samples;
     while (frames) {
-        unsigned take = frames < CHUNK_FRAMES ? frames : CHUNK_FRAMES;
-        unsigned produced = 0;
-        if (!audio_speed_process(&output_speed, source, take, converted,
-                                 CHUNK_FRAMES * 2 + 1, &produced)) {
-            platform_audio_mark_discontinuity();
-            return;
+        unsigned take = frames < 735 ? frames : 735;
+        if (stretched && !muted) {
+            if (!audio_speed_write(output_speed, source, take, rate)) {
+                platform_audio_mark_discontinuity();
+                return;
+            }
+            unsigned produced;
+            do {
+                produced = audio_speed_read(output_speed, converted, 735);
+                if (!send_game_pcm(converted, produced, muted)) {
+                    platform_audio_mark_discontinuity();
+                    return;
+                }
+            } while (produced);
+        } else {
+            memcpy(converted, source, (size_t)take * 2 * sizeof(int16_t));
+            if (!send_game_pcm(converted, take, muted)) {
+                platform_audio_mark_discontinuity();
+                return;
+            }
         }
-        for (unsigned frame = 0; frame < produced && fade_remaining; ++frame) {
-            unsigned gain = 129 - fade_remaining;
-            converted[frame * 2] = (int16_t)((int32_t)converted[frame * 2] * (int32_t)gain / 128);
-            converted[frame * 2 + 1] = (int16_t)((int32_t)converted[frame * 2 + 1] * (int32_t)gain / 128);
-            --fade_remaining;
-        }
-        unsigned converted_samples = produced * 2;
-        if (!low_latency_audio_feed(converted, converted_samples, muted) &&
-            !legacy_feed(converted, converted_samples, muted)) {
+        if (epoch != __atomic_load_n(&output_epoch, __ATOMIC_ACQUIRE)) {
+            /* A backend transfer may have cleared the playback queue. */
             platform_audio_mark_discontinuity();
             return;
         }

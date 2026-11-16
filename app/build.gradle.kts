@@ -20,8 +20,8 @@ android {
         applicationId = "com.seedlessds.app"
         minSdk = 21
         targetSdk = 35
-        versionCode = 148
-        versionName = "1.0.38-fast-audio"
+        versionCode = 149
+        versionName = "1.0.39-natural-audio"
 
         ndk {
             abiFilters += "arm64-v8a"

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
+add_subdirectory(soundtouch)
 
 set(SEEDLESS_LUA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lua")
 if(NOT EXISTS "${SEEDLESS_LUA_DIR}/lapi.c")

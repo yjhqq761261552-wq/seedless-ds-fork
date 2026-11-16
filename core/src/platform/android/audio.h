@@ -54,6 +54,7 @@ typedef struct platform_audio {
 
 extern platform_audio_t platform_audio_state;
 void platform_audio_mark_discontinuity(void);
+void platform_audio_release_output(void);
 /* Never acquire the AAudio control lock while holding this queue lock. */
 void platform_audio_queue_lock(void);
 void platform_audio_queue_unlock(void);

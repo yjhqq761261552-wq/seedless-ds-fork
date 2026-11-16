@@ -130,7 +130,7 @@ with tempfile.TemporaryDirectory(prefix='seedless-opensl-queue-') as directory:
         '#include <stddef.h>\nvoid *memcpy(void *,const void *,size_t);\nvoid *memset(void *,int,size_t);\n', encoding='utf-8')
     source = (root / 'core/src/platform/android/audio.c').read_text(encoding='utf-8')
     start = source.index('static int legacy_feed(')
-    end = source.index('\nstatic void output_game_pcm(', start)
+    end = source.index('\nstatic int send_game_pcm(', start)
     function = source[start:end]
     (temp / 'queue.c').write_text(MOCK + '\n' + function + '''
 int test_feed(const int16_t *samples, unsigned count, int muted) {
