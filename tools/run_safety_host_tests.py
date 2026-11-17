@@ -33,6 +33,9 @@ static void wr64(void *p,uint64_t v){*(uint64_t*)p=v;}
 void *memcpy(void *d,const void *s,size_t n){unsigned char *a=d;const unsigned char *b=s;for(size_t i=0;i<n;i++)a[i]=b[i];return d;}
 void *memset(void *d,int c,size_t n){unsigned char *a=d;for(size_t i=0;i<n;i++)a[i]=(unsigned char)c;return d;}
 static unsigned failures,write_at,writes,renames,opens,closes;
+static unsigned finish_during_start;
+static unsigned admit_after_completion;
+static uint64_t admitted_ticket;
 static unsigned char raw[0x680000],compressed[0x680100];
 static size_t fake_write(const void *p,size_t n,size_t count,void *f){(void)p;(void)n;(void)f;++writes;return (failures==1&&(!write_at||writes==write_at))?0:count;}
 static int fake_close(void *f){(void)f;++closes;return failures==2?-1:0;}
@@ -53,7 +56,16 @@ typedef int(*fn_compress2)(void*,unsigned long*,const void*,unsigned long,int);
 typedef void*(*fn_malloc_29)(size_t);typedef void(*fn_free_29)(void*);typedef void*(*fn_memcpy_29)(void*,const void*,size_t);typedef int(*fn_usleep)(unsigned);typedef char*(*fn_strncpy)(char*,const char*,size_t);typedef void*(*fn_start_thread)(void*);typedef int(*fn_pthread_create)(void*,const void*,fn_start_thread,void*);
 int str_vsprintf_caller_limit_4(char *d,size_t n,const char *fmt,...){(void)n;(void)fmt;d[0]='x';d[1]=0;return 1;}
 int files_jni_env_invoke_and_release(const char *a,const char *b){(void)a;(void)b;++renames;return failures==7?-1:0;}
-int platform_thread_create(void *t,const void *attr,void *(*run)(void*),void *arg){(void)attr;(void)run;(void)arg;*(uint64_t*)t=1;return failures==9?-1:0;}
+int platform_thread_create(void *t,const void *attr,void *(*run)(void*),void *arg){
+ (void)attr;
+ *(uint64_t*)t=1;
+ if(failures==9)return -1;
+ if(finish_during_start){
+  run(arg);
+  if(admit_after_completion)admitted_ticket=nds_state_request(8,1);
+ }
+ return 0;
+}
 int pthread_detach(uint64_t t){(void)t;return 0;}
 typedef struct{uint64_t frame;struct{unsigned savestates_enabled,savestate_copies,savestate_extra;}config;struct{struct{unsigned mask;}backup;unsigned game_code;}cart;struct{unsigned bios_flags;}bus;}nds_t;
 static nds_t machine;
@@ -77,7 +89,7 @@ post=r'''
 int state_save_slot_with_screens(unsigned slot){(void)slot;return state_save_file((uint8_t*)&machine,"test","slot",NULL,NULL);}
 int state_load_slot(void *ctx,unsigned slot,void *a,void *b,unsigned look){(void)ctx;(void)slot;(void)a;(void)b;(void)look;return failures==10?-1:0;}
 void fixture_setup(unsigned fail,unsigned at,unsigned compressed_mode){
- failures=fail;write_at=at;writes=renames=opens=closes=0;
+ failures=fail;write_at=at;writes=renames=opens=closes=0;finish_during_start=0;admit_after_completion=0;admitted_ticket=0;
  memset(&machine,0,sizeof machine);machine.config.savestates_enabled=compressed_mode;
  __atomic_store_n(&state_write_work.pending,0,__ATOMIC_RELEASE);
  mock_frontend.quit_request=0;
@@ -88,6 +100,9 @@ unsigned fixture_stat(unsigned which){return which==0?opens:which==1?renames:whi
 void fixture_poll(void){nds_state_request_poll(&machine);}
 void fixture_quit(unsigned quit){mock_frontend.quit_request=quit;}
 void fixture_clock(uint64_t now){fake_clock=now;}
+void fixture_finish_during_start(unsigned enabled){finish_during_start=enabled;}
+void fixture_admit_after_completion(unsigned enabled){admit_after_completion=enabled;}
+uint64_t fixture_admitted_ticket(void){return admitted_ticket;}
 '''
 fixtures={
 'frontend/frontend.h':'#ifndef MOCK_FRONTEND\n#define MOCK_FRONTEND\ntypedef struct{void *machine;unsigned quit_request,lid_closed;}frontend_t;extern frontend_t mock_frontend;\n#define FRONTEND (&mock_frontend)\n#endif\n',
@@ -109,7 +124,7 @@ with tempfile.TemporaryDirectory(prefix='seedless-safety-') as folder:
  state=r/'core/src/core/state.c'
  (t/'fixture.c').write_text(pre+'\n'+function(state,'void *state_write_finish(')+'\n'+function(state,'uint32_t state_write_pending(')+'\n'+function(state,'int32_t state_save_file(')+'\n'+post,encoding='utf8')
  sources=[t/'fixture.c',r/'core/src/core/state_request.c',r/'core/src/frontend/input_mailbox.c',r/'core/src/platform/android/pcm_ring.c',r/'core/src/core/metrics.c',r/'core/src/core/frame_observer.c']
- names=['nds_boot_state_begin','nds_boot_state_complete','nds_boot_state_status','fixture_setup','fixture_save','fixture_finish','fixture_stat','fixture_poll','fixture_quit','fixture_clock','state_write_pending','nds_state_request','nds_state_request_status','nds_state_requests_cancel','nds_state_hold','nds_state_held','nds_state_hold_acknowledge','input_mailbox_publish','input_mailbox_read','input_mailbox_reset','pcm_ring_push','pcm_ring_render','nds_metrics_record','nds_metrics_count','nds_metrics_percentile','nds_frame_observer_set','nds_frame_observer_emit']
+ names=['nds_boot_state_begin','nds_boot_state_complete','nds_boot_state_status','fixture_setup','fixture_save','fixture_finish','fixture_stat','fixture_poll','fixture_quit','fixture_clock','fixture_finish_during_start','fixture_admit_after_completion','fixture_admitted_ticket','state_write_pending','nds_state_request','nds_state_request_status','nds_state_requests_cancel','nds_state_hold','nds_state_held','nds_state_hold_acknowledge','input_mailbox_publish','input_mailbox_read','input_mailbox_reset','pcm_ring_push','pcm_ring_render','nds_metrics_record','nds_metrics_count','nds_metrics_percentile','nds_frame_observer_set','nds_frame_observer_emit']
  flags=['-I',inc,'-I',r/'core/include','-I',r/'core/src','-I',r/'core/src/platform/android']
  if win:
   objects=[]
@@ -142,6 +157,37 @@ with tempfile.TemporaryDirectory(prefix='seedless-safety-') as folder:
     assert dll.fixture_stat(1)==(1 if fail in [0,7] else 0),(compressed,fail,at)
     assert dll.state_write_pending()==0
     saves.append([compressed,fail,at])
+ # A fast writer may finish before the producer returns from thread creation.
+ # Completion must remain final, allowing the next quick save or quick load.
+ for compressed in [0,1]:
+  for fail in [0,1,2,3,4,6,7]:
+   for cycle in range(20):
+    dll.fixture_setup(fail,0,compressed)
+    dll.fixture_finish_during_start(1)
+    ticket=dll.nds_state_request(8,0)
+    assert ticket
+    dll.fixture_poll()
+    expected=1 if fail==0 or (fail==6 and not compressed) else -1
+    assert dll.nds_state_request_status(ticket)==expected,('early writer completion overwritten',compressed,fail,cycle)
+    assert dll.state_write_pending()==0
+    next_ticket=dll.nds_state_request(8,1)
+    assert next_ticket,('quick load remains busy',compressed,fail,cycle)
+    dll.fixture_poll()
+    assert dll.nds_state_request_status(next_ticket)==1
+ # If another caller admits a request after completion, the old producer must
+ # not change that new request from waiting to writing.
+ dll.fixture_setup(0,0,0)
+ dll.fixture_finish_during_start(1)
+ dll.fixture_admit_after_completion(1)
+ old_ticket=dll.nds_state_request(8,0)
+ assert old_ticket
+ dll.fixture_poll()
+ dll.fixture_admitted_ticket.restype=C.c_uint64
+ next_ticket=dll.fixture_admitted_ticket()
+ assert next_ticket>old_ticket
+ assert dll.nds_state_request_status(next_ticket)==0
+ dll.fixture_poll()
+ assert dll.nds_state_request_status(next_ticket)==1
  dll.nds_boot_state_begin(-1);assert dll.nds_boot_state_status()==2
  dll.nds_boot_state_begin(0);assert dll.nds_boot_state_status()==0
  dll.nds_boot_state_complete(0);assert dll.nds_boot_state_status()==1
@@ -197,6 +243,6 @@ with tempfile.TemporaryDirectory(prefix='seedless-safety-') as folder:
  dll.nds_frame_observer_set.argtypes=[callback];dll.nds_frame_observer_set(observe)
  for i in range(120):dll.nds_frame_observer_emit()
  assert len(observations)==120
- print(json.dumps({'saveFaultCases':len(saves),'saveWriterAndAdmission':'passed','loadCompletionAndCancellation':'passed','mailboxEdgesMovesCancelAndConcurrentAccess':'passed','resamplerRates':rates,'ringOwnershipWrapOverflowAndFlush':'passed','histogramPercentiles':'passed','emulatedFrameObserverCount':len(observations),'scope':'Production code, fault-injection file/serialization/clock adapters; no Android driver or live saves'},indent=2))
+ print(json.dumps({'saveFaultCases':len(saves),'saveWriterAndAdmission':'passed','earlyWriterCompletionAndRepeatedQuickSaveLoadCycles':280,'newRequestSurvivesPreviousProducerReturn':'passed','loadCompletionAndCancellation':'passed','mailboxEdgesMovesCancelAndConcurrentAccess':'passed','resamplerRates':rates,'ringOwnershipWrapOverflowAndFlush':'passed','histogramPercentiles':'passed','emulatedFrameObserverCount':len(observations),'scope':'Production code, fault-injection file/serialization/clock adapters; no Android driver or live saves'},indent=2))
  if win:
   kernel=C.WinDLL('kernel32');kernel.FreeLibrary.argtypes=[C.c_void_p];assert kernel.FreeLibrary(dll._handle)

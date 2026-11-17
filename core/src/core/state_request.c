@@ -59,6 +59,7 @@ void nds_state_request_poll(void *machine) {
     }
     const unsigned requested_slot = slot;
     const int requested_load = load;
+    const uint64_t requested_ticket = current;
     phase = 2;
     pthread_mutex_unlock(&lock);
     if (requested_load) {
@@ -69,19 +70,20 @@ void nds_state_request_poll(void *machine) {
     int status = requested_load
         ? state_load_slot(machine, requested_slot, 0, 0, 0)
         : state_save_slot_with_screens(requested_slot);
-    if (requested_load || status != 0) {
-        pthread_mutex_lock(&lock);
-        result = status == 0 ? 1 : -1;
-        phase = 0;
-        pthread_mutex_unlock(&lock);
-    } else {
-        /* Save snapshot is in its own buffer and the writer thread owns it
-         * now (state_write_finish). Mark phase 3 so the status call can
-         * tell the UI to resume while the write finishes. */
-        pthread_mutex_lock(&lock);
-        phase = 3;
-        pthread_mutex_unlock(&lock);
+    pthread_mutex_lock(&lock);
+    /* The writer may have already published phase 0 before save returns.
+     * Preserve that completion, including a newer request admitted since it.
+     * Resurrecting phase 3 would leave the UI's busy gate locked forever. */
+    if (current == requested_ticket && phase == 2) {
+        if (requested_load || status != 0) {
+            result = status == 0 ? 1 : -1;
+            phase = 0;
+        } else {
+            /* Snapshot captured; resume while the writer completes I/O. */
+            phase = 3;
+        }
     }
+    pthread_mutex_unlock(&lock);
 }
 
 void nds_state_requests_cancel(void) {
