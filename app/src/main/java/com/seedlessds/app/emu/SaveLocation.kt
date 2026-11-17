@@ -8,6 +8,8 @@ import com.seedlessds.app.filesystem.NativePathHandle
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.security.MessageDigest
 
 object SaveLocation {
     const val NEXT_TO_ROM = 0
@@ -82,11 +84,14 @@ object SaveLocation {
                     ?: throw java.io.IOException("Save provider returned no cursor")).use { c ->
                     if (c.moveToFirst() && c.getString(1) == name) entry(c, uri) else null
                 }
+            } catch (e: SecurityException) {
+                throw e
             } catch (e: Exception) {
                 // ExternalStorageProvider can wrap a missing child in an
-                // IllegalArgumentException. Verify against a fresh successful
+                // IllegalArgumentException. Verify against a successful
                 // directory query; never treat an arbitrary exception as absence.
-                invalidate()
+                // Reuse a recent successful listing for other missing names.
+                // All local creates, deletes and renames invalidate that listing.
                 try { list()[name] }
                 catch (listError: Exception) { throw java.io.IOException("Cannot query save document", listError) }
             }
@@ -138,7 +143,12 @@ object SaveLocation {
         }
 
         override fun delete(name: String): Boolean {
-            val uri = find(name) ?: return false
+            // ExternalStorageProvider document IDs are paths. Delete that exact
+            // child directly, so a missing optional sidecar never lists ROMs.
+            val uri = if (pathIds) {
+                val id = if (parentId.endsWith(":")) parentId + name else "$parentId/$name"
+                DocumentsContract.buildDocumentUriUsingTree(treeUri, id)
+            } else find(name) ?: return false
             invalidate()
             return runCatching { DocumentsContract.deleteDocument(ctx.contentResolver, uri) }.getOrDefault(false)
         }
@@ -300,14 +310,34 @@ object SaveLocation {
         return out
     }
 
-    fun readBytes(ctx: Context, romUri: Uri?, romPath: String?, userRel: String, profile: String, internal: File): ByteArray? {
+    private fun <T> readStream(ctx: Context, romUri: Uri?, romPath: String?, userRel: String,
+                               profile: String, internal: File, read: (InputStream) -> T): T? {
         val placed = place(ctx, romUri, romPath, userRel, profile)
-        if (placed == null) return if (internal.exists()) runCatching { internal.readBytes() }.getOrNull() else null
+        if (placed == null) return runCatching { internal.inputStream().use(read) }.getOrNull()
         val (t, name) = placed
         val fd = t.openFd(name, "r", false)
-        if (fd < 0) return if (internal.exists()) runCatching { internal.readBytes() }.getOrNull() else null
-        return runCatching { android.os.ParcelFileDescriptor.adoptFd(fd).use { pfd -> FileInputStream(pfd.fileDescriptor).use { it.readBytes() } } }.getOrNull()
+        if (fd < 0) return runCatching { internal.inputStream().use(read) }.getOrNull()
+        return runCatching {
+            android.os.ParcelFileDescriptor.adoptFd(fd).use { pfd ->
+                FileInputStream(pfd.fileDescriptor).use(read)
+            }
+        }.getOrNull()
     }
+
+    fun readBytes(ctx: Context, romUri: Uri?, romPath: String?, userRel: String, profile: String, internal: File): ByteArray? =
+        readStream(ctx, romUri, romPath, userRel, profile, internal) { it.readBytes() }
+
+    fun stateDigest(ctx: Context, romUri: Uri?, romPath: String?, userRel: String, profile: String, internal: File): ByteArray? =
+        readStream(ctx, romUri, romPath, userRel, profile, internal) { stream ->
+            val digest = MessageDigest.getInstance("SHA-256")
+            val buffer = ByteArray(8192)
+            while (true) {
+                val count = stream.read(buffer)
+                if (count < 0) break
+                if (count > 0) digest.update(buffer, 0, count)
+            }
+            digest.digest()
+        }
 
     fun writeBytes(ctx: Context, romUri: Uri?, romPath: String?, userRel: String, profile: String, internal: File, bytes: ByteArray): Boolean {
         val placed = place(ctx, romUri, romPath, userRel, profile)

@@ -98,9 +98,9 @@ class SaveStateInfo(
         SaveLocation.delete(ctx, romUri, romPath, rel(stateName(slot)), userSub, File(internalDir(), stateName(slot)))
         deleteSidecar(slot)
     }
-    private fun stateDigest(slot: Int): ByteArray? = SaveLocation.readBytes(
+    private fun stateDigest(slot: Int): ByteArray? = SaveLocation.stateDigest(
         ctx, romUri, romPath, rel(stateName(slot)), userSub, File(internalDir(), stateName(slot))
-    )?.let { java.security.MessageDigest.getInstance("SHA-256").digest(it) }
+    )
     fun readSidecar(slot: Int): ByteArray? = runCatching {
         val bytes = SaveLocation.readBytes(ctx, romUri, romPath, rel(sidecarName(slot)), userSub, File(internalDir(), sidecarName(slot)))
             ?: return@runCatching null

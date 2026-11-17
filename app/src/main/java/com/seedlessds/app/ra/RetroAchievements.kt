@@ -319,8 +319,9 @@ object RetroAchievements {
         return try { f.get(timeoutMs, TimeUnit.MILLISECONDS) } catch (_: Throwable) { false }
     }
 
-    fun deserializeProgress(bytes: ByteArray?, timeoutMs: Long = 1500): Boolean {
+    fun deserializeProgress(readProgress: () -> ByteArray?, timeoutMs: Long = 1500): Boolean {
         if (!activeForState()) { suspendFrames = false; return false }
+        val bytes = readProgress()
         val f = exec.submit(Callable {
             val ok = RaNative.raDeserializeProgress(bytes)
             suspendFrames = false

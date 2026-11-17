@@ -20,8 +20,8 @@ android {
         applicationId = "com.seedlessds.app"
         minSdk = 21
         targetSdk = 35
-        versionCode = 150
-        versionName = "1.0.40-quickstate-fix"
+        versionCode = 151
+        versionName = "1.0.41-state-latency"
 
         ndk {
             abiFilters += "arm64-v8a"

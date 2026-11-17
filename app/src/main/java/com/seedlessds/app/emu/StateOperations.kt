@@ -22,6 +22,7 @@ internal class StateOperations(private val info: SaveStateInfo) {
     }
     private suspend fun execute(slot: Int, load: Boolean): Boolean {
         return withContext(Dispatchers.IO + NonCancellable) {
+            val startedAt = android.os.SystemClock.elapsedRealtime()
             val ra = com.seedlessds.app.ra.RetroAchievements
             ra.beginStateLoad()
             SeedlessCore.stateHold(true)
@@ -32,6 +33,7 @@ internal class StateOperations(private val info: SaveStateInfo) {
                 } == true
                 if (!held) { com.seedlessds.app.AppLog.w("state", "State pause acknowledgement timed out"); return@withContext false }
                 val progress = if (load) null else ra.serializeProgress()
+                val requestedAt = android.os.SystemClock.elapsedRealtime()
                 val ticket = SeedlessCore.stateRequest(slot, load)
                 if (ticket == 0L) { com.seedlessds.app.AppLog.w("state", "State request busy"); return@withContext false }
                 var status: Int
@@ -51,11 +53,16 @@ internal class StateOperations(private val info: SaveStateInfo) {
                 } while (status == 0 || status == 2)
                 com.seedlessds.app.AppLog.i("state", "${if (load) "load" else "save"} slot=${slot + 1} completed=$status")
                 if (status != 1) return@withContext false
+                val committedAt = android.os.SystemClock.elapsedRealtime()
                 // Sidecar work re-reads the whole state file to hash it; it
                 // used to run inside the pause window. Resume first.
                 resume()
-                if (load) ra.deserializeProgress(info.readSidecar(slot))
+                if (load) ra.deserializeProgress({ info.readSidecar(slot) })
                 else if (progress == null || !info.writeSidecar(slot, progress)) info.deleteSidecar(slot)
+                val finishedAt = android.os.SystemClock.elapsedRealtime()
+                com.seedlessds.app.AppLog.i("state", "${if (load) "load" else "save"} slot=${slot + 1} " +
+                    "prepare=${requestedAt - startedAt}ms core=${committedAt - requestedAt}ms " +
+                    "sidecar=${finishedAt - committedAt}ms total=${finishedAt - startedAt}ms")
                 true
             } catch (error: Exception) {
                 com.seedlessds.app.AppLog.e("state", "State operation failed: ${error.javaClass.simpleName}")

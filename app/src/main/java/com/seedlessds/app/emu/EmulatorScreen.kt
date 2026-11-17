@@ -214,9 +214,13 @@ fun EmulatorScreen(
         quickStateBusy = true
         stateScope.launch {
             try {
+                val checkingAt = android.os.SystemClock.elapsedRealtime()
                 val cfg = SettingsRepo.current
-                val occupied = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { stateInfo.exists(8) }
-                if (!confirmed && occupied && (if (load) cfg.loadNeedsConfirm else cfg.overwriteNeedsConfirm)) quickStatePrompt = load
+                val needsConfirm = !confirmed && (if (load) cfg.loadNeedsConfirm else cfg.overwriteNeedsConfirm)
+                val occupied = needsConfirm && kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { stateInfo.exists(8) }
+                com.seedlessds.app.AppLog.i("state", "quick ${if (load) "load" else "save"} " +
+                    "confirmCheck=${android.os.SystemClock.elapsedRealtime() - checkingAt}ms")
+                if (occupied) quickStatePrompt = load
                 else if (load) onLoadState(8) else onSaveState(8)
             } catch (error: Exception) {
                 if (error is kotlinx.coroutines.CancellationException) throw error
