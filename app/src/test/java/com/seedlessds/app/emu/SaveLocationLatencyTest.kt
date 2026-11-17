@@ -22,6 +22,9 @@ import org.robolectric.shadows.ShadowContentResolver
 import java.io.File
 import java.io.FileNotFoundException
 import java.security.MessageDigest
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 class SaveLocationLatencyTest {
@@ -94,6 +97,28 @@ class SaveLocationLatencyTest {
         assertNull(SaveLocation.stateDigest(context, null, null, "savestates/test.dss", "", file))
     }
 
+    @Test fun listingStartedBeforeDeletionCannotRepopulateCacheWithDeletedFile() {
+        provider.names += "old.ra"
+        val ready = CountDownLatch(1)
+        val resume = CountDownLatch(1)
+        provider.listingReady = ready
+        provider.resumeListing = resume
+        val executor = Executors.newSingleThreadExecutor()
+        try {
+            val listing = executor.submit<Map<String, SaveLocation.Entry>> { target.list() }
+            org.junit.Assert.assertTrue(ready.await(5, TimeUnit.SECONDS))
+            org.junit.Assert.assertTrue(target.delete("old.ra"))
+            resume.countDown()
+            listing.get(5, TimeUnit.SECONDS)
+            assertNull("An old in-flight listing must not undo invalidation", target.lookup("old.ra"))
+            assertEquals(2, provider.directoryQueries)
+        } finally {
+            resume.countDown()
+            executor.shutdown()
+            org.junit.Assert.assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS))
+        }
+    }
+
     private class SaveProvider : ContentProvider() {
         val names = mutableSetOf("game_8.dss")
         var directoryQueries = 0
@@ -101,6 +126,8 @@ class SaveLocationLatencyTest {
         var deletes = 0
         var denyAccess = false
         var failListing = false
+        var listingReady: CountDownLatch? = null
+        var resumeListing: CountDownLatch? = null
         override fun onCreate() = true
         override fun getType(uri: Uri): String = "application/octet-stream"
         override fun query(uri: Uri, projection: Array<out String>?, selection: String?,
@@ -118,6 +145,10 @@ class SaveLocationLatencyTest {
                 val name = DocumentsContract.getDocumentId(uri).substringAfterLast('/')
                 if (name !in names) throw IllegalArgumentException("Missing document")
                 listOf(name)
+            }
+            if (listing) {
+                listingReady?.countDown()
+                check(resumeListing?.await(5, TimeUnit.SECONDS) != false)
             }
             for (name in selectedNames) {
                 cursor.addRow(columns.map<String, Any?> { column ->

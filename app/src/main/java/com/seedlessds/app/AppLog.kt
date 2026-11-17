@@ -12,6 +12,7 @@ import com.seedlessds.app.emu.DeviceProfiles
 import com.seedlessds.app.emu.RomLibrary
 import com.seedlessds.app.emu.SettingsRepo
 import java.io.FileOutputStream
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -22,15 +23,19 @@ object AppLog {
     private const val PENDING = 400
 
     private val stamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
+    private fun timestamp() = synchronized(stamp) { stamp.format(Date()) }
     private var out: FileOutputStream? = null
     private var pfd: ParcelFileDescriptor? = null
     private var readPfd: ParcelFileDescriptor? = null
     private var folder = ""
     private val pending = ArrayList<String>()
     @Volatile private var starting = false
+    @Volatile private var stateTraceFile: File? = null
+    private val stateTraceLock = Any()
 
     fun start(ctx: Context, enabled: Boolean) {
         val app = ctx.applicationContext
+        stateTraceFile = File(app.filesDir, "state-operations.log")
         if (!enabled) { close(); return }
         synchronized(this) { if (starting) return; starting = true }
         Thread({
@@ -112,7 +117,7 @@ object AppLog {
 
     private fun header(ctx: Context, root: String): String {
         val sb = StringBuilder()
-        sb.append("\n== SeedlessDS ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) pid=${Process.myPid()} started=${stamp.format(Date())}\n")
+        sb.append("\n== SeedlessDS ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) pid=${Process.myPid()} started=${timestamp()}\n")
         sb.append("device: ${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE}) Android ${Build.VERSION.RELEASE} sdk ${Build.VERSION.SDK_INT} ${Build.FINGERPRINT}\n")
         runCatching {
             val dm = ctx.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
@@ -133,7 +138,7 @@ object AppLog {
     }
 
     private fun put(level: String, tag: String, msg: String) {
-        val line = "${stamp.format(Date())} $level $tag: $msg\n"
+        val line = "${timestamp()} $level $tag: $msg\n"
         synchronized(this) {
             if (out != null) raw(line)
             else { if (pending.size >= PENDING) pending.removeAt(0); pending.add(line) }
@@ -141,6 +146,21 @@ object AppLog {
     }
 
     fun i(tag: String, msg: String) { Log.i(tag, msg); put("I", tag, msg) }
+    /** Bounded private history for rare state-operation stalls after process exit.
+     * Called by the state I/O coroutine, never by the frame or UI thread. */
+    fun stateTrace(message: String) {
+        i("state", message)
+        val file = stateTraceFile ?: return
+        synchronized(stateTraceLock) {
+            runCatching {
+                if (file.length() > 32768) {
+                    val tail = file.readBytes().takeLast(16384).toByteArray()
+                    file.writeBytes(tail)
+                }
+                file.appendText("${System.currentTimeMillis()} $message\n", Charsets.UTF_8)
+            }
+        }
+    }
     fun d(tag: String, msg: String) { Log.d(tag, msg); put("D", tag, msg) }
     fun w(tag: String, msg: String) { Log.w(tag, msg); put("W", tag, msg) }
     fun w(tag: String, msg: String, tr: Throwable) { Log.w(tag, msg, tr); put("W", tag, msg + "\n" + Log.getStackTraceString(tr)) }

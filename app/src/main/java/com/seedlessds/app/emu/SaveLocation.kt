@@ -65,6 +65,8 @@ object SaveLocation {
         private val parentUri: Uri get() = DocumentsContract.buildDocumentUriUsingTree(treeUri, parentId)
         @Volatile private var cache: Map<String, Entry>? = null
         @Volatile private var cacheAt = 0L
+        private val cacheLock = Any()
+        private var cacheRevision = 0L
 
         private val pathIds = treeUri.authority == "com.android.externalstorage.documents"
 
@@ -99,7 +101,10 @@ object SaveLocation {
 
         override fun list(): Map<String, Entry> {
             val now = android.os.SystemClock.elapsedRealtime()
-            cache?.let { if (now - cacheAt < 1500) return it }
+            val revision = synchronized(cacheLock) {
+                cache?.let { if (now - cacheAt < 1500) return it }
+                cacheRevision
+            }
             val out = HashMap<String, Entry>()
             val children = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, parentId)
             run {
@@ -113,12 +118,22 @@ object SaveLocation {
                     }
                 }
             }
-            cache = out; cacheAt = now
+            synchronized(cacheLock) {
+                // An I/O operation may have invalidated the cache while this
+                // provider query was in flight. Do not republish its old view.
+                if (revision == cacheRevision) {
+                    cache = out
+                    cacheAt = now
+                }
+            }
             com.seedlessds.app.AppLog.i("saves", "listed ${out.size} entries of ${label()} in ${android.os.SystemClock.elapsedRealtime() - now} ms")
             return out
         }
 
-        private fun invalidate() { cache = null }
+        private fun invalidate() = synchronized(cacheLock) {
+            cache = null
+            cacheRevision++
+        }
 
         private fun find(name: String): Uri? = lookup(name)?.uri
 

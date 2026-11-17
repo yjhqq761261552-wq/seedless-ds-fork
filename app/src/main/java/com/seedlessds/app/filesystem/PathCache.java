@@ -16,17 +16,38 @@ public class PathCache {
     public static final String SYS_PREFIX = "SeedlessDS" + File.separator;
     public static final String USER_PREFIX = "User" + File.separator;
 
-    private static Context ctx;
+    private static volatile Context ctx;
     private static volatile File dataRoot;
 
     public static void setDataRoot(File root) {
         dataRoot = root;
     }
 
-    private static String romKey;
-    private static Uri romUri;
-    private static String romRealPath;
-    private static String romName;
+    private static final class RomLocation {
+        final String key;
+        final Uri uri;
+        final String realPath;
+        final String name;
+
+        RomLocation(String key, Uri uri, String realPath, String name) {
+            this.key = key;
+            this.uri = uri;
+            this.realPath = realPath;
+            this.name = name;
+        }
+    }
+
+    private static volatile RomLocation activeRom = new RomLocation(null, null, null, null);
+    // Snapshot transactions serialize with each other, while cartridge backup
+    // access and ROM reads remain independent of a slow snapshot provider.
+    private static final Object[] pathLocks = { new Object(), new Object(), new Object() };
+
+    private static int pathGroup(String path) {
+        String normalized = sanitize(path);
+        if (normalized.startsWith(USER_PREFIX + "savestates/")) return 0;
+        if (normalized.startsWith(USER_PREFIX + "backup/")) return 1;
+        return 2;
+    }
 
     public static void setAppContext(Context c) {
         ctx = c.getApplicationContext();
@@ -65,30 +86,35 @@ public class PathCache {
         return new File(d, "usrcheat.dat");
     }
 
-    public static synchronized void changeRom(String key, Uri uri, String realPath, String name) {
-        romKey = key;
-        romUri = uri;
-        romRealPath = realPath;
-        romName = name;
+    public static void changeRom(String key, Uri uri, String realPath, String name) {
+        activeRom = new RomLocation(key, uri, realPath, name);
     }
 
-    public static synchronized NativePathHandle open(String path, String mode) {
-        if (romKey != null && romKey.equals(path)) {
-            if (romUri != null) {
+    public static NativePathHandle open(String path, String mode) {
+        RomLocation rom = activeRom;
+        if (rom.key != null && rom.key.equals(path)) {
+            if (rom.uri != null) {
                 try {
-                    ParcelFileDescriptor pfd = ctx.getContentResolver().openFileDescriptor(romUri, "r");
+                    ParcelFileDescriptor pfd = ctx.getContentResolver().openFileDescriptor(rom.uri, "r");
                     if (pfd != null) {
-                        return new NativePathHandle(romName != null ? romName : path, pfd.detachFd(), romName != null ? romName : path);
+                        String name = rom.name != null ? rom.name : path;
+                        return new NativePathHandle(name, pfd.detachFd(), name);
                     }
                 } catch (Exception e) {
                 }
             }
-            if (romRealPath != null) return new NativePathHandle(romRealPath, romName != null ? romName : new File(romRealPath).getName());
+            if (rom.realPath != null) return new NativePathHandle(rom.realPath,
+                rom.name != null ? rom.name : new File(rom.realPath).getName());
         }
+        synchronized (pathLocks[pathGroup(path)]) {
+            return openData(path, mode, rom);
+        }
+    }
 
+    private static NativePathHandle openData(String path, String mode, RomLocation rom) {
         if (dataRoot == null && path.startsWith(USER_PREFIX)) {
             NativePathHandle h = com.seedlessds.app.emu.SaveLocation.openHandle(
-                ctx, romUri, romRealPath, sanitize(path).substring(USER_PREFIX.length()), mode, activeUserSub, resolve(path));
+                ctx, rom.uri, rom.realPath, sanitize(path).substring(USER_PREFIX.length()), mode, activeUserSub, resolve(path));
             if (h != null) return h;
         }
         File f = resolve(path);
@@ -104,20 +130,38 @@ public class PathCache {
         return new NativePathHandle(f);
     }
 
-    public static synchronized boolean remove(String path) {
+    public static boolean remove(String path) {
+        synchronized (pathLocks[pathGroup(path)]) {
+            return removeData(path, activeRom);
+        }
+    }
+
+    private static boolean removeData(String path, RomLocation rom) {
         if (dataRoot == null && path.startsWith(USER_PREFIX)) {
             Boolean r = com.seedlessds.app.emu.SaveLocation.remove(
-                ctx, romUri, romRealPath, sanitize(path).substring(USER_PREFIX.length()), activeUserSub);
+                ctx, rom.uri, rom.realPath, sanitize(path).substring(USER_PREFIX.length()), activeUserSub);
             if (r != null) { File i = resolve(path); if (i.exists()) i.delete(); return r; }
         }
         File f = resolve(path);
         return f.exists() && f.delete();
     }
 
-    public static synchronized boolean rename(String from, String to) {
+    public static boolean rename(String from, String to) {
+        int fromGroup = pathGroup(from);
+        int toGroup = pathGroup(to);
+        // Acquire cross-directory locks in one order, including uncommon moves
+        // between backup and snapshot directories.
+        synchronized (pathLocks[Math.min(fromGroup, toGroup)]) {
+            synchronized (pathLocks[Math.max(fromGroup, toGroup)]) {
+                return renameData(from, to, activeRom);
+            }
+        }
+    }
+
+    private static boolean renameData(String from, String to, RomLocation rom) {
         if (dataRoot == null && from.startsWith(USER_PREFIX) && to.startsWith(USER_PREFIX)) {
             Boolean r = com.seedlessds.app.emu.SaveLocation.rename(
-                ctx, romUri, romRealPath, sanitize(from).substring(USER_PREFIX.length()),
+                ctx, rom.uri, rom.realPath, sanitize(from).substring(USER_PREFIX.length()),
                 sanitize(to).substring(USER_PREFIX.length()), activeUserSub);
             if (r != null) return r;
         }
@@ -132,6 +176,7 @@ public class PathCache {
 
     private static String sanitize(String s) {
         String sep = File.separator;
-        return s.replaceAll(sep + "\\+", sep).replaceAll("^" + sep, "");
+        while (s.contains(sep + sep)) s = s.replace(sep + sep, sep);
+        return s.startsWith(sep) ? s.substring(sep.length()) : s;
     }
 }

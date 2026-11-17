@@ -17,6 +17,9 @@
 #include "seedlessds/state_request.h"
 #include "seedlessds/video_snapshot.h"
 #include <pthread.h>
+#if defined(__ANDROID__)
+#include <sys/resource.h>
+#endif
 #include "core/rewind_memory.h"
 #include "core/rewind_codec.h"
 #include "seedlessds/rewind.h"
@@ -2119,6 +2122,11 @@ extern int str_vsprintf_caller_limit_4(char *dest, size_t size,
                               const char *format, ...);
 
 void *state_write_finish(void *arg) {
+#if defined(__ANDROID__)
+    pthread_setname_np(pthread_self(), "seedless-state");
+    /* pthread_create inherits the emulation thread's elevated priority. */
+    setpriority(PRIO_PROCESS, 0, 5);
+#endif
     uint8_t *state = arg;
     fn_fwrite write_fn = (fn_fwrite)sym_libc_fwrite;
     fn_free_26 release = (fn_free_26)sym_libc_free;

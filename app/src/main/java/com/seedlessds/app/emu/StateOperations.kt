@@ -23,6 +23,8 @@ internal class StateOperations(private val info: SaveStateInfo) {
     private suspend fun execute(slot: Int, load: Boolean): Boolean {
         return withContext(Dispatchers.IO + NonCancellable) {
             val startedAt = android.os.SystemClock.elapsedRealtime()
+            val action = if (load) "load" else "save"
+            com.seedlessds.app.AppLog.stateTrace("$action slot=${slot + 1} begin")
             val ra = com.seedlessds.app.ra.RetroAchievements
             ra.beginStateLoad()
             SeedlessCore.stateHold(true)
@@ -36,6 +38,7 @@ internal class StateOperations(private val info: SaveStateInfo) {
                 val requestedAt = android.os.SystemClock.elapsedRealtime()
                 val ticket = SeedlessCore.stateRequest(slot, load)
                 if (ticket == 0L) { com.seedlessds.app.AppLog.w("state", "State request busy"); return@withContext false }
+                var nextTraceAt = requestedAt + 1000
                 var status: Int
                 var resumed = false
                 fun resume() {
@@ -44,6 +47,12 @@ internal class StateOperations(private val info: SaveStateInfo) {
                 do {
                     delay(4)
                     status = SeedlessCore.stateRequestStatus(ticket)
+                    val now = android.os.SystemClock.elapsedRealtime()
+                    if ((status == 0 || status == 2) && now >= nextTraceAt) {
+                        com.seedlessds.app.AppLog.stateTrace("$action slot=${slot + 1} " +
+                            "phase=${if (status == 2) "writer" else "pending"} elapsed=${now - startedAt}ms")
+                        nextTraceAt = now + 1000
+                    }
                     // Save only: status 2 means the snapshot is captured and
                     // the native writer thread owns compression + disk I/O.
                     // Resume play right away and keep waiting here for the
@@ -51,7 +60,7 @@ internal class StateOperations(private val info: SaveStateInfo) {
                     // below valid) only once the writer completes.
                     if (!load && status == 2) resume()
                 } while (status == 0 || status == 2)
-                com.seedlessds.app.AppLog.i("state", "${if (load) "load" else "save"} slot=${slot + 1} completed=$status")
+                com.seedlessds.app.AppLog.stateTrace("$action slot=${slot + 1} completed=$status")
                 if (status != 1) return@withContext false
                 val committedAt = android.os.SystemClock.elapsedRealtime()
                 // Sidecar work re-reads the whole state file to hash it; it
@@ -60,16 +69,19 @@ internal class StateOperations(private val info: SaveStateInfo) {
                 if (load) ra.deserializeProgress({ info.readSidecar(slot) })
                 else if (progress == null || !info.writeSidecar(slot, progress)) info.deleteSidecar(slot)
                 val finishedAt = android.os.SystemClock.elapsedRealtime()
-                com.seedlessds.app.AppLog.i("state", "${if (load) "load" else "save"} slot=${slot + 1} " +
+                com.seedlessds.app.AppLog.stateTrace("$action slot=${slot + 1} " +
                     "prepare=${requestedAt - startedAt}ms core=${committedAt - requestedAt}ms " +
                     "sidecar=${finishedAt - committedAt}ms total=${finishedAt - startedAt}ms")
                 true
             } catch (error: Exception) {
                 com.seedlessds.app.AppLog.e("state", "State operation failed: ${error.javaClass.simpleName}")
+                com.seedlessds.app.AppLog.stateTrace("$action slot=${slot + 1} failed=${error.javaClass.simpleName}")
                 false
             } finally {
                 SeedlessCore.stateHold(false)
                 ra.endStateLoad()
+                com.seedlessds.app.AppLog.stateTrace("$action slot=${slot + 1} released " +
+                    "elapsed=${android.os.SystemClock.elapsedRealtime() - startedAt}ms")
             }
         }
     }
