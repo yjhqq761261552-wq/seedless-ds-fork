@@ -83,6 +83,12 @@ android {
             signingConfig = signingConfigs.getByName("shared")
             applicationIdSuffix = ".debug"
         }
+        create("replacement") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ""
+            isDebuggable = false
+            matchingFallbacks += "debug"
+        }
     }
 
     buildFeatures {

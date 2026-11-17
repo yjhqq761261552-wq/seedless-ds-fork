@@ -9,6 +9,7 @@ Lua is a Git submodule. Other source archives are fetched from the pinned URLs a
 | unarr | 1.1.1, https://github.com/selmf/unarr/releases/tag/v1.1.1 | LGPL-3.0; lzmasdk PPMd public domain. common/crc32.c currently declares LGPLv3; do not rely on the older AUTHORS summary for that file. Only common/RAR/PPMd are compiled. |
 | LZMA SDK | 9.20, https://www.7-zip.org/a/lzma920.tar.bz2 | Public-domain selected C 7z/LZMA decoders; no RAR code. |
 | zlib | Android system library, NDK 25.2.9519653 headers | zlib license; no new bundled binary. |
+| SoundTouch | 2.3.3, https://www.surina.net/soundtouch/ | LGPL-2.1-or-later, copyright Olli Parviainen. Included source and license in soundtouch/. |
 
 Local changes are reproducibly applied by CMake to downloaded copies: unarr/common/stream.c opens through the existing resolver; unarr/rar/rar.c rejects invalid header CRC and encrypted entries; 7zFile.c opens through the resolver. Lua lauxlib.c uses a compile definition for the resolver. unarr uses zlib CRC to avoid its mutable lazy lookup table. No optional archive compression/crypto dependencies are enabled beyond zlib.
 

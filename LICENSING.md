@@ -13,6 +13,7 @@ This code is distributed in the hope that it will be useful, but WITHOUT ANY WAR
 This declaration does not replace third-party notices or relicense their code or assets. Their individual terms remain applicable:
 
 - Native libraries and modifications are listed in [core/third_party/LICENSES.md](core/third_party/LICENSES.md). Rcheevos retains its MIT and per-file notices.
+- SoundTouch 2.3.3 retains Olli Parviainen's copyright and LGPL-2.1-or-later terms. The included source and license are in [core/third_party/soundtouch](core/third_party/soundtouch/README.md).
 - The unchanged DeadSkullzJr 20211225 cheat catalog retains its supplied AGPL-3.0, contributor attribution and XML source.
 - The game database derives from melonDS under GPL-3.0-or-later.
 - The six GPL-2.0-or-later shaders retain their notices. HQ2X and Scale2X retain the original sources and attribution for their adaptations.

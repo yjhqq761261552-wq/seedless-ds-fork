@@ -1,6 +1,7 @@
 package com.seedlessds.app.emu
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -33,8 +34,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.rules.ExternalResource
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
 import java.io.File
 
 /** Interaction test for the mask settings page: picking an image stores it
@@ -44,7 +47,17 @@ import java.io.File
 @org.robolectric.annotation.GraphicsMode(org.robolectric.annotation.GraphicsMode.Mode.NATIVE)
 class SettingsMaskTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val activityRegistration = object : ExternalResource() {
+        override fun before() {
+            val app = RuntimeEnvironment.getApplication()
+            // Register the test host independently of the APK build type.
+            shadowOf(app.packageManager).addActivityIfNotPresent(
+                ComponentName(app, ComponentActivity::class.java))
+        }
+    }
+
+    @get:Rule(order = 1)
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     private class FakeOwner : ActivityResultRegistryOwner {
