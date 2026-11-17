@@ -1,10 +1,10 @@
 # SeedlessDS · 自制优化分支
 
-基于 [SapphireRhodonite/SeedlessDS](https://github.com/SapphireRhodonite/SeedlessDS) 的 Android NDS 模拟器改进分支，侧重双屏布局、输入响应、可绑定回溯、存档可靠性与 Vulkan 呈现。当前版本：**1.0.39-natural-audio / versionCode 149**。
+基于 [SapphireRhodonite/SeedlessDS](https://github.com/SapphireRhodonite/SeedlessDS) 的 Android NDS 模拟器改进分支，侧重双屏布局、输入响应、可绑定回溯、存档可靠性与 Vulkan 呈现。当前正式版为 **1.1 / versionCode 153**。
 
 **特别感谢 SapphireRhodonite、WatermelonDS / SeedlessDS 制作组及所有贡献者开源与维护。** Vulkan 低延迟等优化参考了 [WatermelonDS 0.8.0.rc3](https://github.com/SapphireRhodonite/WatermelonDS/releases/tag/0.8.0.rc3)；完整归属见 [致谢](CREDITS.md)。这是第三方修改分支，自制版本号与官方发布相互独立。
 
-[全部版本改进](CHANGELOG.md) · [Nova 磷光点与验证](NOVA_1.0.37.md) · [加速音色修复与验证](FAST_AUDIO_1.0.39.md) · [许可](LICENSING.md) · [上游衍生英文说明](README.upstream-derived.md)
+[1.1 正式版说明](docs/releases/1.1.md) · [全部版本改进](CHANGELOG.md) · [Nova 磷光点与验证](NOVA_1.0.37.md) · [加速音色修复与验证](FAST_AUDIO_1.0.39.md) · [许可](LICENSING.md)
 
 [下载最新 APK（GitHub Releases）](https://github.com/yjhqq761261552-wq/seedless-ds-fork/releases/latest)。感谢 OpenGL 滤镜的原算法作者与移植者，完整名单及源码依据见 [OpenGL / GLES 滤镜来源致谢](CREDITS.md#opengl--gles-滤镜来源)。
 
@@ -56,7 +56,7 @@
 本仓库包含实际 core 和原生依赖源压缩包，无需初始化 submodule。使用 JDK 17、Android SDK 35、Build Tools 34.0.0、NDK 25.2.9519653、CMake 3.22.1；Gradle 8.11.1 由 wrapper 获取。创建未跟踪的 local.properties，设置 sdk.dir。
 
 ```sh
-./gradlew :app:assembleDebug :app:assembleReplacement :app:testDebugUnitTest :app:lintDebug :app:lintReplacement
+./gradlew :app:assembleCoexist :app:assembleReplacement :app:testCoexistUnitTest :app:testReplacementUnitTest :app:lintCoexist :app:lintReplacement
 ```
 
 Windows 使用 gradlew.bat。首次构建需联网获取 Android/Gradle 依赖。普通 APK 构建使用随源 SPIR-V；重新生成 shader 的方法见 tools/compile_vulkan_shaders.py 和最新版本说明。
@@ -65,12 +65,14 @@ Releases 同时提供两种安装包，均支持 ARM64，最低 Android API 21�
 
 | 安装包 | 包名 | 构建任务 |
 |---|---|---|
-| 共存版 coexist | `com.seedlessds.app.debug` | `:app:assembleDebug` |
+| 共存版 coexist | `com.seedlessds.app.debug` | `:app:assembleCoexist` |
 | 原包名替换版 replacement | `com.seedlessds.app` | `:app:assembleReplacement` |
 
 共存版沿用本分支历版包名和签名，可覆盖本分支旧共存版。已核对官方 1.0.1 APK，替换版与官方版签名不同，首次替换需先导出存档和配置，再卸载官方版并安装。两种包名各自保存应用数据，切换使用时需自行导入存档。
 
-Vulkan 需系统和驱动支持。两版均使用随源公开测试签名，替换版关闭调试标志。APK 放在 Releases，源码历史包含对应的构建配置。
+1.1 两版均关闭调试标志，版本号和发布文件名不含 debug。共存版保留历史包名中的 `.debug` 以支持直接更新旧版，签名也沿用旧版。开发构建仍可使用 `:app:assembleDebug`。
+
+Vulkan 需系统和驱动支持。两版均使用随源公开测试签名。APK 放在 Releases，源码历史包含对应的构建配置。
 
 ## 验证范围
 

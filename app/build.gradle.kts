@@ -20,8 +20,8 @@ android {
         applicationId = "com.seedlessds.app"
         minSdk = 21
         targetSdk = 35
-        versionCode = 152
-        versionName = "1.0.42-save-contention"
+        versionCode = 153
+        versionName = "1.1"
 
         ndk {
             abiFilters += "arm64-v8a"
@@ -88,6 +88,11 @@ android {
             applicationIdSuffix = ""
             isDebuggable = false
             matchingFallbacks += "debug"
+            buildConfigField("boolean", "FRAME_CONTROLS", "false")
+        }
+        create("coexist") {
+            initWith(getByName("replacement"))
+            applicationIdSuffix = ".debug"
         }
     }
 
